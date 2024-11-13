@@ -6,7 +6,7 @@ const ApiTestButton = () => {
 
   const handleApiCheck = () => {
     axios
-      .get('/api/health')
+      .get('/health')
       .then((response) => {
         setApiStatus('API 연결 성공: ' + response.data.message);
       })

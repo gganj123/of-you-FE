@@ -6,7 +6,7 @@ const ApiTestButton = () => {
 
  const handleApiCheck = async () => {
   try {
-    const response = await axios.get("/");
+    const response = await axios.get("/health");
     setApiStatus("API 연결 성공: " + response.data.message);
   } catch (error) {
     setApiStatus("API 연결 실패: " + error.message);

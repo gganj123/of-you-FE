@@ -3,7 +3,7 @@
   publish = "build"
 
 [[redirects]]
-  from = "/api/*"
+  from = "/proxy/*"
   to = "https://of-you-150add69b1bb.herokuapp.com/api/:splat"
   status = 200
   force = true

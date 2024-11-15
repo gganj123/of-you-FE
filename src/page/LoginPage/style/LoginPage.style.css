@@ -1,24 +1,32 @@
 .sub-title-wrab {
-  padding-top: 55px;
-  padding-bottom: 36px;
-  text-align: center;
-  font-size: 32px;
-  font-weight: bold;
+  width: calc(100% -  35vw); 
+  margin: 0 auto; 
+  margin-top: 250px;
 }
 
+.sub-title-name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 55px;
+  padding-bottom: 55px;
+  font-size: 32px;
+}
 .member-join .join-content {
   padding-top: 50px;
-  border-top: 2px solid #171717;
+  padding-bottom: 50px;
+
+  border-top: 1px #171717;
 }
 
 .form-container {
   display: flex;
-  gap: 20px; /* 로그인 필드와 버튼 간격 */
-  margin: 0px 252.5px;
+  gap: 20px; 
+  margin: 0px 150px;
 }
 
 .login-wrab {
-  flex: 3; /* 3:1 비율로 설정 */
+  flex: 3;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -27,6 +35,7 @@
 .login-wrab p {
   display: flex;
   align-items: center;
+  width: calc(100% + 81px);
   gap: 10px;
   margin: 0px;
 }
@@ -38,7 +47,8 @@
 }
 
 .form-control {
-  width: 420px;
+  width: calc(100% - 200px);
+  max-width: 420px; 
   height: 40px;
   padding-left: 20px;
   border: 1px solid #f2f2f2;
@@ -52,10 +62,17 @@
   border-color: #333;
   background-color: #ffffff;
 }
-
+.login-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0px 160px;
+}
 .login-button {
-  width: 190px;
-  height: 90px;
+  width: 100%;
+  max-width: 190px;
+  min-width: 150px;
+  height: 95px;
   background-color: #000;
   color: #fff;
   font-size: 16px;
@@ -63,11 +80,278 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  flex: none;
   justify-content: center;
   transition: background-color 0.3s;
 }
-
 .login-button:hover {
   background-color: #333;
+}
+
+.custom-checkbox input[type='checkbox'] {
+  display: none;
+}
+.custom-checkbox {
+  margin-top: 15px;
+  margin-left: 110px;
+  display: flex;
+  align-items: center;
+}
+
+.custom-checkbox .checkmark {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  position: relative;
+  margin-top: 0px;
+  margin-right: 8px;
+  padding-bottom: 0;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+.input-line {
+  margin: 0px;
+}
+
+.custom-checkbox input[type='checkbox']:checked + .checkmark {
+  border-color: #666; 
+}
+
+
+.custom-checkbox input[type='checkbox']:checked + .checkmark::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  width: 6px;
+  height: 10px;
+  border: solid #666;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.link {
+  display: flex;
+  justify-content: center; 
+  gap: 20px; 
+  margin-top: 10px; 
+  list-style-type: none; 
+  padding: 0;
+}
+
+.link li {
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.link li a {
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.link li a:hover {
+  color: #666;
+}
+.right-line {
+  padding-right: 10px;
+  border: solid #999;
+  border-width: 0 1px 0 0;
+}
+
+.required {
+  color: #ff6160;
+}
+
+.join-email {
+  padding: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 999;
+  border-width: 1px 0 0 0;
+}
+
+.email-content {
+  flex: 1;
+  display: flex;
+  max-width: 326px;
+  justify-content: center;
+  align-items: center;
+}
+
+.email-signup {
+  cursor: pointer;
+  flex: 1;
+  max-width: 326px;
+  height: 50px;
+  background-color: white;
+  border: solid 1px;
+}
+
+.join-sns {
+  
+  padding: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+}
+.sns-content {
+  flex: 1;
+  display: flex;
+  max-width: 326px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+}
+
+.sns-buttons {
+  cursor: pointer;
+
+  flex:1;
+  max-width: 326px;
+  height: 126px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 중앙 정렬 */
+  gap: 10px; /* 버튼 간 간격 */
+  margin-top: 10px; /* 상단 여백 */
+}
+
+.sns-signup {
+  flex: 1;
+ width:100%;
+  height: 50px;
+  background-color: white;
+  border: solid 1px;
+}
+
+.sosial-flex{
+  display: flex;
+}
+.google-login-icon {
+  width: 46px; 
+  height: 46px;
+  border-radius: 50%; 
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  
+  margin: 10px;
+  border: 1px solid gray;
+}
+
+.google-login-icon img {
+  width: 46px;
+  height: 46px;
+}
+@media (max-width: 1500px) {
+  .sub-title-wrab {
+    width: calc(100% -  20vw); 
+  }
+  .form-container {
+    margin: 0 150px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .sub-title-wrab {
+    width: calc(100% -  20vw); 
+  }
+  .form-container {
+    margin: 0px 100px;
+  }
+  .login-option {
+    margin: 0px 100px;
+  }
+}
+@media (max-width: 768px) {
+  .form-container {
+    margin: 0 50px;
+  }
+  .member-join .join-content {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    margin: 0px;
+
+    border-top: 2px solid #171717;
+  }
+  .login-option {
+    margin: 0 20px;
+  }
+  .email-content,
+  .sns-content {
+    display: none; 
+  }
+  .join-email, .join-sns{
+    padding: 30px;
+  }
+  .join-sns{
+    padding-top: 0px;
+  }
+}
+@media (max-width: 480px) {
+  .sub-title-wrab {
+    width: calc(100%); 
+    margin-top: 150px;
+    padding-top: 0px;
+    
+  }
+  .sub-title {  
+    font-size: 30px;
+
+  }
+  .form-container {
+    flex-direction: column; 
+    margin: 0 50px;
+    align-items: center; 
+  }
+  .login-wrab {
+    width: 100%;
+  }
+  .join-email{
+    padding:10px;
+  }
+  .join-sns{
+    padding:10px;
+  }
+  .link{
+margin-right: 10px;
+  }
+  .form-control {
+    width: 60%; 
+    max-width: 420px;
+    margin: 0;
+  }
+  .custom-checkbox {
+    margin-left: 80px;
+  }
+  .login-option {
+    margin-right: 30px;
+  }
+  .login-button {
+    display: block;
+    min-width: 400px;
+    width: 100%;
+    max-width: 100%; 
+    height: 50px;
+    margin-top: 10px; /
+  }
+  .login-option {
+    margin: 0px;
+  }
+  .custom-checkbox {
+    margin-top: 15px;
+    margin-left: 40px;
+    display: flex;
+    align-items: center;
+  }
+  .sub-title-wrab {
+    margin-top: 100px;
+}
+.sub-title-name {
+  padding-top: 0;
+}
 }

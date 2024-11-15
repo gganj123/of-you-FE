@@ -1,13 +1,4 @@
 import React from 'react';
-import ApiTestButton from '../../common/components/ApiTestButton';
-
-const HomePage = () => {
-  return (
-    <div>
-      HomePage
-      <ApiTestButton />
-      <ApiTestButton />
-      <ApiTestButto
 import BannerSlider from "./components/BannerSlider/BannerSlider";
 import RecommendedProducts from "./components/RecommendedProducts/RecommendedProducts"
 import BrandBanner from "./components/BrandBanner/BrandBanner";

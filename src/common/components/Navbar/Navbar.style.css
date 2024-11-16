@@ -436,6 +436,12 @@
   font-size: 0.7rem;
 }
 
+.navbar-menu-divider {
+  margin: 0 10px;
+  color: #ccc;
+  font-weight: bold;
+}
+
 @media (max-width: 1200px) {
   .navbar-container {
     height: 180px;

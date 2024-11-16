@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
-import ProductCard from "../ProductCard/ProductCard";
+import ProductCard from "../../../../common/components/ProductCard/ProductCard";
 import './CategorySection.style.css';
 
 const CategorySection = ({ categoryName, products }) => {

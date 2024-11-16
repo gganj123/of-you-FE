@@ -4,6 +4,7 @@
     width: 100%;
     min-width: 250px;
     margin-right: 20px;
+    overflow: hidden;
 }
 
 .homepage-product-image-container {
@@ -23,6 +24,10 @@
     object-position: center;
     transition: transform 0.2s ease-in-out;
     border-radius: 5px;
+}
+
+.homepage-product-card:hover .homepage-product-image {
+    transform: scale(1.1);
 }
 
 .homepage-product-like-button {
@@ -97,6 +102,7 @@
     font-size: 15px;
 }
 
+/* 반응형 디자인 */
 @media (max-width: 1440px) {
     .homepage-product-card {
         min-width: 180px;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route, Routes} from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import HomePage from './../page/HomePage/HomePage';
 import LoginPage from '../page/LoginPage/LoginPage';
 import SignupPage from '../page/SignupPage/SignupPage';
@@ -11,6 +11,7 @@ import MyPage from '../page/MyPage/MyPage';
 import OrderCompletePage from '../page/OrderCompletePage/OrderCompletePage';
 import PaymentPage from '../page/PaymentPage/PaymentPage';
 import PrivateRoute from './PrivateRoute';
+import CategoryPage from '../page/CategoryPage/CategoryPage';
 import ProductDetail from '../page/ProductDetailPage/ProductDetailPage';
 import LikePage from '../page/LikePage/LikePage';
 
@@ -20,6 +21,8 @@ function AppRouter() {
       <Route path='/' element={<HomePage />} />
       <Route path='/login' element={<LoginPage />} />
       <Route path='/signup' element={<SignupPage />} />
+      <Route path="/products/category/:category" element={<CategoryPage />} />
+      <Route path="/products/category/:category/:subcategory" element={<CategoryPage />} />
       <Route path='/product/:id' element={<ProductDetail />} />
       <Route element={<PrivateRoute permissionLevel='customer' />}>
         <Route path='/cart' element={<CartPage />} />

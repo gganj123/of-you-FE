@@ -17,7 +17,7 @@ const HomePage = () => {
     discount: 51,
   };
 
-  const recommendedProducts = Array.from({ length: 18 }, (_, index) => ({
+  const recommendedProducts = Array.from({ length: 16 }, (_, index) => ({
     ...baseProduct,
     id: index + 1,
   }));

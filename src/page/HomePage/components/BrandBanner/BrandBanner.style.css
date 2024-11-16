@@ -4,7 +4,7 @@
     height: 400px;
     overflow: hidden;
     margin-top: 30px;
-    margin-bottom: 50px;
+    margin-bottom: 100px;
 }
 
 .brand-banner-slide {
@@ -120,6 +120,7 @@
 @media (max-width: 480px) {
     .brand-banner-container {
         height: 200px;
+        margin-bottom: 50px;
     }
 
     .brand-banner-image {

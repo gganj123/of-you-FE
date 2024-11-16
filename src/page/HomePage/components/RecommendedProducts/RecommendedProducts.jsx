@@ -9,10 +9,12 @@ const RecommendedProducts = ({ products }) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     const getItemsPerPage = () => {
-        if (windowWidth <= 768) {
-            return 4; // 모바일에서는 4개씩 (2x2)
+        if (windowWidth <= 480) {
+            return 4;
+        } else if (windowWidth <= 768) {
+            return 6;
         } else if (windowWidth <= 1200) {
-            return 6; // 태블릿에서는 6개씩 (3x2)
+            return 8;
         }
         return products.length; // PC에서는 전체 상품 표시
     };

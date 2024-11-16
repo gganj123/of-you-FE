@@ -20,6 +20,7 @@
     color: #666;
     text-decoration: none;
     font-size: 1rem;
+    margin-bottom: 20px;
 }
 
 .recommended-products-container {
@@ -34,6 +35,10 @@
     gap: 20px;
     flex-wrap: nowrap;
     padding: 20px 0 0 0;
+}
+
+.recommended-products-list::-webkit-scrollbar {
+    display: none;
 }
 
 .recommended-product-item {
@@ -70,7 +75,7 @@
 
 .recommended-nav-button {
     position: absolute;
-    top: 50%;
+    top: 45%;
     transform: translateY(-50%);
     z-index: 2;
     background: rgba(255, 255, 255, 0.8);
@@ -83,6 +88,8 @@
     justify-content: center;
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 1.2rem;
+    color: #666;
 }
 
 .recommended-prev-button {
@@ -101,7 +108,7 @@
 
     .recommended-products-list {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 20px;
         padding: 20px 0;
     }
@@ -147,7 +154,7 @@
     }
 
     .recommended-products-list {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 15px;
         padding-bottom: 5px;
     }
@@ -171,8 +178,9 @@
     }
 
     .recommended-products-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
-        padding-bottom: 0;
+        padding-bottom: 0px;
     }
 
     .recommended-products-title {

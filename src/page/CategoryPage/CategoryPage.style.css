@@ -1,6 +1,6 @@
 .category-page {
     padding: 20px;
-    margin-top: 250px;
+    margin-top: 280px;
     max-width: 1280px;
     margin-left: auto;
     margin-right: auto;
@@ -53,9 +53,6 @@
     border-top: 2px solid black;
     border-bottom: 1px solid #ccc;
     margin-bottom: 20px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
 }
 
 .category-page__subcategory-btn {

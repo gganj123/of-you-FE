@@ -6,7 +6,8 @@ const ProductCard = ({ image, title, price, originalPrice, discount }) => {
     const [isLiked, setIsLiked] = useState(false);
 
     const handleLikeClick = (e) => {
-        e.preventDefault(); // 이미지 클릭 이벤트와 분리
+        e.preventDefault();
+        e.stopPropagation();
         setIsLiked(!isLiked);
     };
 

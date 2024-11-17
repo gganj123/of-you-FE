@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import '../../App.css';
 import './style/LoginPage.style.css';
 import {useDispatch, useSelector} from 'react-redux';
@@ -150,12 +150,21 @@ const LoginPage = () => {
 
               <div className='sosial-flex'>
                 <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-                  <GoogleLogin
-                    onSuccess={handleGoogleLogin}
-                    onError={() => {
-                      console.log('Login Failed');
-                    }}
-                  />
+                  <div className='google-login-container'>
+                    <GoogleLogin
+                      onSuccess={handleGoogleLogin}
+                      onError={() => console.log('Login Failed')}
+                      render={(renderProps) => (
+                        <button
+                          className='custom-google-button'
+                          onClick={renderProps.onClick}
+                          disabled={renderProps.disabled}>
+                          <img src='/images/g-logo.png' alt='Google Logo' className='google-icon' />
+                          <span>구글로 시작하기</span>
+                        </button>
+                      )}
+                    />
+                  </div>
                 </GoogleOAuthProvider>
               </div>
             </div>

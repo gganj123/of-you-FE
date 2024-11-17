@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import store from './features/store';
 import {Provider} from 'react-redux';

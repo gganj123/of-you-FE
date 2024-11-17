@@ -1,5 +1,4 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import {Route, Routes} from 'react-router-dom';
 import HomePage from './../page/HomePage/HomePage';
 import LoginPage from '../page/LoginPage/LoginPage';
 import SignupPage from '../page/SignupPage/SignupPage';
@@ -14,6 +13,7 @@ import PrivateRoute from './PrivateRoute';
 import CategoryPage from '../page/CategoryPage/CategoryPage';
 import ProductDetail from '../page/ProductDetailPage/ProductDetailPage';
 import LikePage from '../page/LikePage/LikePage';
+import AddressPage from '../page/AddressPage/AddressPage';
 
 function AppRouter() {
   return (
@@ -21,8 +21,8 @@ function AppRouter() {
       <Route path='/' element={<HomePage />} />
       <Route path='/login' element={<LoginPage />} />
       <Route path='/signup' element={<SignupPage />} />
-      <Route path="/products/category/:category" element={<CategoryPage />} />
-      <Route path="/products/category/:category/:subcategory" element={<CategoryPage />} />
+      <Route path='/products/category/:category' element={<CategoryPage />} />
+      <Route path='/products/category/:category/:subcategory' element={<CategoryPage />} />
       <Route path='/product/:id' element={<ProductDetail />} />
       <Route element={<PrivateRoute permissionLevel='customer' />}>
         <Route path='/cart' element={<CartPage />} />
@@ -30,6 +30,7 @@ function AppRouter() {
         <Route path='/payment/success' element={<OrderCompletePage />} />
         <Route path='/mypage/' element={<MyPage />} />
         <Route path='/mypage/like' element={<LikePage />} />
+        <Route path='/mypage/address' element={<AddressPage />} />
       </Route>
       <Route element={<PrivateRoute permissionLevel='admin' />}>
         <Route path='/admin/user' element={<AdminUserPage />} />

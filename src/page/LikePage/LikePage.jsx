@@ -33,7 +33,7 @@ const LikePage = () => {
       tags: ['예약', '쿠폰']
     },
     {
-      id: 3,
+      id: 4,
       brand: 'demeriel',
       title: 'Veneta Hobo Bag Medium Chestnut',
       image: '/images/banner7.jpg',
@@ -42,7 +42,7 @@ const LikePage = () => {
       discountRate: 22,
     },
     {
-      id: 3,
+      id: 5,
       brand: 'demeriel',
       title: 'Veneta Hobo Bag Medium Chestnut',
       image: '/images/banner8.jpg',
@@ -89,7 +89,6 @@ const LikePage = () => {
             salePrice={product.salePrice}
             originalPrice={product.originalPrice}
             discountRate={product.discountRate}
-            tags={product.tags}
           />
         ))}
       </div>

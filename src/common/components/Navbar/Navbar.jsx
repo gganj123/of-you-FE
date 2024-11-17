@@ -1,17 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FiHeart, FiLogIn, FiUser, FiShoppingBag, FiSearch, FiChevronDown, FiMenu, FiArrowLeft } from 'react-icons/fi';
 import './Navbar.style.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../features/user/userSlice';
 
 const Navbar = ({ user }) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('WOMAN');
+  const [selectedCategory, setSelectedCategory] = useState('WOMEN');
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isPopularSearchVisible, setIsPopularSearchVisible] = useState(false);
 
   const popularSearchRef = useRef(null);
+  const categoryMenuRef = useRef(null);
+  const location = useLocation();
 
   const categories = {
     WOMEN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'DRESS', 'ACCESSORIES'],
@@ -23,21 +25,51 @@ const Navbar = ({ user }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // 카테고리 메뉴 외부 클릭 시 닫기
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (categoryMenuRef.current && !categoryMenuRef.current.contains(event.target) &&
+        !event.target.closest('.navbar-category-button') &&
+        !event.target.closest('.navbar-hamburger button')) {
+        setIsCategoryOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // 페이지 이동 시 카테고리 메뉴 닫기
+  useEffect(() => {
+    setIsCategoryOpen(false);
+  }, [location]);
+
   const handleCategoryToggle = () => {
     setIsCategoryOpen(!isCategoryOpen);
   };
 
-  const handleCategorySelect = (category) => {
+  // 토글박스의 중분류 카테고리 선택을 위한 함수
+  const handleSubCategorySelect = (category) => {
     setSelectedCategory(category);
+  };
+
+  // 중분류 카테고리 클릭 시의 함수
+  const handleSubCategoryClick = (subcategory) => {
+    if (selectedCategory && categories[selectedCategory]) {
+      navigate(`/products/category/${selectedCategory.toLowerCase()}/${subcategory.toLowerCase()}`);
+      setIsCategoryOpen(false);
+    }
+  };
+
+  // 메뉴의 대분류 카테고리 페이지 이동을 위한 함수
+  const handleCategoryPageNavigate = (category) => {
     navigate(`/products/category/${category.toLowerCase()}`);
   };
 
   const handleSearchIconClick = () => {
     if (window.innerWidth <= 1200) {
-      // 모바일에서는 검색 모달 열기
       setIsSearchModalOpen(true);
     } else {
-      // 피씨에서는 검색창 아래에 인기 검색어 표시
       setIsPopularSearchVisible(!isPopularSearchVisible);
     }
   };
@@ -108,7 +140,8 @@ const Navbar = ({ user }) => {
                       <div
                         key={category}
                         className='navbar-category-item'
-                        onClick={() => handleCategorySelect(category)}>
+                        onClick={() => handleSubCategorySelect(category)}
+                      >
                         {category} {selectedCategory === category && <span className='navbar-arrow'>▶</span>}
                       </div>
                     ))}
@@ -116,7 +149,9 @@ const Navbar = ({ user }) => {
                   {selectedCategory && (
                     <div className='navbar-subcategory-list'>
                       {categories[selectedCategory].map((subcategory) => (
-                        <div key={subcategory} className='navbar-subcategory-item'>
+                        <div key={subcategory} className='navbar-subcategory-item'
+                          onClick={() => handleSubCategoryClick(subcategory)}
+                        >
                           {subcategory}
                         </div>
                       ))}
@@ -211,7 +246,7 @@ const Navbar = ({ user }) => {
               <div className='navbar-category-menu'>
                 <div className='navbar-category-list'>
                   {Object.keys(categories).map((category) => (
-                    <div key={category} className='navbar-category-item' onClick={() => handleCategorySelect(category)}>
+                    <div key={category} className='navbar-category-item' onClick={() => handleSubCategorySelect(category)}>
                       {category} {selectedCategory === category && <span className='navbar-arrow'>▶</span>}
                     </div>
                   ))}
@@ -219,7 +254,8 @@ const Navbar = ({ user }) => {
                 {selectedCategory && (
                   <div className='navbar-subcategory-list'>
                     {categories[selectedCategory].map((subcategory) => (
-                      <div key={subcategory} className='navbar-subcategory-item'>
+                      <div key={subcategory} className='navbar-subcategory-item'
+                        onClick={() => handleSubCategoryClick(subcategory)} >
                         {subcategory}
                       </div>
                     ))}
@@ -233,7 +269,7 @@ const Navbar = ({ user }) => {
               <React.Fragment key={menuItem}>
                 <div
                   className='navbar-menu-item'
-                  onClick={() => handleCategorySelect(menuItem)}
+                  onClick={() => handleCategoryPageNavigate(menuItem)}
                 >
                   {menuItem}
                 </div>

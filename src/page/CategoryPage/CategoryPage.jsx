@@ -18,6 +18,8 @@ const CategoryPage = () => {
     const [hasMoreProducts, setHasMoreProducts] = useState(true);
     const [showScrollToTopButton, setShowScrollToTopButton] = useState(false);
     const [sortType, setSortType] = useState('latest');
+    const [isSortOpen, setIsSortOpen] = useState(false);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const pageRef = useRef(1);
     const productsPerPage = 50;
 
@@ -25,10 +27,19 @@ const CategoryPage = () => {
     const subcategories = categories[categoryName] || [];
 
     useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
         fetchProducts(1);
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [sortType, category, subcategory]); // subcategory 변경시에도 상품 목록 새로고침
+    }, [sortType, category, subcategory]);
 
     const fetchProducts = (page) => {
         setIsLoading(true);
@@ -45,7 +56,6 @@ const CategoryPage = () => {
             createdAt: new Date(Date.now() - Math.random() * 10000000000)
         }));
 
-        // 정렬 로직 적용
         const sortedData = sortProducts(data);
 
         setProducts((prevProducts) => {
@@ -79,17 +89,20 @@ const CategoryPage = () => {
     const handleSortChange = (newSortType) => {
         if (newSortType !== sortType) {
             setSortType(newSortType);
-            setProducts([]); // 상품 목록 초기화
-            pageRef.current = 1; // 페이지 초기화
-            setHasMoreProducts(true); // 더 불러오기 가능하도록 설정
+            setProducts([]);
+            pageRef.current = 1;
+            setHasMoreProducts(true);
+            if (windowWidth <= 1200) {
+                setIsSortOpen(false);
+            }
         }
     };
 
     const handleSubcategoryClick = (subcat) => {
         navigate(`/products/category/${category.toLowerCase()}/${subcat.toLowerCase()}`);
-        setProducts([]); // 상품 목록 초기화
-        pageRef.current = 1; // 페이지 초기화
-        setHasMoreProducts(true); // 더 불러오기 가능하도록 설정
+        setProducts([]);
+        pageRef.current = 1;
+        setHasMoreProducts(true);
     };
 
     const handleScroll = () => {
@@ -115,11 +128,86 @@ const CategoryPage = () => {
         });
     };
 
+    const renderSortButtons = () => {
+        if (windowWidth > 1200) {
+            return (
+                <div className="category-page__sort">
+                    <button
+                        className={`category-page__sort-btn ${sortType === 'latest' ? 'active' : ''}`}
+                        onClick={() => handleSortChange('latest')}
+                    >
+                        신상품순
+                    </button>
+                    <button
+                        className={`category-page__sort-btn ${sortType === 'discount' ? 'active' : ''}`}
+                        onClick={() => handleSortChange('discount')}
+                    >
+                        할인율순
+                    </button>
+                    <button
+                        className={`category-page__sort-btn ${sortType === 'priceAsc' ? 'active' : ''}`}
+                        onClick={() => handleSortChange('priceAsc')}
+                    >
+                        가격낮은순
+                    </button>
+                    <button
+                        className={`category-page__sort-btn ${sortType === 'priceDesc' ? 'active' : ''}`}
+                        onClick={() => handleSortChange('priceDesc')}
+                    >
+                        가격높은순
+                    </button>
+                </div>
+            );
+        } else {
+            return (
+                <div className="category-page__sort-mobile">
+                    <button
+                        className="category-page__sort-toggle"
+                        onClick={() => setIsSortOpen(!isSortOpen)}
+                    >
+                        {sortType === 'latest' && '신상품순'}
+                        {sortType === 'discount' && '할인율순'}
+                        {sortType === 'priceAsc' && '가격낮은순'}
+                        {sortType === 'priceDesc' && '가격높은순'}
+                        <span className={`arrow ${isSortOpen ? 'open' : ''}`}>▼</span>
+                    </button>
+                    {isSortOpen && (
+                        <div className="category-page__sort-dropdown">
+                            <button
+                                className={`category-page__sort-btn ${sortType === 'latest' ? 'active' : ''}`}
+                                onClick={() => handleSortChange('latest')}
+                            >
+                                신상품순
+                            </button>
+                            <button
+                                className={`category-page__sort-btn ${sortType === 'discount' ? 'active' : ''}`}
+                                onClick={() => handleSortChange('discount')}
+                            >
+                                할인율순
+                            </button>
+                            <button
+                                className={`category-page__sort-btn ${sortType === 'priceAsc' ? 'active' : ''}`}
+                                onClick={() => handleSortChange('priceAsc')}
+                            >
+                                가격낮은순
+                            </button>
+                            <button
+                                className={`category-page__sort-btn ${sortType === 'priceDesc' ? 'active' : ''}`}
+                                onClick={() => handleSortChange('priceDesc')}
+                            >
+                                가격높은순
+                            </button>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+    };
+
     return (
         <div className="category-page">
             <div className="category-page__header">
                 <h1 className="category-page__title">{categoryName}</h1>
-
             </div>
 
             {subcategories.length > 0 && (
@@ -148,32 +236,7 @@ const CategoryPage = () => {
                 </div>
             )}
 
-            <div className="category-page__sort">
-                <button
-                    className={`category-page__sort-btn ${sortType === 'latest' ? 'active' : ''}`}
-                    onClick={() => handleSortChange('latest')}
-                >
-                    신상품순
-                </button>
-                <button
-                    className={`category-page__sort-btn ${sortType === 'discount' ? 'active' : ''}`}
-                    onClick={() => handleSortChange('discount')}
-                >
-                    할인율순
-                </button>
-                <button
-                    className={`category-page__sort-btn ${sortType === 'priceAsc' ? 'active' : ''}`}
-                    onClick={() => handleSortChange('priceAsc')}
-                >
-                    가격낮은순
-                </button>
-                <button
-                    className={`category-page__sort-btn ${sortType === 'priceDesc' ? 'active' : ''}`}
-                    onClick={() => handleSortChange('priceDesc')}
-                >
-                    가격높은순
-                </button>
-            </div>
+            {renderSortButtons()}
 
             <div className="category-page__product-grid">
                 {products.map((product) => (

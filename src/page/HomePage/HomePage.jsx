@@ -12,9 +12,9 @@ const HomePage = () => {
     image: '/images/banner8.jpg',
     brand: 'LOOKAST',
     title: 'LEANNE WOOL HANDMADE HALF COAT',
-    price: 143663,
+    salePrice: 143663,
     originalPrice: 298000,
-    discount: 51,
+    discountRate: 51,
   };
 
   const recommendedProducts = Array.from({ length: 16 }, (_, index) => ({
@@ -29,10 +29,9 @@ const HomePage = () => {
         id: index + 1,
         image: '/images/banner2.jpg',
         title: 'MIND BRIDGE Women',
-        price: 199000,
+        salePrice: 199000,
         originalPrice: 399000,
-        discount: 50,
-        badge: '특가',
+        discountRate: 50,
       })),
     },
     {
@@ -41,9 +40,9 @@ const HomePage = () => {
         id: index + 11, // ID가 중복되지 않도록 오프셋 추가
         image: '/images/banner3.jpg',
         title: 'ADER ERROR',
-        price: 698000,
+        salePrice: 698000,
         originalPrice: null,
-        discount: null,
+        discountRate: null,
       })),
     },
     {
@@ -52,10 +51,9 @@ const HomePage = () => {
         id: index + 21,
         image: '/images/banner5.jpg',
         title: 'JAVIN DE SEOUL',
-        price: 18827,
+        salePrice: 18827,
         originalPrice: 28000,
-        discount: 32,
-        badge: '쿠폰',
+        discountRate: 32,
       })),
     },
     {
@@ -64,9 +62,9 @@ const HomePage = () => {
         id: index + 31,
         image: '/images/banner6.jpg',
         title: 'Life Product',
-        price: 32000,
+        salePrice: 32000,
         originalPrice: null,
-        discount: null,
+        discountRate: null,
       })),
     },
   ];

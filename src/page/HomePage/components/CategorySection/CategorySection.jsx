@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
-import ProductCard from "../ProductCard/ProductCard";
+import ProductCard from "../../../../common/components/ProductCard/ProductCard";
 import './CategorySection.style.css';
 
 const CategorySection = ({ categoryName, products }) => {
@@ -63,11 +63,12 @@ const CategorySection = ({ categoryName, products }) => {
                         {displayedProducts.map(product => (
                             <div key={product.id} className="homepage-product-item">
                                 <ProductCard
+                                    id={product.id}
                                     image={product.image}
                                     title={product.title}
-                                    price={product.price}
+                                    salePrice={product.salePrice}
                                     originalPrice={product.originalPrice}
-                                    discount={product.discount}
+                                    discountRate={product.discountRate}
                                 />
                             </div>
                         ))}

@@ -40,7 +40,7 @@
 
 .homepage-product-list {
     display: flex;
-    overflow-x: auto;
+    overflow-x: hidden;
     scroll-behavior: smooth;
     gap: 20px;
     padding: 0;

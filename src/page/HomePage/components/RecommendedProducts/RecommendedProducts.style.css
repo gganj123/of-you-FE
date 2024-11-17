@@ -30,7 +30,7 @@
 
 .recommended-products-list {
     display: flex;
-    overflow-x: auto;
+    overflow-x: hidden;
     scroll-behavior: smooth;
     gap: 20px;
     flex-wrap: nowrap;

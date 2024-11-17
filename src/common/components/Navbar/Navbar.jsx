@@ -1,11 +1,11 @@
-import React, {useState, useRef, useEffect} from 'react';
-import {FiHeart, FiLogIn, FiUser, FiShoppingBag, FiSearch, FiChevronDown, FiMenu, FiArrowLeft} from 'react-icons/fi';
+import React, { useState, useRef, useEffect } from 'react';
+import { FiHeart, FiLogIn, FiUser, FiShoppingBag, FiSearch, FiChevronDown, FiMenu, FiArrowLeft } from 'react-icons/fi';
 import './Navbar.style.css';
-import {useNavigate} from 'react-router-dom';
-import {useDispatch} from 'react-redux';
-import {logout} from '../../features/user/userSlice';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../../features/user/userSlice';
 
-const Navbar = ({user}) => {
+const Navbar = ({ user }) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('WOMAN');
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
@@ -14,8 +14,8 @@ const Navbar = ({user}) => {
   const popularSearchRef = useRef(null);
 
   const categories = {
-    WOMAN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'DRESS', 'ACCESSORIES'],
-    MAN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'ACCESSORIES'],
+    WOMEN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'DRESS', 'ACCESSORIES'],
+    MEN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'ACCESSORIES'],
     BEAUTY: ['SKINCARE', 'MAKEUP', 'HAIR & BODY', 'DEVICES'],
     LIFE: ['HOME', 'TRAVEL', 'DIGITAL', 'CULTURE', 'FOOD']
   };
@@ -29,6 +29,7 @@ const Navbar = ({user}) => {
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
+    navigate(`/products/category/${category.toLowerCase()}`);
   };
 
   const handleSearchIconClick = () => {
@@ -87,7 +88,7 @@ const Navbar = ({user}) => {
     <>
       <div className='navbar-container'>
         <div className='navbar-top-banner'>
-          <img src='./images/banner-top.jpeg' alt='banner-top' className='navbar-top-banner-img' />
+          <img src='/images/banner-top.jpeg' alt='banner-top' className='navbar-top-banner-img' />
           <div className='navbar-top-banner-text'>
             <div className='navbar-top-banner-text-line1'>차원이 다른 역대급 세일</div>
             <div className='navbar-top-banner-text-line2'>WEEK OF YOU</div>
@@ -137,7 +138,7 @@ const Navbar = ({user}) => {
                 <div className='navbar-popular-search-list' ref={popularSearchRef}>
                   <h4>급상승 검색어</h4>
                   <ul>
-                    {Array.from({length: 10}, (_, i) => (
+                    {Array.from({ length: 10 }, (_, i) => (
                       <li key={`popular-${i}`}>{i + 1}. 검색어</li>
                     ))}
                   </ul>
@@ -191,7 +192,7 @@ const Navbar = ({user}) => {
                 <div className='navbar-popular-searches'>
                   <h4>급상승 검색어</h4>
                   <ul>
-                    {Array.from({length: 10}, (_, i) => (
+                    {Array.from({ length: 10 }, (_, i) => (
                       <li key={`popular-${i}`}> {i + 1}. 검색어</li>
                     ))}
                   </ul>
@@ -228,14 +229,19 @@ const Navbar = ({user}) => {
             )}
           </div>
           <div className='navbar-menu'>
-            <div className='navbar-menu-item'>WOMEN</div>
-            <div className='navbar-menu-item'>MEN</div>
-            <div className='navbar-menu-item'>BEAUTY</div>
-            <div className='navbar-menu-item'>LIFE</div>
-            <div className='navbar-divider'></div>
-            <div className='navbar-menu-item'>BEST</div>
-            <div className='navbar-menu-item'>SALE</div>
-            <div className='navbar-menu-item'>NEW</div>
+            {['WOMEN', 'MEN', 'BEAUTY', 'LIFE', 'BEST', 'SALE', 'NEW'].map((menuItem, index, array) => (
+              <React.Fragment key={menuItem}>
+                <div
+                  className='navbar-menu-item'
+                  onClick={() => handleCategorySelect(menuItem)}
+                >
+                  {menuItem}
+                </div>
+                {menuItem === 'LIFE' && index < array.length - 1 && (
+                  <span className="navbar-menu-divider">|</span>
+                )}
+              </React.Fragment>
+            ))}
           </div>
         </div>
       </div>

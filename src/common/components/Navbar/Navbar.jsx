@@ -88,7 +88,7 @@ const Navbar = ({ user }) => {
     <>
       <div className='navbar-container'>
         <div className='navbar-top-banner'>
-          <img src='./images/banner-top.jpeg' alt='banner-top' className='navbar-top-banner-img' />
+          <img src='/images/banner-top.jpeg' alt='banner-top' className='navbar-top-banner-img' />
           <div className='navbar-top-banner-text'>
             <div className='navbar-top-banner-text-line1'>차원이 다른 역대급 세일</div>
             <div className='navbar-top-banner-text-line2'>WEEK OF YOU</div>

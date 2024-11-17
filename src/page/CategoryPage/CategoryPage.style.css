@@ -1,7 +1,7 @@
 .category-page {
     padding: 20px;
-    margin-top: 280px;
-    max-width: 1280px;
+    margin-top: 270px;
+    max-width: 1480px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -28,13 +28,17 @@
 }
 
 .category-page__sort-btn {
-    padding: 6px 12px;
+    padding: 6px 10px;
     border: none;
     background: none;
     font-size: 14px;
     color: #777;
     cursor: pointer;
     position: relative;
+}
+
+.category-page__sort-btn:last-child {
+    padding-right: 0;
 }
 
 .category-page__sort-btn:hover {
@@ -52,11 +56,11 @@
     padding: 20px 8px;
     border-top: 2px solid black;
     border-bottom: 1px solid #ccc;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .category-page__subcategory-btn {
-    padding: 8px 16px;
+    padding: 2px 20px;
     border: none;
     background: none;
     font-size: 15px;
@@ -74,6 +78,21 @@
 .category-page__subcategory-btn.active {
     color: #000;
     font-weight: bold;
+}
+
+.category-page__subcategory-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -21px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #000;
+    transition: width 0.3s ease;
+}
+
+.category-page__subcategory-btn.active::after {
+    width: 100%;
 }
 
 .category-page__divider {
@@ -94,7 +113,7 @@
 
 .category-page__product-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 8px;
     padding: 0 8px;
 }
@@ -117,10 +136,6 @@
     opacity: 0;
     transition: opacity 0.3s ease;
     pointer-events: none;
-}
-
-.category-page__product-item:hover::after {
-    opacity: 1;
 }
 
 .category-page__loading {
@@ -174,8 +189,12 @@
 }
 
 @media screen and (max-width: 1200px) {
+    .category-page {
+        margin-top: 200px;
+    }
+
     .category-page__product-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
 
     .category-page__product-item:hover {
@@ -185,7 +204,7 @@
 
 @media screen and (max-width: 768px) {
     .category-page__product-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 
     .category-page__header {
@@ -201,7 +220,7 @@
 
 @media screen and (max-width: 480px) {
     .category-page__product-grid {
-        grid-template-columns: repeat(1, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .category-page__sort {

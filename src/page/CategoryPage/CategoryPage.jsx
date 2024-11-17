@@ -69,6 +69,8 @@ const CategoryPage = () => {
                 return [...data].sort((a, b) => a.price - b.price);
             case 'priceDesc':
                 return [...data].sort((a, b) => b.price - a.price);
+            case 'discount':
+                return [...data].sort((a, b) => b.discount - a.discount);
             default:
                 return data;
         }
@@ -152,6 +154,12 @@ const CategoryPage = () => {
                     onClick={() => handleSortChange('latest')}
                 >
                     신상품순
+                </button>
+                <button
+                    className={`category-page__sort-btn ${sortType === 'discount' ? 'active' : ''}`}
+                    onClick={() => handleSortChange('discount')}
+                >
+                    할인율순
                 </button>
                 <button
                     className={`category-page__sort-btn ${sortType === 'priceAsc' ? 'active' : ''}`}

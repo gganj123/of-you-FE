@@ -6,6 +6,11 @@
     --color-white: #fff;
     --color-red: #ff3f3f;
     --color-orange: #ff6b00;
+
+    --font-size-large: 24px;
+    --font-size-medium: 16px;
+    --font-size-small: 14px;
+    --font-size-xsmall: 12px;
 }
 
 .product-detail-page {
@@ -17,7 +22,6 @@
     padding-top: 280px;
 }
 
-/* Left Section - Images */
 .product-detail-page__left {
     flex: 1;
     position: sticky;
@@ -55,7 +59,6 @@
     border: 2px solid var(--color-primary);
 }
 
-/* Right Section - Product Info */
 .product-detail-page__right {
     flex: 1;
     max-width: 500px;
@@ -66,19 +69,19 @@
 }
 
 .product-detail-page__brand {
-    font-size: 24px;
-    font-weight: bold;
+    font-size: var(--font-size-large);
+    font-weight: 500;
     margin-bottom: 8px;
 }
 
 .product-detail-page__name {
-    font-size: 16px;
+    font-size: var(--font-size-medium);
     color: var(--color-gray);
     margin-bottom: 8px;
 }
 
 .product-detail-page__status {
-    font-size: 14px;
+    font-size: var(--font-size-small);
     color: var(--color-orange);
 }
 
@@ -89,7 +92,7 @@
 }
 
 .product-detail-page__original-price {
-    font-size: 16px;
+    font-size: var(--font-size-medium);
     color: var(--color-gray);
     text-decoration: line-through;
     margin-bottom: 8px;
@@ -102,25 +105,16 @@
 }
 
 .product-detail-page__sale-price .discount-rate {
-    font-size: 24px;
+    font-size: var(--font-size-large);
     font-weight: bold;
     color: var(--color-red);
 }
 
 .product-detail-page__sale-price .price {
-    font-size: 24px;
+    font-size: var(--font-size-large);
     font-weight: bold;
 }
 
-.product-detail-page__sale-price .discount-rate,
-.product-detail-page__sale-price .price {
-    line-height: 1;
-    /* 요소의 높이를 같게 맞추기 */
-    vertical-align: middle;
-    /* 세로 중앙 정렬 보정 */
-}
-
-/* Benefits Section */
 .product-detail-page__benefits {
     margin-bottom: 30px;
     padding-bottom: 20px;
@@ -135,21 +129,20 @@
 .product-detail-page__benefit-item .label {
     width: 100px;
     color: var(--color-gray);
-    font-size: 14px;
+    font-size: var(--font-size-small);
 }
 
 .product-detail-page__benefit-item .value {
     flex: 1;
-    font-size: 14px;
+    font-size: var(--font-size-small);
 }
 
 .product-detail-page__benefit-item .sub-text {
     margin-top: 5px;
-    font-size: 12px;
+    font-size: var(--font-size-xsmall);
     color: var(--color-gray);
 }
 
-/* Options Section */
 .product-detail-page__options {
     margin-bottom: 30px;
 }
@@ -168,11 +161,12 @@
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
+    font-size: var(--font-size-medium);
     border-radius: 5px;
 }
 
 .product-detail-page__arrow-down {
-    font-size: 12px;
+    font-size: var(--font-size-xsmall);
     transition: transform 0.3s ease;
 }
 
@@ -196,7 +190,6 @@
     background-color: #f8f8f8;
 }
 
-/* Buttons Section */
 .product-detail-page__buttons {
     display: flex;
     gap: 10px;
@@ -208,7 +201,7 @@
     flex: 1;
     padding: 18px;
     border: none;
-    font-size: 16px;
+    font-size: var(--font-size-medium);
     font-weight: bold;
     cursor: pointer;
     transition: opacity 0.2s ease;
@@ -226,12 +219,32 @@
     border: 1px solid var(--color-primary);
 }
 
-/* Responsive Design */
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1200px) {
+    :root {
+        --font-size-large: 1.75rem;
+        --font-size-medium: 1.125rem;
+        --font-size-small: 0.875rem;
+        --font-size-xsmall: 0.75rem;
+    }
+
+    .product-detail-page {
+        padding-top: 200px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    :root {
+        --font-size-large: 1.3rem;
+        --font-size-medium: 1rem;
+        --font-size-small: 0.875rem;
+        --font-size-xsmall: 0.75rem;
+    }
+
     .product-detail-page {
         flex-direction: column;
-        gap: 30px;
+        gap: 10px;
         padding: 20px;
+        padding-top: 150px;
     }
 
     .product-detail-page__left {
@@ -241,24 +254,24 @@
     .product-detail-page__right {
         max-width: 100%;
     }
-}
-
-@media screen and (max-width: 768px) {
-    .product-detail-page__brand {
-        font-size: 20px;
-    }
-
-    .product-detail-page__sale-price .discount-rate,
-    .product-detail-page__sale-price .price {
-        font-size: 20px;
-    }
 
     .product-detail-page__buttons {
         flex-direction: column;
     }
 
-    .product-detail-page__like-button {
-        width: 100%;
-        padding: 15px;
+    .product-detail-page__buy-now,
+    .product-detail-page__add-cart {
+        font-size: var(--font-size-medium);
+        padding: 12px;
+    }
+
+    .product-detail-page__option-button {
+        font-size: var(--font-size-medium);
+        padding: 10px;
+    }
+
+    .product-detail-page__option-choice {
+        font-size: var(--font-size-small);
+        padding: 8px 10px;
     }
 }

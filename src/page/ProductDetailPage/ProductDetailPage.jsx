@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductCard from "../../common/components/ProductCard/ProductCard";
 import './ProductDetailPage.style.css';
 
 const ProductDetailPage = () => {
   const { id } = useParams();
-  const [selectedImage, setSelectedImage] = useState(0);
-  const [isColorOpen, setIsColorOpen] = useState(false);
-  const [isSizeOpen, setIsSizeOpen] = useState(false);
+  const [isOptionOpen, setIsOptionOpen] = useState(false);
 
-  // 임시 상품 데이터
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
   const productData = {
     id,
     brand: 'MaLoupe',
@@ -26,19 +27,8 @@ const ProductDetailPage = () => {
     <div className="product-detail-page">
       <div className="product-detail-page__left">
         <div className="product-detail-page__main-image">
-          <img src={productData.images[selectedImage]} alt={productData.name} />
+          <img src={productData.images} alt={productData.name} />
         </div>
-        {/* <div className="product-detail-page__thumbnails">
-          {productData.images.map((image, index) => (
-            <img
-              key={index}
-              src={image}
-              alt={`thumbnail ${index + 1}`}
-              onClick={() => setSelectedImage(index)}
-              className={selectedImage === index ? 'active' : ''}
-            />
-          ))}
-        </div> */}
       </div>
       <div className="product-detail-page__right">
         <div className="product-detail-page__header">
@@ -71,12 +61,12 @@ const ProductDetailPage = () => {
           <div className="product-detail-page__option-item">
             <button
               className="product-detail-page__option-button"
-              onClick={() => setIsColorOpen(!isColorOpen)}
+              onClick={() => setIsOptionOpen(!isColorOpen)}
             >
               옵션을 선택해주세요
               <span className="product-detail-page__arrow-down">▼</span>
             </button>
-            {isColorOpen && (
+            {isOptionOpen && (
               <div className="product-detail-page__option-dropdown">
                 {productData.color.map(color => (
                   <div key={color} className="product-detail-page__option-choice">{color}</div>

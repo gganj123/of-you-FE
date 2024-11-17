@@ -134,7 +134,7 @@ const CartPage = () => {
 
   return (
     <div className="cart-wrapper">
-      <h1 className="cart-page-title">쇼핑백 상품 ({cartItems.length})</h1>
+      <h1 className="cart-page-title">장바구니 상품 ({cartItems.length})</h1>
 
       <div className="cart-layout">
         <div className="cart-list">
@@ -251,7 +251,6 @@ const CartPage = () => {
 
       <div className="cart-notice">
         <ul className="cart-notice-list">
-          <li className="cart-notice-item">적용하신 쿠폰은 체크아웃 화면에서 변경이 가능합니다.</li>
           <li className="cart-notice-item">쇼핑백에 담긴 상품은 최대 100개까지 담을 수 있습니다.</li>
           <li className="cart-notice-item">쇼핑백에 담긴 상품은 30일간 보관후 삭제됩니다.</li>
         </ul>

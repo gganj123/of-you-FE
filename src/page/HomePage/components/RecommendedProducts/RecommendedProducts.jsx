@@ -87,7 +87,14 @@ const RecommendedProducts = ({ products }) => {
                     <div className="recommended-products-list" ref={scrollRef}>
                         {displayedProducts.map((product) => (
                             <div key={product.id} className="recommended-product-item">
-                                <ProductCard {...product} />
+                                <ProductCard
+                                    id={product.id}
+                                    image={product.image}
+                                    title={product.title}
+                                    salePrice={product.salePrice}
+                                    originalPrice={product.originalPrice}
+                                    discountRate={product.discountRate}
+                                />
                             </div>
                         ))}
                     </div>

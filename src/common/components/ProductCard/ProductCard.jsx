@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { IoHeartOutline, IoHeart } from 'react-icons/io5';
 import './ProductCard.style.css';
 
-const ProductCard = ({ image, title, price, originalPrice, discount }) => {
+const ProductCard = ({ id, image, title, salePrice, originalPrice, discountRate }) => {
     const [isLiked, setIsLiked] = useState(false);
+    const navigate = useNavigate();
+
 
     const handleLikeClick = (e) => {
         e.preventDefault();
@@ -11,8 +14,12 @@ const ProductCard = ({ image, title, price, originalPrice, discount }) => {
         setIsLiked(!isLiked);
     };
 
+    const handleCardClick = () => {
+        navigate(`/product/${id}`);
+    };
+
     return (
-        <div className="homepage-product-card">
+        <div className="homepage-product-card" onClick={handleCardClick}>
             <div className="homepage-product-image-wrapper">
                 <div className="homepage-product-image-container">
                     <img src={image} alt={title} className="homepage-product-image" />
@@ -32,11 +39,12 @@ const ProductCard = ({ image, title, price, originalPrice, discount }) => {
             <div className="homepage-product-info">
                 <h3 className="homepage-product-title">{title}</h3>
                 <div className="homepage-product-price">
-                    <span className="homepage-current-price">{price.toLocaleString()}원</span>
+                    <span className="homepage-current-price">{salePrice ? salePrice.toLocaleString() : '0'}원</span>
                     {originalPrice && (
                         <div className="homepage-price-discount">
                             <span className="homepage-original-price">{originalPrice.toLocaleString()}원</span>
-                            <span className="homepage-discount">-{discount}%</span>
+                            <span className="homepage-discount">-{discountRate ? discountRate : 0}%
+                            </span>
                         </div>
                     )}
                 </div>

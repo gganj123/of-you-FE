@@ -48,9 +48,9 @@ const CategoryPage = () => {
             image: '/images/banner7.jpg',
             brand: 'H&M',
             title: `Product ${index + 1}`,
-            price: 29900 + index * 1000,
+            salePrice: 29900 + index * 1000,
             originalPrice: 39900 + index * 1000,
-            discount: 25,
+            discountRate: 25,
             likeCount: Math.floor(Math.random() * 100),
             isFree: Math.random() > 0.5,
             createdAt: new Date(Date.now() - Math.random() * 10000000000)
@@ -242,14 +242,14 @@ const CategoryPage = () => {
                 {products.map((product) => (
                     <div className="category-page__product-item" key={product.id}>
                         <ProductCard
+                            id={product.id}
                             image={product.image}
                             brand={product.brand}
                             title={product.title}
-                            price={product.price}
+                            salePrice={product.salePrice}
                             originalPrice={product.originalPrice}
-                            discount={product.discount}
+                            discountRate={product.discountRate}
                             likeCount={product.likeCount}
-                            isFree={product.isFree}
                         />
                     </div>
                 ))}

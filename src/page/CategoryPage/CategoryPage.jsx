@@ -44,18 +44,18 @@ const CategoryPage = () => {
     dispatch(clearProducts());
     pageRef.current = 1;
     setHasMoreProducts(true);
-    dispatch(
-      fetchProducts({
-        category: categoryName,
-        subcategory,
-        page: 1,
-        limit: productsPerPage,
-        sort: sortType,
-        name: searchTerm
-      })
-    );
-    setHasMoreProducts(true);
-  }, [categoryName, subcategory, sortType, searchTerm, dispatch]);
+
+    const fetchParams = {
+      category: categoryName,
+      subcategory,
+      page: 1,
+      limit: productsPerPage,
+      sort: searchParams.get('sort') || sortType,
+      name: searchTerm
+    };
+
+    dispatch(fetchProducts(fetchParams));
+  }, [categoryName, subcategory, searchParams, dispatch]); // searchParams 추가
 
   const handleCategoryClick = (newCategory) => {
     navigate(`/products/category/${newCategory.toLowerCase()}`);
@@ -63,9 +63,10 @@ const CategoryPage = () => {
 
   const handleSubcategoryClick = (subcat) => {
     const params = new URLSearchParams(searchParams);
-    navigate(`/products/category/${category.toLowerCase()}/${subcat.toLowerCase()}?${params.toString()}`);
+    params.delete('subcategory');
+    params.set('subcategory', subcat.toLowerCase());
+    navigate(`/products/category/${category.toLowerCase()}?${params.toString()}`);
   };
-
   const loadMoreProducts = () => {
     if (!hasMoreProducts || loading) return;
 
@@ -127,7 +128,7 @@ const CategoryPage = () => {
             신상품순
           </button>
           <button
-            className={`category-page__sort-btn ${sortType === 'discount' ? 'active' : ''}`}
+            className={`category-page__sort-btn ${sortType === 'highSale' ? 'active' : ''}`}
             onClick={() => handleSortChange('discount')}>
             할인율순
           </button>

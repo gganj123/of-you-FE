@@ -22,8 +22,6 @@ function AppRouter() {
       <Route path='/login' element={<LoginPage />} />
       <Route path='/signup' element={<SignupPage />} />
       <Route path='/products/category/:category' element={<CategoryPage />} />
-      <Route path='/products/category/:category/:subcategory' element={<CategoryPage />} />
-      <Route path='/product/:id' element={<ProductDetail />} />
       <Route element={<PrivateRoute permissionLevel='customer' />}>
         <Route path='/cart' element={<CartPage />} />
         <Route path='/payment' element={<PaymentPage />} />

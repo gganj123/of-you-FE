@@ -8,7 +8,10 @@ const ProductDetailPage = () => {
   const {id} = useParams();
   const dispatch = useDispatch();
   const {productDetail, loading, error} = useSelector((state) => state.products);
+
   const [isOptionOpen, setIsOptionOpen] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -23,15 +26,35 @@ const ProductDetailPage = () => {
     return <div>Loading...</div>;
   }
 
-  // 에러 처리
   if (error) {
     return <div>Error: {error}</div>;
   }
 
-  // 데이터가 없는 경우 처리
   if (!productDetail) {
     return <div>Product not found or loading failed.</div>;
   }
+
+  const handleOptionSelect = (option) => {
+    const exists = selectedOptions.find((item) => item.option === option);
+
+    if (exists) {
+      alert('이미 추가된 상품입니다. 주문 수량을 조정해주세요');
+      setIsOptionOpen(false);
+
+      return;
+    }
+
+    setSelectedOptions((prev) => [...prev, {option, quantity: 1}]);
+    setIsOptionOpen(false);
+  };
+
+  const handleQuantityChange = (index, value) => {
+    setSelectedOptions((prev) => prev.map((item, i) => (i === index ? {...item, quantity: Math.max(1, value)} : item)));
+  };
+
+  const handleRemoveOption = (index) => {
+    setSelectedOptions((prev) => prev.filter((_, i) => i !== index));
+  };
 
   return (
     <div className='product-detail-page'>
@@ -52,7 +75,6 @@ const ProductDetailPage = () => {
               {productDetail.price.toLocaleString()}원
             </div>
           )}
-
           {productDetail.salePrice && (
             <div className='product-detail-page__sale-price'>
               <span className='discount-rate'>{productDetail.discountRate}%</span>
@@ -60,6 +82,7 @@ const ProductDetailPage = () => {
             </div>
           )}
         </div>
+
         <div className='product-detail-page__benefits'>
           <div className='product-detail-page__benefit-item'>
             <span className='label'>신규회원</span>
@@ -83,7 +106,10 @@ const ProductDetailPage = () => {
             {isOptionOpen && (
               <div className='product-detail-page__option-dropdown'>
                 {Object.entries(productDetail.stock).map(([option, quantity]) => (
-                  <div key={option} className='product-detail-page__option-choice'>
+                  <div
+                    key={option}
+                    className='product-detail-page__option-choice'
+                    onClick={() => handleOptionSelect(option)}>
                     {option.trim()} (재고: {quantity})
                   </div>
                 ))}
@@ -91,6 +117,25 @@ const ProductDetailPage = () => {
             )}
           </div>
         </div>
+        {selectedOptions.map((selected, index) => (
+          <div key={index} className='product-detail-page__selected-option'>
+            <span>
+              {productDetail.name} / {selected.option}
+            </span>
+            <div className='product-detail-page__quantity'>
+              <input
+                type='number'
+                value={selected.quantity}
+                min='1'
+                onChange={(e) => handleQuantityChange(index, parseInt(e.target.value))}
+              />
+              <span>{(productDetail.salePrice || productDetail.price) * selected.quantity}원</span>
+              <button className='product-detail-page__remove-option' onClick={() => handleRemoveOption(index)}>
+                ✖
+              </button>
+            </div>
+          </div>
+        ))}
 
         <div className='product-detail-page__buttons'>
           <button className='product-detail-page__buy-now'>바로 구매</button>

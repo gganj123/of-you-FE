@@ -1,5 +1,4 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import {Route, Routes} from 'react-router-dom';
 import HomePage from './../page/HomePage/HomePage';
 import LoginPage from '../page/LoginPage/LoginPage';
 import SignupPage from '../page/SignupPage/SignupPage';
@@ -30,6 +29,7 @@ function AppRouter() {
         <Route path='/mypage/' element={<MyPage />} />
         <Route path='/like' element={<LikePage />} />
       </Route>
+
       <Route element={<PrivateRoute permissionLevel='admin' />}>
         <Route path='/admin/product' element={<AdminProduct />} />
         <Route path='/admin/order' element={<AdminOrderPage />} />

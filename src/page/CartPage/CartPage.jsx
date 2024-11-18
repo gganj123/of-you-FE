@@ -1,12 +1,23 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { IoClose, IoChevronDown } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import './CartPage.style.css';
 
 const CartPage = () => {
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 486);
+  const [temporaryQuantity, setTemporaryQuantity] = useState(1);
 
-  // 장바구니 상품 목록 상태
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 486);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
@@ -31,14 +42,18 @@ const CartPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // 체크된 상품만 계산
+  useEffect(() => {
+    if (selectedProduct) {
+      setTemporaryQuantity(selectedProduct.quantity);
+    }
+  }, [selectedProduct]);
+
   const totalProductPrice = cartItems
     .filter(item => item.checked)
     .reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const shippingFee = 0;
   const totalDiscount = 0;
 
-  // 전체 선택 핸들러
   const handleSelectAll = (e) => {
     const isChecked = e.target.checked;
     setCartItems(cartItems.map(item => ({
@@ -47,14 +62,12 @@ const CartPage = () => {
     })));
   };
 
-  // 개별 상품 선택 핸들러
   const handleSelectItem = (itemId) => {
     setCartItems(cartItems.map(item =>
       item.id === itemId ? { ...item, checked: !item.checked } : item
     ));
   };
 
-  // 선택된 상품 삭제 핸들러
   const handleDeleteSelected = () => {
     if (!cartItems.some(item => item.checked)) {
       alert('삭제할 상품을 선택해주세요.');
@@ -66,12 +79,10 @@ const CartPage = () => {
     }
   };
 
-  // 쇼핑 계속하기
   const handleContinueShopping = () => {
-    navigate('/'); // 메인 페이지로 이동
+    navigate('/');
   };
 
-  // 주문하기
   const handleCheckout = () => {
     const selectedItems = cartItems.filter(item => item.checked);
 
@@ -80,8 +91,7 @@ const CartPage = () => {
       return;
     }
 
-    // 주문 페이지로 이동하면서 선택된 상품 정보 전달
-    navigate('/order', {
+    navigate('/payment', {
       state: {
         items: selectedItems,
         totalPrice: totalProductPrice,
@@ -91,7 +101,6 @@ const CartPage = () => {
     });
   };
 
-  // 수량 변경 핸들러
   const handleQuantityChange = (itemId, change) => {
     setCartItems(cartItems.map(item => {
       if (item.id === itemId) {
@@ -106,7 +115,13 @@ const CartPage = () => {
     }));
   };
 
-  // 옵션 변경 관련 핸들러들...
+  const handleModalQuantityChange = (change) => {
+    const newQuantity = temporaryQuantity + change;
+    if (newQuantity >= 1) {
+      setTemporaryQuantity(newQuantity);
+    }
+  };
+
   const handleOptionChange = (product) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
@@ -115,21 +130,26 @@ const CartPage = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedProduct(null);
+    setTemporaryQuantity(1);
   };
 
   const handleApplyOption = () => {
-    // 옵션 변경 로직 구현
+    if (selectedProduct) {
+      setCartItems(cartItems.map(item =>
+        item.id === selectedProduct.id
+          ? { ...item, quantity: temporaryQuantity }
+          : item
+      ));
+    }
     handleCloseModal();
   };
 
-  // 개별 상품 삭제
   const handleRemoveItem = (itemId) => {
     if (window.confirm('이 상품을 삭제하시겠습니까?')) {
       setCartItems(cartItems.filter(item => item.id !== itemId));
     }
   };
 
-  // 전체 선택 체크박스 상태
   const isAllChecked = cartItems.length > 0 && cartItems.every(item => item.checked);
 
   return (
@@ -147,8 +167,8 @@ const CartPage = () => {
               />
             </div>
             <div className="cart-list-header-info">상품정보</div>
-            <div>수량</div>
-            <div>가격</div>
+            {!isMobile && <div>수량</div>}
+            <div className="cart-list-header-price">가격</div>
             <div></div>
           </div>
 
@@ -167,39 +187,60 @@ const CartPage = () => {
                   <div className="cart-item-brand">{item.brand}</div>
                   <div className="cart-item-name">{item.name}</div>
                   <div className="cart-item-option">옵션 : {item.size}</div>
-                  <button
-                    className="cart-option-change"
-                    onClick={() => handleOptionChange(item)}
-                  >
-                    옵션변경 <IoChevronDown className="cart-option-change-icon" size={12} />
-                  </button>
+                  {isMobile && (
+                    <div className="cart-item-quantity">수량: {item.quantity}개</div>
+                  )}
+                  {isMobile ? (
+                    <div className="cart-item-mobile-bottom">
+                      <div className="cart-item-mobile-price">
+                        {(item.price * item.quantity).toLocaleString()}원
+                      </div>
+                      <button
+                        className="cart-option-change"
+                        onClick={() => handleOptionChange(item)}
+                      >
+                        옵션/수량변경 <IoChevronDown className="cart-option-change-icon" size={12} />
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      className="cart-option-change"
+                      onClick={() => handleOptionChange(item)}
+                    >
+                      옵션변경 <IoChevronDown className="cart-option-change-icon" size={12} />
+                    </button>
+                  )}
                 </div>
               </div>
-              <div className="cart-quantity-control">
-                <input
-                  type="text"
-                  value={item.quantity}
-                  className="cart-quantity-input"
-                  readOnly
-                />
-                <div className="cart-quantity-buttons">
-                  <button
-                    className="cart-quantity-up"
-                    onClick={() => handleQuantityChange(item.id, 1)}
-                  >
-                    <span className="cart-quantity-arrow">▲</span>
-                  </button>
-                  <button
-                    className="cart-quantity-down"
-                    onClick={() => handleQuantityChange(item.id, -1)}
-                  >
-                    <span className="cart-quantity-arrow">▼</span>
-                  </button>
+              {!isMobile && (
+                <div className="pc-quantity-control">
+                  <input
+                    type="text"
+                    value={item.quantity}
+                    className="pc-quantity-input"
+                    readOnly
+                  />
+                  <div className="pc-quantity-buttons">
+                    <button
+                      className="pc-quantity-up"
+                      onClick={() => handleQuantityChange(item.id, 1)}
+                    >
+                      <span className="pc-quantity-arrow">▲</span>
+                    </button>
+                    <button
+                      className="pc-quantity-down"
+                      onClick={() => handleQuantityChange(item.id, -1)}
+                    >
+                      <span className="pc-quantity-arrow">▼</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <div className="cart-item-price">
-                {item.price.toLocaleString()}원
-              </div>
+              )}
+              {!isMobile && (
+                <div className="cart-item-price">
+                  {(item.price * item.quantity).toLocaleString()}원
+                </div>
+              )}
               <button
                 className="cart-item-delete"
                 onClick={() => handleRemoveItem(item.id)}
@@ -208,6 +249,21 @@ const CartPage = () => {
               </button>
             </div>
           ))}
+
+          <div className="cart-action-buttons">
+            <button
+              className="cart-action-button cart-action-button-primary"
+              onClick={handleDeleteSelected}
+            >
+              선택상품삭제
+            </button>
+            <button
+              className="cart-action-button cart-action-button-secondary"
+              onClick={handleContinueShopping}
+            >
+              쇼핑계속하기
+            </button>
+          </div>
         </div>
 
         <div className="cart-summary">
@@ -230,23 +286,8 @@ const CartPage = () => {
               <span>{(totalProductPrice + shippingFee - totalDiscount).toLocaleString()}원</span>
             </div>
           </div>
-          <button className="cart-checkout-button">주문하기</button>
+          <button className="cart-checkout-button" onClick={handleCheckout}>주문하기</button>
         </div>
-      </div>
-
-      <div className="cart-action-buttons">
-        <button
-          className="cart-action-button cart-action-button-primary"
-          onClick={handleDeleteSelected}
-        >
-          선택상품삭제
-        </button>
-        <button
-          className="cart-action-button cart-action-button-secondary"
-          onClick={handleContinueShopping}
-        >
-          쇼핑계속하기
-        </button>
       </div>
 
       <div className="cart-notice">
@@ -261,13 +302,14 @@ const CartPage = () => {
         <div className="cart-modal-overlay">
           <div className="cart-modal">
             <div className="cart-modal-header">
-              <h2 className="cart-modal-title">옵션변경</h2>
+              <h2 className="cart-modal-title">{isMobile ? '옵션/수량' : '옵션변경'}</h2>
               <button className="cart-modal-close" onClick={handleCloseModal}>
                 <IoClose />
               </button>
             </div>
             <div className="cart-modal-content">
               <div className="cart-option-group">
+                {/* 옵션 선택 */}
                 <div className="cart-option-select-wrapper">
                   <select
                     className="cart-option-select"
@@ -276,6 +318,33 @@ const CartPage = () => {
                     <option value="FREE">FREE</option>
                   </select>
                 </div>
+
+                {/* 수량 조절 - 모바일에서만 표시 */}
+                {isMobile && (
+                  <div className="modal-quantity">
+                    <div className="modal-quantity-title">수량</div>
+                    <div className="modal-quantity-control">
+                      <button
+                        className="modal-quantity-down"
+                        onClick={() => handleModalQuantityChange(-1)}
+                      >
+                        -
+                      </button>
+                      <input
+                        type="number"
+                        value={temporaryQuantity}
+                        className="modal-quantity-input"
+                        readOnly
+                      />
+                      <button
+                        className="modal-quantity-up"
+                        onClick={() => handleModalQuantityChange(1)}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             <div className="cart-modal-footer">
@@ -289,7 +358,7 @@ const CartPage = () => {
                 className="cart-modal-button cart-modal-button-apply"
                 onClick={handleApplyOption}
               >
-                적용
+                변경
               </button>
             </div>
           </div>

@@ -96,6 +96,9 @@ const Navbar = ({user}) => {
   const handleBack = () => {
     navigate(-1);
   };
+  const handleAdmin = () => {
+    navigate('/admin');
+  };
 
   return (
     <>

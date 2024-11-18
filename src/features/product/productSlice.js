@@ -64,7 +64,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchProductDetail.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload ? action.payload.message : 'Something went wrong.';
+        state.error = action.payload ? action.payload.message : 'Something went wrong';
       });
   }
 });

@@ -1,7 +1,7 @@
-import './style/Mypage.style.css';
+import './MyPage.style.css';
 
 const MyPage = () => {
-  return <div>mypagefsdfsdfs</div>;
+  return <div>mypage</div>;
 };
 
 export default MyPage;

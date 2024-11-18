@@ -105,7 +105,7 @@ const Navbar = ({ user }) => {
   };
 
   const handleLike = () => {
-    navigate('/mypage/like');
+    navigate('/like');
   };
 
   const handleCart = () => {

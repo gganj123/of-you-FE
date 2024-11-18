@@ -38,7 +38,7 @@ const ProductDetailPage = () => {
     const exists = selectedOptions.find((item) => item.option === option);
 
     if (exists) {
-      alert('이미 추가된 상품입니다. 주문 수량을 조정해주세요.');
+      alert('이미 추가된 상품입니다. 주문 수량을 조정해주세요');
       setIsOptionOpen(false);
 
       return;

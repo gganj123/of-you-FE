@@ -56,6 +56,7 @@ const ProductDetailPage = () => {
   const handleRemoveOption = (index) => {
     setSelectedOptions((prev) => prev.filter((_, i) => i !== index));
   };
+
   return (
     <div className='product-detail-page'>
       <div className='product-detail-page__left'>

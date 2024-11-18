@@ -1,11 +1,13 @@
-import React, {useState, useRef, useEffect} from 'react';
-import {FiHeart, FiLogIn, FiUser, FiShoppingBag, FiSearch, FiChevronDown, FiMenu, FiArrowLeft} from 'react-icons/fi';
+import React, { useState, useRef, useEffect } from 'react';
+import { FiHeart, FiLogIn, FiUser, FiShoppingBag, FiSearch, FiChevronDown, FiMenu, FiArrowLeft } from 'react-icons/fi';
 import './Navbar.style.css';
-import {useNavigate, useLocation} from 'react-router-dom';
-import {useDispatch} from 'react-redux';
-import {logout} from '../../../features/user/userSlice';
 
-const Navbar = ({user}) => {
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../../features/user/userSlice';
+
+
+const Navbar = ({ user }) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('WOMEN');
   const [selectedAdminCategory, setSelectedAdminCategory] = useState('PRODUCT');
@@ -83,12 +85,10 @@ const Navbar = ({user}) => {
   // 카테고리 메뉴 외부 클릭 시 닫기
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        categoryMenuRef.current &&
-        !categoryMenuRef.current.contains(event.target) &&
+
+      if (categoryMenuRef.current && !categoryMenuRef.current.contains(event.target) &&
         !event.target.closest('.navbar-category-button') &&
-        !event.target.closest('.navbar-hamburger button')
-      ) {
+        !event.target.closest('.navbar-hamburger button')) {
         setIsCategoryOpen(false);
       }
     };
@@ -96,6 +96,7 @@ const Navbar = ({user}) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
 
   const handleLogout = () => {
     dispatch(logout());
@@ -106,7 +107,7 @@ const Navbar = ({user}) => {
   };
 
   const handleLike = () => {
-    navigate('/mypage/like');
+    navigate('/like');
   };
 
   const handleCart = () => {
@@ -152,7 +153,9 @@ const Navbar = ({user}) => {
                       <div
                         key={category}
                         className='navbar-category-item'
-                        onClick={() => handleSubCategorySelect(category)}>
+                        onClick={() => handleSubCategorySelect(category)}
+                      >
+
                         {category} {selectedCategory === category && <span className='navbar-arrow'>▶</span>}
                       </div>
                     ))}
@@ -160,9 +163,8 @@ const Navbar = ({user}) => {
                   {selectedCategory && (
                     <div className='navbar-subcategory-list'>
                       {categories[selectedCategory].map((subcategory) => (
-                        <div
-                          key={subcategory}
-                          className='navbar-subcategory-item'
+
+                        <div key={subcategory} className='navbar-subcategory-item'
                           onClick={() => handleSubCategoryClick(subcategory)}>
                           {subcategory}
                         </div>
@@ -196,7 +198,7 @@ const Navbar = ({user}) => {
                 <div className='navbar-popular-search-list' ref={popularSearchRef}>
                   <h4>급상승 검색어</h4>
                   <ul>
-                    {Array.from({length: 10}, (_, i) => (
+                    {Array.from({ length: 10 }, (_, i) => (
                       <li key={`popular-${i}`}>{i + 1}. 검색어</li>
                     ))}
                   </ul>
@@ -250,7 +252,7 @@ const Navbar = ({user}) => {
                 <div className='navbar-popular-searches'>
                   <h4>급상승 검색어</h4>
                   <ul>
-                    {Array.from({length: 10}, (_, i) => (
+                    {Array.from({ length: 10 }, (_, i) => (
                       <li key={`popular-${i}`}> {i + 1}. 검색어</li>
                     ))}
                   </ul>
@@ -269,10 +271,8 @@ const Navbar = ({user}) => {
               <div className='navbar-category-menu'>
                 <div className='navbar-category-list'>
                   {Object.keys(categories).map((category) => (
-                    <div
-                      key={category}
-                      className='navbar-category-item'
-                      onClick={() => handleSubCategorySelect(category)}>
+                    <div key={category} className='navbar-category-item' onClick={() => handleSubCategorySelect(category)}>
+
                       {category} {selectedCategory === category && <span className='navbar-arrow'>▶</span>}
                     </div>
                   ))}
@@ -280,10 +280,8 @@ const Navbar = ({user}) => {
                 {selectedCategory && (
                   <div className='navbar-subcategory-list'>
                     {categories[selectedCategory].map((subcategory) => (
-                      <div
-                        key={subcategory}
-                        className='navbar-subcategory-item'
-                        onClick={() => handleSubCategoryClick(subcategory)}>
+                      <div key={subcategory} className='navbar-subcategory-item'
+                        onClick={() => handleSubCategoryClick(subcategory)} >
                         {subcategory}
                       </div>
                     ))}
@@ -295,21 +293,21 @@ const Navbar = ({user}) => {
           <div className='navbar-menu'>
             {location.pathname.startsWith('/admin')
               ? ['PRODUCT', 'ORDER'].map((menuItem, index, array) => (
-                  <React.Fragment key={menuItem}>
-                    <div className='navbar-menu-item' onClick={() => handleAdminCategorySelect(menuItem)}>
-                      {menuItem}
-                    </div>
-                    {index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
-                  </React.Fragment>
-                ))
+                <React.Fragment key={menuItem}>
+                  <div className='navbar-menu-item' onClick={() => handleAdminCategorySelect(menuItem)}>
+                    {menuItem}
+                  </div>
+                  {index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
+                </React.Fragment>
+              ))
               : ['WOMEN', 'MEN', 'BEAUTY', 'LIFE', 'BEST', 'SALE', 'NEW'].map((menuItem, index, array) => (
-                  <React.Fragment key={menuItem}>
-                    <div className='navbar-menu-item' onClick={() => handleCategoryPageNavigate(menuItem)}>
-                      {menuItem}
-                    </div>
-                    {menuItem === 'LIFE' && index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
-                  </React.Fragment>
-                ))}
+                <React.Fragment key={menuItem}>
+                  <div className='navbar-menu-item' onClick={() => handleCategoryPageNavigate(menuItem)}>
+                    {menuItem}
+                  </div>
+                  {menuItem === 'LIFE' && index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
+                </React.Fragment>
+              ))}
           </div>
         </div>
       </div>

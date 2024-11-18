@@ -27,7 +27,7 @@ function AppRouter() {
         <Route path='/payment' element={<PaymentPage />} />
         <Route path='/payment/success' element={<OrderCompletePage />} />
         <Route path='/mypage/' element={<MyPage />} />
-        <Route path='/mypage/like' element={<LikePage />} />
+        <Route path='/like' element={<LikePage />} />
       </Route>
 
       <Route element={<PrivateRoute permissionLevel='admin' />}>

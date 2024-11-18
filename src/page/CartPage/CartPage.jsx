@@ -21,6 +21,7 @@ const CartPage = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+
   useEffect(() => {
     // 장바구니 데이터를 로드
     dispatch(fetchCart());
@@ -33,6 +34,7 @@ const CartPage = () => {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
+
 
   return (
     <div className='cart-wrapper'>
@@ -74,6 +76,7 @@ const CartPage = () => {
               선택상품삭제
             </button>
             <button className='cart-action-button cart-action-button-secondary' onClick={handleContinueShopping}>
+
               쇼핑계속하기
             </button>
           </div>
@@ -99,9 +102,85 @@ const CartPage = () => {
               <span>{(totalProductPrice + shippingFee - totalDiscount).toLocaleString()}원</span>
             </div>
           </div>
-          <button className='cart-checkout-button'>주문하기</button>
+
+          <button className="cart-checkout-button" onClick={handleCheckout}>주문하기</button>
         </div>
       </div>
+
+      <div className="cart-notice">
+        <ul className="cart-notice-list">
+          <li className="cart-notice-item">쇼핑백에 담긴 상품은 최대 100개까지 담을 수 있습니다.</li>
+          <li className="cart-notice-item">쇼핑백에 담긴 상품은 30일간 보관후 삭제됩니다.</li>
+        </ul>
+      </div>
+
+      {/* 옵션 변경 모달 */}
+      {isModalOpen && (
+        <div className="cart-modal-overlay">
+          <div className="cart-modal">
+            <div className="cart-modal-header">
+              <h2 className="cart-modal-title">{isMobile ? '옵션/수량' : '옵션변경'}</h2>
+              <button className="cart-modal-close" onClick={handleCloseModal}>
+                <IoClose />
+              </button>
+            </div>
+            <div className="cart-modal-content">
+              <div className="cart-option-group">
+                {/* 옵션 선택 */}
+                <div className="cart-option-select-wrapper">
+                  <select
+                    className="cart-option-select"
+                    defaultValue={selectedProduct?.size}
+                  >
+                    <option value="FREE">FREE</option>
+                  </select>
+                </div>
+
+                {/* 수량 조절 - 모바일에서만 표시 */}
+                {isMobile && (
+                  <div className="modal-quantity">
+                    <div className="modal-quantity-title">수량</div>
+                    <div className="modal-quantity-control">
+                      <button
+                        className="modal-quantity-down"
+                        onClick={() => handleModalQuantityChange(-1)}
+                      >
+                        -
+                      </button>
+                      <input
+                        type="number"
+                        value={temporaryQuantity}
+                        className="modal-quantity-input"
+                        readOnly
+                      />
+                      <button
+                        className="modal-quantity-up"
+                        onClick={() => handleModalQuantityChange(1)}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="cart-modal-footer">
+              <button
+                className="cart-modal-button cart-modal-button-cancel"
+                onClick={handleCloseModal}
+              >
+                취소
+              </button>
+              <button
+                className="cart-modal-button cart-modal-button-apply"
+                onClick={handleApplyOption}
+              >
+                변경
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

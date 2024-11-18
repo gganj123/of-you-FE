@@ -217,7 +217,7 @@ const CategoryPage = () => {
               title={product.name}
               salePrice={product.salePrice}
               originalPrice={product.price}
-              discountRate={product.discountRate}
+              discountRate={product.saleRate}
             />
           </div>
         ))}

@@ -89,24 +89,15 @@ const cartSlice = createSlice({
     builder.addCase(getCartList.fulfilled, (state, action) => {
       state.loading = false;
       state.error = '';
+      const cartData = action.payload.data || [];
 
-      // 데이터 처리 수정
-      const items = action.payload.data || []; // 데이터가 없을 경우 기본값 빈 배열로 설정
-      state.cartList = items.map((item) => {
-        const stockCount = item.productId.stock[item.size] || 0;
-        return {
-          ...item,
-          qty: stockCount === 0 ? 0 : item.qty
-        };
-      });
-
-      console.log(state.cartList);
+      state.cartList = cartData;
 
       // 총 금액 계산
-      state.totalPrice = items.reduce((total, item) => total + (item.productId.price || 0) * item.qty, 0);
-
-      // 아이템 수 계산
-      state.cartItemCount = items.length;
+      state.totalPrice = cartData.reduce(
+        (total, item) => total + item.productId.price * item.qty,
+        0 // 초기값 설정
+      );
     });
     builder.addCase(getCartList.rejected, (state, action) => {
       state.loading = false;

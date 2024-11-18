@@ -39,6 +39,17 @@ export const loginWithGoogle = createAsyncThunk('user/loginWithGoogle', async (t
   }
 });
 
+export const loginWithKakao = createAsyncThunk('user/loginWithKakao', async (code, {rejectWithValue}) => {
+  try {
+    const response = await api.get(`/auth/kakao/callback?code=${code}`); // GET 요청으로 변경
+    sessionStorage.setItem('token', response.data.token);
+    return response.data;
+  } catch (error) {
+    console.error('카카오 로그인 실패:', error.response?.data || error);
+    return rejectWithValue(error.response?.data || 'Kakao login failed');
+  }
+});
+
 export const loginWithToken = createAsyncThunk('user/loginWithToken', async (_, {rejectWithValue}) => {
   const token = sessionStorage.getItem('token');
   if (!token) {
@@ -118,6 +129,18 @@ const userSlice = createSlice({
         state.loginError = null;
       })
       .addCase(loginWithGoogle.rejected, (state, action) => {
+        state.loading = false;
+        state.loginError = action.payload;
+      })
+      .addCase(loginWithKakao.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(loginWithKakao.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.loginError = null;
+      })
+      .addCase(loginWithKakao.rejected, (state, action) => {
         state.loading = false;
         state.loginError = action.payload;
       });

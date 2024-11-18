@@ -9,6 +9,17 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const {items, loading, error} = useSelector((state) => state.cart); // Redux state
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 486);
+  const [temporaryQuantity, setTemporaryQuantity] = useState(1);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 486);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     // 장바구니 데이터를 로드
@@ -57,6 +68,15 @@ const CartPage = () => {
               </button>
             </div>
           ))}
+
+          <div className='cart-action-buttons'>
+            <button className='cart-action-button cart-action-button-primary' onClick={handleDeleteSelected}>
+              선택상품삭제
+            </button>
+            <button className='cart-action-button cart-action-button-secondary' onClick={handleContinueShopping}>
+              쇼핑계속하기
+            </button>
+          </div>
         </div>
 
         <div className='cart-summary'>

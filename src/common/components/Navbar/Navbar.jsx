@@ -8,6 +8,7 @@ import {logout} from '../../../features/user/userSlice';
 const Navbar = ({user}) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('WOMAN');
+  const [selectedAdminCategory, setSelectedAdminCategory] = useState('PRODUCT');
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isPopularSearchVisible, setIsPopularSearchVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -92,6 +93,15 @@ const Navbar = ({user}) => {
     navigate('/');
   };
 
+  const handleAdmin = () => {
+    navigate('/admin/product');
+  };
+
+  const handleAdminCategorySelect = (category) => {
+    setSelectedAdminCategory(category);
+    navigate(`/admin/${category.toLowerCase()}`);
+  };
+
   return (
     <>
       <div className='navbar-container'>
@@ -166,7 +176,7 @@ const Navbar = ({user}) => {
             </div>
             <div className='navbar-icons'>
               {user && user.level === 'admin' && (
-                <div className='navbar-icon-item'>
+                <div className='navbar-icon-item' onClick={handleAdmin}>
                   <FiHeart />
                   ADMIN
                 </div>
@@ -248,14 +258,23 @@ const Navbar = ({user}) => {
             )}
           </div>
           <div className='navbar-menu'>
-            {['WOMEN', 'MEN', 'BEAUTY', 'LIFE', 'BEST', 'SALE', 'NEW'].map((menuItem, index, array) => (
-              <React.Fragment key={menuItem}>
-                <div className='navbar-menu-item' onClick={() => handleCategorySelect(menuItem)}>
-                  {menuItem}
-                </div>
-                {menuItem === 'LIFE' && index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
-              </React.Fragment>
-            ))}
+            {location.pathname.startsWith('/admin')
+              ? ['PRODUCT', 'ORDER'].map((menuItem, index, array) => (
+                  <React.Fragment key={menuItem}>
+                    <div className='navbar-menu-item' onClick={() => handleAdminCategorySelect(menuItem)}>
+                      {menuItem}
+                    </div>
+                    {index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
+                  </React.Fragment>
+                ))
+              : ['WOMEN', 'MEN', 'BEAUTY', 'LIFE', 'BEST', 'SALE', 'NEW'].map((menuItem, index, array) => (
+                  <React.Fragment key={menuItem}>
+                    <div className='navbar-menu-item' onClick={() => handleCategorySelect(menuItem)}>
+                      {menuItem}
+                    </div>
+                    {menuItem === 'LIFE' && index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
+                  </React.Fragment>
+                ))}
           </div>
         </div>
       </div>

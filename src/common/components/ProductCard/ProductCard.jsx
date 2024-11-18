@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {IoHeartOutline, IoHeart} from 'react-icons/io5';
 import './ProductCard.style.css';
@@ -16,9 +16,14 @@ const ProductCard = ({id, image, title, salePrice, originalPrice, discountRate})
     e.stopPropagation();
     setIsLiked(!isLiked);
   };
-
   const handleCardClick = () => {
-    navigate(`/product/${id}`);
+    if (id) {
+      navigate(`/product/${id}`); // id를 기반으로 상세 페이지로 이동
+    } else {
+      alert('상품 정보를 찾을 수 없습니다.'); // 사용자에게 경고
+
+      console.error('Product ID is missing. Cannot navigate to the product detail page.');
+    }
   };
 
   return (

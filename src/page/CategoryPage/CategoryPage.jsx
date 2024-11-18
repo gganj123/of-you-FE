@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {useParams, useNavigate, useSearchParams} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import ProductCard from '../../common/components/ProductCard/ProductCard';
-import {fetchProducts} from '../../features/product/productSlice';
+import {clearProducts, fetchProducts} from '../../features/product/productSlice';
 import './CategoryPage.style.css';
 
 const categories = {
@@ -41,8 +41,9 @@ const CategoryPage = () => {
   }, []);
 
   useEffect(() => {
-    // Redux Thunk로 상품 데이터 가져오기
-    pageRef.current = 1; // 초기화
+    dispatch(clearProducts());
+    pageRef.current = 1;
+    setHasMoreProducts(true);
     dispatch(
       fetchProducts({
         category: categoryName,
@@ -54,7 +55,16 @@ const CategoryPage = () => {
       })
     );
     setHasMoreProducts(true);
-  }, [category, subcategory, page, sortType, searchTerm, dispatch]);
+  }, [categoryName, subcategory, sortType, searchTerm, dispatch]);
+
+  const handleCategoryClick = (newCategory) => {
+    navigate(`/products/category/${newCategory.toLowerCase()}`);
+  };
+
+  const handleSubcategoryClick = (subcat) => {
+    const params = new URLSearchParams(searchParams);
+    navigate(`/products/category/${category.toLowerCase()}/${subcat.toLowerCase()}?${params.toString()}`);
+  };
 
   const loadMoreProducts = () => {
     if (!hasMoreProducts || loading) return;
@@ -78,17 +88,9 @@ const CategoryPage = () => {
   };
 
   const handleSortChange = (newSortType) => {
-    if (newSortType !== sortType) {
-      setSortType(newSortType);
-      console.log('Sort Type Sent to Backend:', sortType);
-      setPage(1);
-      setHasMoreProducts(true);
-      pageRef.current = 1;
-    }
-  };
-
-  const handleSubcategoryClick = (subcat) => {
-    navigate(`/products/category/${category.toLowerCase()}/${subcat.toLowerCase()}`);
+    const params = new URLSearchParams(searchParams);
+    params.set('sort', newSortType);
+    navigate(`/products/category/${category.toLowerCase()}?${params.toString()}`);
   };
 
   const handleScroll = () => {
@@ -207,9 +209,9 @@ const CategoryPage = () => {
 
       <div className='category-page__product-grid'>
         {products.map((product) => (
-          <div className='category-page__product-item' key={product.id}>
+          <div className='category-page__product-item' key={product._id}>
             <ProductCard
-              id={product.id}
+              id={product._id}
               image={product.image}
               brand={product.brand}
               title={product.name}

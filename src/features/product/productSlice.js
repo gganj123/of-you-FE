@@ -11,16 +11,30 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async (p
   }
 });
 
+export const fetchProductDetail = createAsyncThunk(`product/fetchProductDetail`, async (id, {rejectWithValue}) => {
+  try {
+    const response = await api.get(`/product/${id}`);
+
+    return response.data.product;
+  } catch (error) {
+    return rejectWithValue(error.response?.data?.message || error.message);
+  }
+});
+
 const productSlice = createSlice({
   name: 'products',
   initialState: {
     products: [],
+    productDetail: null,
     loading: false,
     error: null
   },
   reducers: {
     clearProducts: (state) => {
       state.products = [];
+    },
+    clearProductDetail: (state) => {
+      state.productDetail = null; // 상세 정보 초기화
     }
   },
   extraReducers: (builder) => {
@@ -37,9 +51,24 @@ const productSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       });
+    builder
+      .addCase(fetchProductDetail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.productDetail = null;
+      })
+      .addCase(fetchProductDetail.fulfilled, (state, action) => {
+        state.loading = false;
+        state.productDetail = action.payload;
+        console.log(Object.entries(state.productDetail.stock));
+      })
+      .addCase(fetchProductDetail.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ? action.payload.message : 'Something went wrong.';
+      });
   }
 });
 
-export const {clearProducts} = productSlice.actions;
+export const {clearProducts, clearProductDetail} = productSlice.actions;
 
 export default productSlice.reducer;

@@ -93,13 +93,8 @@ const Navbar = ({user}) => {
     navigate('/');
   };
 
-  const handleAdmin = () => {
-    navigate('/admin/product');
-  };
-
-  const handleAdminCategorySelect = (category) => {
-    setSelectedAdminCategory(category);
-    navigate(`/admin/${category.toLowerCase()}`);
+  const handleBack = () => {
+    navigate(-1);
   };
 
   return (
@@ -281,19 +276,26 @@ const Navbar = ({user}) => {
 
       {/* 모바일 전용 하단 메뉴 */}
       <div className='mobile-navbar'>
-        <div className='mobile-nav-item'>
+        <div className='mobile-nav-item' onClick={handleBack}>
           <FiArrowLeft />
           <span>BACK</span>
         </div>
-        <div className='mobile-nav-item'>
+        <div className='mobile-nav-item' onClick={handleLike}>
           <FiHeart />
           <span>LIKE</span>
         </div>
-        <div className='mobile-nav-item'>
-          <FiLogIn />
-          <span>LOGIN</span>
-        </div>
-        <div className='mobile-nav-item'>
+        {user ? (
+          <div className='mobile-nav-item' onClick={handleLogout}>
+            <FiLogIn />
+            <span>LOGOUT</span>
+          </div>
+        ) : (
+          <div className='mobile-nav-item' onClick={handleLogin}>
+            <FiLogIn />
+            <span>LOGIN</span>
+          </div>
+        )}
+        <div className='mobile-nav-item' onClick={handleMy}>
           <FiUser />
           <span>MY</span>
         </div>

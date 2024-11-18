@@ -1,0 +1,471 @@
+:root {
+    --color-primary: #000;
+    --color-gray: #777;
+    --color-light-gray: #ccc;
+    --color-border: #ddd;
+    --color-hover-bg: #f8f8f8;
+    --color-white: #fff;
+    --page-padding: 40px;
+}
+
+.cart-wrapper {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 20px var(--page-padding);
+    margin-top: 270px;
+    overflow: hidden;
+}
+
+.cart-page-title {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+.cart-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 40px;
+}
+
+/* 상품 목록 영역 */
+.cart-list-header {
+    display: grid;
+    grid-template-columns: 40px 3fr 1fr 1fr 40px;
+    align-items: center;
+    padding: 15px 0;
+    border-top: 1px solid var(--color-primary);
+    border-bottom: 1px solid var(--color-border);
+    text-align: center;
+    font-size: 14px;
+}
+
+.cart-list-header>div {
+    text-align: center;
+    /* 모든 헤더 텍스트 중앙 정렬 */
+}
+
+.cart-list-header-info {
+    text-align: left;
+    padding-left: 20px;
+}
+
+.cart-list-item {
+    display: grid;
+    grid-template-columns: 40px 3fr 1fr 1fr 40px;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.cart-item-checkbox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cart-item-content {
+    display: flex;
+    gap: 20px;
+    padding-left: 20px;
+}
+
+.cart-item-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.cart-item-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.cart-item-brand {
+    font-size: 14px;
+    color: var(--color-gray);
+}
+
+.cart-item-name {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.cart-item-option {
+    font-size: 13px;
+    color: var(--color-gray);
+}
+
+.cart-option-change {
+    padding: 4px 8px;
+    border: 1px solid var(--color-border);
+    background: none;
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.cart-option-change-icon {
+    margin-top: 1px;
+}
+
+.cart-quantity-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0px;
+    padding-left: 15px;
+}
+
+.cart-quantity-input {
+    width: 40px;
+    height: 30px;
+    text-align: center;
+    border: 1px solid var(--color-border);
+    font-size: 14px;
+    padding: 0;
+}
+
+.cart-quantity-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+}
+
+.cart-quantity-up,
+.cart-quantity-down {
+    border: 1px solid var(--color-border);
+    background: var(--color-white);
+    width: 20px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+.cart-quantity-arrow {
+    font-size: 6px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-quantity-up:hover,
+.cart-quantity-down:hover {
+    background: #f5f5f5;
+}
+
+.cart-quantity-up:focus,
+.cart-quantity-down:focus {
+    outline: none;
+}
+
+/* 화살표 아이콘 스타일 */
+.cart-quantity-icon {
+    font-size: 8px;
+}
+
+.cart-item-price {
+    text-align: center;
+    font-weight: 500;
+}
+
+.cart-item-delete {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #999;
+    font-size: 18px;
+    padding: 4px;
+    display: flex;
+    justify-content: center;
+}
+
+/* 옵션 변경 모달 */
+.cart-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.cart-modal {
+    background: white;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.cart-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-modal-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.cart-modal-close {
+    border: none;
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    color: #666;
+}
+
+.cart-modal-content {
+    padding: 20px;
+}
+
+.cart-option-group {
+    margin-bottom: 20px;
+}
+
+.cart-option-label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.cart-option-select-wrapper {
+    position: relative;
+    width: 100%;
+    background: #f8f8f8;
+    border-radius: 4px;
+}
+
+.cart-option-select {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: transparent;
+    appearance: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.cart-modal-footer {
+    display: flex;
+    gap: 10px;
+    padding: 20px;
+    border-top: 1px solid #eee;
+}
+
+.cart-modal-button {
+    flex: 1;
+    padding: 15px;
+    border: 1px solid var(--color-primary);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.cart-modal-button-cancel {
+    background: var(--color-white);
+    color: var(--color-primary);
+    border-radius: 5px;
+}
+
+.cart-modal-button-apply {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-radius: 5px;
+}
+
+/* 결제 정보 영역 */
+.cart-summary {
+    padding: 24px;
+    border: 1px solid var(--color-border);
+    height: fit-content;
+    border-radius: 5px;
+}
+
+.cart-summary-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.cart-price-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.cart-price-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.cart-price-row-total {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-border);
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.cart-checkout-button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    border: none;
+    background: var(--color-primary);
+    color: var(--color-white);
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* 하단 버튼 영역 */
+.cart-action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 40px;
+}
+
+.cart-action-button {
+    padding: 12px 24px;
+    border: 1px solid var(--color-primary);
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.cart-action-button-primary {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.cart-action-button-secondary {
+    background: var(--color-white);
+    color: var(--color-primary);
+}
+
+/* 안내사항 */
+.cart-notice {
+    margin-top: 40px;
+    padding: 20px;
+    background: var(--color-hover-bg);
+    font-size: 13px;
+    color: var(--color-gray);
+    border-radius: 5px;
+}
+
+.cart-notice-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cart-notice-item {
+    margin-bottom: 8px;
+}
+
+.cart-notice-item:last-child {
+    margin-bottom: 0;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 1024px) {
+    .cart-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .cart-summary {
+        order: -1;
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .cart-item-content {
+        padding-left: 10px;
+    }
+
+    .cart-item-img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .cart-modal {
+        margin: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cart-wrapper {
+        margin-top: 140px;
+        padding: 16px;
+    }
+
+    .cart-list-header {
+        grid-template-columns: 40px 3fr 1fr 40px;
+    }
+
+    .cart-list-header-price {
+        display: none;
+    }
+
+    .cart-list-item {
+        grid-template-columns: 40px 3fr 1fr 40px;
+    }
+
+    .cart-item-price {
+        display: none;
+    }
+
+    .cart-action-buttons {
+        flex-direction: column;
+    }
+
+    .cart-item-img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .cart-item-info {
+        gap: 4px;
+    }
+
+    .cart-item-brand,
+    .cart-item-name,
+    .cart-item-option {
+        font-size: 12px;
+    }
+
+    .cart-modal {
+        margin: 16px;
+    }
+
+    .cart-modal-header,
+    .cart-modal-content,
+    .cart-modal-footer {
+        padding: 16px;
+    }
+
+    .cart-modal-button {
+        padding: 12px;
+    }
+}

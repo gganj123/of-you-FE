@@ -1,269 +1,236 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import ProductCard from "../../common/components/ProductCard/ProductCard";
+import {useEffect, useState} from 'react';
+import {useParams, useNavigate, useSearchParams} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import ProductCard from '../../common/components/ProductCard/ProductCard';
+import {clearProducts, fetchProducts} from '../../features/product/productSlice';
 import './CategoryPage.style.css';
 
 const categories = {
-    WOMEN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'DRESS', 'ACCESSORIES'],
-    MEN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'ACCESSORIES'],
-    BEAUTY: ['SKINCARE', 'MAKEUP', 'HAIR & BODY', 'DEVICES'],
-    LIFE: ['HOME', 'TRAVEL', 'DIGITAL', 'CULTURE', 'FOOD']
+  WOMEN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'DRESS', 'ACCESSORIES'],
+  MEN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'ACCESSORIES'],
+  BEAUTY: ['SKINCARE', 'MAKEUP', 'HAIR & BODY', 'DEVICES'],
+  LIFE: ['HOME', 'TRAVEL', 'DIGITAL', 'CULTURE', 'FOOD']
 };
 
 const CategoryPage = () => {
-    const navigate = useNavigate();
-    const { category, subcategory } = useParams();
-    const [isLoading, setIsLoading] = useState(false);
-    const [products, setProducts] = useState([]);
-    const [hasMoreProducts, setHasMoreProducts] = useState(true);
-    const [showScrollToTopButton, setShowScrollToTopButton] = useState(false);
-    const [sortType, setSortType] = useState('latest');
-    const [isSortOpen, setIsSortOpen] = useState(false);
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    const pageRef = useRef(1);
-    const productsPerPage = 50;
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const {category, subcategory} = useParams();
+  const [searchParams] = useSearchParams();
+  const {products, loading, error} = useSelector((state) => state.products);
+  const [hasMoreProducts, setHasMoreProducts] = useState(true);
+  const [showScrollToTopButton, setShowScrollToTopButton] = useState(false);
+  const [sortType, setSortType] = useState('latest');
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [page, setPage] = useState(1);
 
-    const categoryName = category ? category.toUpperCase() : 'ALL';
-    const subcategories = categories[categoryName] || [];
+  const pageRef = useState(1); // 페이지 상태 관리
+  const productsPerPage = 50;
+  const searchTerm = searchParams.get('name') || ''; // 검색어 가져오기
+  const categoryName = category ? category.toUpperCase() : 'ALL';
+  const subcategories = categories[categoryName] || [];
 
-    useEffect(() => {
-        const handleResize = () => {
-            setWindowWidth(window.innerWidth);
-        };
-
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    useEffect(() => {
-        fetchProducts(1);
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [sortType, category, subcategory]);
-
-    const fetchProducts = (page) => {
-        setIsLoading(true);
-        const data = Array.from({ length: productsPerPage }, (_, index) => ({
-            id: (page - 1) * productsPerPage + index + 1,
-            image: '/images/banner7.jpg',
-            brand: 'H&M',
-            title: `Product ${index + 1}`,
-            salePrice: 29900 + index * 1000,
-            originalPrice: 39900 + index * 1000,
-            discountRate: 25,
-            likeCount: Math.floor(Math.random() * 100),
-            isFree: Math.random() > 0.5,
-            createdAt: new Date(Date.now() - Math.random() * 10000000000)
-        }));
-
-        const sortedData = sortProducts(data);
-
-        setProducts((prevProducts) => {
-            const newProducts = [...prevProducts, ...sortedData];
-            return newProducts.slice(0, 50);
-        });
-        setIsLoading(false);
-
-        if (data.length < productsPerPage || products.length >= 50) {
-            setHasMoreProducts(false);
-        }
-
-        pageRef.current += 1;
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
     };
 
-    const sortProducts = (data) => {
-        switch (sortType) {
-            case 'latest':
-                return [...data].sort((a, b) => b.createdAt - a.createdAt);
-            case 'priceAsc':
-                return [...data].sort((a, b) => a.price - b.price);
-            case 'priceDesc':
-                return [...data].sort((a, b) => b.price - a.price);
-            case 'discount':
-                return [...data].sort((a, b) => b.discount - a.discount);
-            default:
-                return data;
-        }
-    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-    const handleSortChange = (newSortType) => {
-        if (newSortType !== sortType) {
-            setSortType(newSortType);
-            setProducts([]);
-            pageRef.current = 1;
-            setHasMoreProducts(true);
-            if (windowWidth <= 1200) {
-                setIsSortOpen(false);
-            }
-        }
-    };
-
-    const handleSubcategoryClick = (subcat) => {
-        navigate(`/products/category/${category.toLowerCase()}/${subcat.toLowerCase()}`);
-        setProducts([]);
-        pageRef.current = 1;
-        setHasMoreProducts(true);
-    };
-
-    const handleScroll = () => {
-        const scrollHeight = document.documentElement.scrollHeight;
-        const scrollTop = document.documentElement.scrollTop;
-        const clientHeight = document.documentElement.clientHeight;
-
-        if (scrollTop + clientHeight >= scrollHeight - 200 && hasMoreProducts && !isLoading) {
-            fetchProducts(pageRef.current);
-        }
-
-        if (scrollTop > 300) {
-            setShowScrollToTopButton(true);
-        } else {
-            setShowScrollToTopButton(false);
-        }
-    };
-
-    const scrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth',
-        });
-    };
-
-    const renderSortButtons = () => {
-        if (windowWidth > 1200) {
-            return (
-                <div className="category-page__sort">
-                    <button
-                        className={`category-page__sort-btn ${sortType === 'latest' ? 'active' : ''}`}
-                        onClick={() => handleSortChange('latest')}
-                    >
-                        신상품순
-                    </button>
-                    <button
-                        className={`category-page__sort-btn ${sortType === 'discount' ? 'active' : ''}`}
-                        onClick={() => handleSortChange('discount')}
-                    >
-                        할인율순
-                    </button>
-                    <button
-                        className={`category-page__sort-btn ${sortType === 'priceAsc' ? 'active' : ''}`}
-                        onClick={() => handleSortChange('priceAsc')}
-                    >
-                        가격낮은순
-                    </button>
-                    <button
-                        className={`category-page__sort-btn ${sortType === 'priceDesc' ? 'active' : ''}`}
-                        onClick={() => handleSortChange('priceDesc')}
-                    >
-                        가격높은순
-                    </button>
-                </div>
-            );
-        } else {
-            return (
-                <div className="category-page__sort-mobile">
-                    <button
-                        className="category-page__sort-toggle"
-                        onClick={() => setIsSortOpen(!isSortOpen)}
-                    >
-                        {sortType === 'latest' && '신상품순'}
-                        {sortType === 'discount' && '할인율순'}
-                        {sortType === 'priceAsc' && '가격낮은순'}
-                        {sortType === 'priceDesc' && '가격높은순'}
-                        <span className={`arrow ${isSortOpen ? 'open' : ''}`}>▼</span>
-                    </button>
-                    {isSortOpen && (
-                        <div className="category-page__sort-dropdown">
-                            <button
-                                className={`category-page__sort-btn ${sortType === 'latest' ? 'active' : ''}`}
-                                onClick={() => handleSortChange('latest')}
-                            >
-                                신상품순
-                            </button>
-                            <button
-                                className={`category-page__sort-btn ${sortType === 'discount' ? 'active' : ''}`}
-                                onClick={() => handleSortChange('discount')}
-                            >
-                                할인율순
-                            </button>
-                            <button
-                                className={`category-page__sort-btn ${sortType === 'priceAsc' ? 'active' : ''}`}
-                                onClick={() => handleSortChange('priceAsc')}
-                            >
-                                가격낮은순
-                            </button>
-                            <button
-                                className={`category-page__sort-btn ${sortType === 'priceDesc' ? 'active' : ''}`}
-                                onClick={() => handleSortChange('priceDesc')}
-                            >
-                                가격높은순
-                            </button>
-                        </div>
-                    )}
-                </div>
-            );
-        }
-    };
-
-    return (
-        <div className="category-page">
-            <div className="category-page__header">
-                <h1 className="category-page__title">{categoryName}</h1>
-            </div>
-
-            {subcategories.length > 0 && (
-                <div className="category-page__subcategories">
-                    <button
-                        className={`category-page__subcategory-btn ${!subcategory ? 'active' : ''}`}
-                        onClick={() => navigate(`/products/category/${category.toLowerCase()}`)}
-                    >
-                        ALL
-                    </button>
-                    <span className="category-page__divider">|</span>
-
-                    {subcategories.map((subcat, index) => (
-                        <React.Fragment key={subcat}>
-                            <button
-                                className={`category-page__subcategory-btn ${subcategory?.toUpperCase() === subcat ? 'active' : ''}`}
-                                onClick={() => handleSubcategoryClick(subcat)}
-                            >
-                                {subcat}
-                            </button>
-                            {index < subcategories.length - 1 && (
-                                <span className="category-page__divider">|</span>
-                            )}
-                        </React.Fragment>
-                    ))}
-                </div>
-            )}
-
-            {renderSortButtons()}
-
-            <div className="category-page__product-grid">
-                {products.map((product) => (
-                    <div className="category-page__product-item" key={product.id}>
-                        <ProductCard
-                            id={product.id}
-                            image={product.image}
-                            brand={product.brand}
-                            title={product.title}
-                            salePrice={product.salePrice}
-                            originalPrice={product.originalPrice}
-                            discountRate={product.discountRate}
-                            likeCount={product.likeCount}
-                        />
-                    </div>
-                ))}
-            </div>
-            {isLoading && <div className="category-page__loading">
-                상품을 불러오는 중입니다...
-            </div>}
-            {showScrollToTopButton && (
-                <button className="category-page__scroll-top" onClick={scrollToTop}>
-                    ▲
-                </button>
-            )}
-        </div>
+  useEffect(() => {
+    dispatch(clearProducts());
+    pageRef.current = 1;
+    setHasMoreProducts(true);
+    dispatch(
+      fetchProducts({
+        category: categoryName,
+        subcategory,
+        page: 1,
+        limit: productsPerPage,
+        sort: sortType,
+        name: searchTerm
+      })
     );
+    setHasMoreProducts(true);
+  }, [categoryName, subcategory, sortType, searchTerm, dispatch]);
+
+  const handleCategoryClick = (newCategory) => {
+    navigate(`/products/category/${newCategory.toLowerCase()}`);
+  };
+
+  const handleSubcategoryClick = (subcat) => {
+    const params = new URLSearchParams(searchParams);
+    navigate(`/products/category/${category.toLowerCase()}/${subcat.toLowerCase()}?${params.toString()}`);
+  };
+
+  const loadMoreProducts = () => {
+    if (!hasMoreProducts || loading) return;
+
+    const nextPage = pageRef.current + 1;
+    pageRef.current = nextPage;
+
+    dispatch(
+      fetchProducts({
+        category: categoryName,
+        subcategory,
+        page: nextPage,
+        limit: productsPerPage,
+        sort: sortType
+      })
+    ).then((result) => {
+      if (!result.payload || result.payload.length < productsPerPage) {
+        setHasMoreProducts(false); // 더 이상 상품이 없으면 로드 중단
+      }
+    });
+  };
+
+  const handleSortChange = (newSortType) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('sort', newSortType);
+    navigate(`/products/category/${category.toLowerCase()}?${params.toString()}`);
+  };
+
+  const handleScroll = () => {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = document.documentElement.clientHeight;
+
+    if (scrollTop + clientHeight >= scrollHeight - 200) {
+      loadMoreProducts();
+    }
+
+    setShowScrollToTopButton(scrollTop > 300);
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [hasMoreProducts, loading]);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  const renderSortButtons = () => {
+    if (windowWidth > 1200) {
+      return (
+        <div className='category-page__sort'>
+          <button
+            className={`category-page__sort-btn ${sortType === 'latest' ? 'active' : ''}`}
+            onClick={() => handleSortChange('latest')}>
+            신상품순
+          </button>
+          <button
+            className={`category-page__sort-btn ${sortType === 'discount' ? 'active' : ''}`}
+            onClick={() => handleSortChange('discount')}>
+            할인율순
+          </button>
+          <button
+            className={`category-page__sort-btn ${sortType === 'lowprice' ? 'active' : ''}`}
+            onClick={() => handleSortChange('lowprice')}>
+            가격낮은순
+          </button>
+          <button
+            className={`category-page__sort-btn ${sortType === 'highprice' ? 'active' : ''}`}
+            onClick={() => handleSortChange('highprice')}>
+            가격높은순
+          </button>
+        </div>
+      );
+    }
+    return (
+      <div className='category-page__sort-mobile'>
+        <button className='category-page__sort-toggle' onClick={() => setIsSortOpen(!isSortOpen)}>
+          {sortType === 'latest' && '신상품순'}
+          {sortType === 'discount' && '할인율순'}
+          {sortType === 'lowPrice' && '가격낮은순'}
+          {sortType === 'highPrice' && '가격높은순'}
+          <span className={`arrow ${isSortOpen ? 'open' : ''}`}>▼</span>
+        </button>
+        {isSortOpen && (
+          <div className='category-page__sort-dropdown'>
+            <button
+              className={`category-page__sort-btn ${sortType === 'latest' ? 'active' : ''}`}
+              onClick={() => handleSortChange('latest')}>
+              신상품순
+            </button>
+            <button
+              className={`category-page__sort-btn ${sortType === 'discount' ? 'active' : ''}`}
+              onClick={() => handleSortChange('discount')}>
+              할인율순
+            </button>
+            <button
+              className={`category-page__sort-btn ${sortType === 'lowPrice' ? 'active' : ''}`}
+              onClick={() => handleSortChange('lowPrice')}>
+              가격낮은순
+            </button>
+            <button
+              className={`category-page__sort-btn ${sortType === 'highPrice' ? 'active' : ''}`}
+              onClick={() => handleSortChange('highPrice')}>
+              가격높은순
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div className='category-page'>
+      <div className='category-page__header'>
+        <h1 className='category-page__title'>{categoryName}</h1>
+      </div>
+
+      {subcategories.length > 0 && (
+        <div className='category-page__subcategories'>
+          <button
+            className={`category-page__subcategory-btn ${!subcategory ? 'active' : ''}`}
+            onClick={() => navigate(`/products/category/${category.toLowerCase()}`)}>
+            ALL
+          </button>
+          {subcategories.map((subcat) => (
+            <button
+              key={subcat}
+              className={`category-page__subcategory-btn ${subcategory?.toUpperCase() === subcat ? 'active' : ''}`}
+              onClick={() => handleSubcategoryClick(subcat)}>
+              {subcat}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {renderSortButtons()}
+
+      <div className='category-page__product-grid'>
+        {products.map((product) => (
+          <div className='category-page__product-item' key={product._id}>
+            <ProductCard
+              id={product._id}
+              image={product.image}
+              brand={product.brand}
+              title={product.name}
+              salePrice={product.salePrice}
+              originalPrice={product.price}
+              discountRate={product.saleRate}
+            />
+          </div>
+        ))}
+      </div>
+      {loading && <div className='category-page__loading'>상품을 불러오는 중입니다...</div>}
+      {showScrollToTopButton && (
+        <button className='category-page__scroll-top' onClick={scrollToTop}>
+          ▲
+        </button>
+      )}
+      {error && <div className='category-page__error'>에러 발생: {error.message}</div>}
+    </div>
+  );
 };
 
 export default CategoryPage;

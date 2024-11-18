@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {useParams, useNavigate} from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {useParams, useNavigate, useSearchParams} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import ProductCard from '../../common/components/ProductCard/ProductCard';
-import {fetchProducts} from '../../features/product/productSlice';
+import {clearProducts, fetchProducts} from '../../features/product/productSlice';
 import './CategoryPage.style.css';
 
 const categories = {
@@ -16,17 +16,18 @@ const CategoryPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {category, subcategory} = useParams();
-
+  const [searchParams] = useSearchParams();
   const {products, loading, error} = useSelector((state) => state.products);
-
   const [hasMoreProducts, setHasMoreProducts] = useState(true);
   const [showScrollToTopButton, setShowScrollToTopButton] = useState(false);
   const [sortType, setSortType] = useState('latest');
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [page, setPage] = useState(1);
+
   const pageRef = useState(1); // 페이지 상태 관리
   const productsPerPage = 50;
-
+  const searchTerm = searchParams.get('name') || ''; // 검색어 가져오기
   const categoryName = category ? category.toUpperCase() : 'ALL';
   const subcategories = categories[categoryName] || [];
 
@@ -40,19 +41,30 @@ const CategoryPage = () => {
   }, []);
 
   useEffect(() => {
-    // Redux Thunk로 상품 데이터 가져오기
-    pageRef.current = 1; // 초기화
+    dispatch(clearProducts());
+    pageRef.current = 1;
+    setHasMoreProducts(true);
     dispatch(
       fetchProducts({
         category: categoryName,
         subcategory,
         page: 1,
         limit: productsPerPage,
-        sort: sortType
+        sort: sortType,
+        name: searchTerm
       })
     );
     setHasMoreProducts(true);
-  }, [sortType, category, subcategory, dispatch]);
+  }, [categoryName, subcategory, sortType, searchTerm, dispatch]);
+
+  const handleCategoryClick = (newCategory) => {
+    navigate(`/products/category/${newCategory.toLowerCase()}`);
+  };
+
+  const handleSubcategoryClick = (subcat) => {
+    const params = new URLSearchParams(searchParams);
+    navigate(`/products/category/${category.toLowerCase()}/${subcat.toLowerCase()}?${params.toString()}`);
+  };
 
   const loadMoreProducts = () => {
     if (!hasMoreProducts || loading) return;
@@ -76,15 +88,9 @@ const CategoryPage = () => {
   };
 
   const handleSortChange = (newSortType) => {
-    if (newSortType !== sortType) {
-      setSortType(newSortType);
-      setHasMoreProducts(true);
-      pageRef.current = 1;
-    }
-  };
-
-  const handleSubcategoryClick = (subcat) => {
-    navigate(`/products/category/${category.toLowerCase()}/${subcat.toLowerCase()}`);
+    const params = new URLSearchParams(searchParams);
+    params.set('sort', newSortType);
+    navigate(`/products/category/${category.toLowerCase()}?${params.toString()}`);
   };
 
   const handleScroll = () => {
@@ -126,13 +132,13 @@ const CategoryPage = () => {
             할인율순
           </button>
           <button
-            className={`category-page__sort-btn ${sortType === 'priceAsc' ? 'active' : ''}`}
-            onClick={() => handleSortChange('priceAsc')}>
+            className={`category-page__sort-btn ${sortType === 'lowprice' ? 'active' : ''}`}
+            onClick={() => handleSortChange('lowprice')}>
             가격낮은순
           </button>
           <button
-            className={`category-page__sort-btn ${sortType === 'priceDesc' ? 'active' : ''}`}
-            onClick={() => handleSortChange('priceDesc')}>
+            className={`category-page__sort-btn ${sortType === 'highprice' ? 'active' : ''}`}
+            onClick={() => handleSortChange('highprice')}>
             가격높은순
           </button>
         </div>
@@ -143,8 +149,8 @@ const CategoryPage = () => {
         <button className='category-page__sort-toggle' onClick={() => setIsSortOpen(!isSortOpen)}>
           {sortType === 'latest' && '신상품순'}
           {sortType === 'discount' && '할인율순'}
-          {sortType === 'priceAsc' && '가격낮은순'}
-          {sortType === 'priceDesc' && '가격높은순'}
+          {sortType === 'lowPrice' && '가격낮은순'}
+          {sortType === 'highPrice' && '가격높은순'}
           <span className={`arrow ${isSortOpen ? 'open' : ''}`}>▼</span>
         </button>
         {isSortOpen && (
@@ -160,13 +166,13 @@ const CategoryPage = () => {
               할인율순
             </button>
             <button
-              className={`category-page__sort-btn ${sortType === 'priceAsc' ? 'active' : ''}`}
-              onClick={() => handleSortChange('priceAsc')}>
+              className={`category-page__sort-btn ${sortType === 'lowPrice' ? 'active' : ''}`}
+              onClick={() => handleSortChange('lowPrice')}>
               가격낮은순
             </button>
             <button
-              className={`category-page__sort-btn ${sortType === 'priceDesc' ? 'active' : ''}`}
-              onClick={() => handleSortChange('priceDesc')}>
+              className={`category-page__sort-btn ${sortType === 'highPrice' ? 'active' : ''}`}
+              onClick={() => handleSortChange('highPrice')}>
               가격높은순
             </button>
           </div>
@@ -203,14 +209,14 @@ const CategoryPage = () => {
 
       <div className='category-page__product-grid'>
         {products.map((product) => (
-          <div className='category-page__product-item' key={product.id}>
+          <div className='category-page__product-item' key={product._id}>
             <ProductCard
-              id={product.id}
+              id={product._id}
               image={product.image}
               brand={product.brand}
-              title={product.title}
+              title={product.name}
               salePrice={product.salePrice}
-              originalPrice={product.originalPrice}
+              originalPrice={product.price}
               discountRate={product.discountRate}
             />
           </div>

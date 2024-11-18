@@ -21,7 +21,6 @@ const AppLayout = ({children}) => {
     <div className='app-layout'>
       <Navbar user={user} />
       {isMyPage ? <Mypagebar /> : <main>{children}</main>}
-      <main>{children}</main>
       <Footer />
     </div>
   );

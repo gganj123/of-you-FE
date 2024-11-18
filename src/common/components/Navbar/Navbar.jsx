@@ -11,6 +11,7 @@ const Navbar = ({user}) => {
   const [selectedAdminCategory, setSelectedAdminCategory] = useState('PRODUCT');
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isPopularSearchVisible, setIsPopularSearchVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const popularSearchRef = useRef(null);
 
@@ -31,6 +32,13 @@ const Navbar = ({user}) => {
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     navigate(`/products/category/${category.toLowerCase()}`);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/products/category/all?name=${encodeURIComponent(searchTerm)}`);
+    }
   };
 
   const handleSearchIconClick = () => {
@@ -142,7 +150,18 @@ const Navbar = ({user}) => {
 
           <div className='navbar-right-section'>
             <div className='navbar-search-bar'>
-              <input type='text' placeholder='Search...' onFocus={handleSearchIconClick} />
+              <input
+                type='text'
+                placeholder='Search...'
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearchSubmit(e);
+                  }
+                }}
+                onFocus={handleSearchIconClick}
+              />
               <FiSearch onClick={handleSearchIconClick} />
               {isPopularSearchVisible && (
                 <div className='navbar-popular-search-list' ref={popularSearchRef}>

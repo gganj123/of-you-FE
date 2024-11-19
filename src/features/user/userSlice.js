@@ -41,7 +41,7 @@ export const loginWithGoogle = createAsyncThunk('user/loginWithGoogle', async (t
 
 export const loginWithKakao = createAsyncThunk('user/loginWithKakao', async (code, {rejectWithValue}) => {
   try {
-    const response = await api.get(`/auth/kakao/callback?code=${code}`); // GET 요청으로 변경
+    const response = await api.get(`auth/kakao/callback?code=${code}`); // GET 요청으로 변경
     sessionStorage.setItem('token', response.data.token);
     return response.data;
   } catch (error) {

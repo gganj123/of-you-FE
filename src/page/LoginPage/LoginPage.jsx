@@ -80,23 +80,6 @@ const LoginPage = () => {
     dispatch(loginWithGoogle(googleData.credential));
   };
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code'); // URL에서 code를 추출
-
-    if (code) {
-      dispatch(loginWithKakao(code)) // 인가 코드를 백엔드로 전송
-        .unwrap() // Redux Toolkit의 Thunk 결과 처리
-        .then(() => {
-          navigate('/'); // 성공 시 메인 페이지로 이동
-        })
-        .catch((err) => {
-          console.error('카카오 로그인 실패:', err);
-          setError('카카오 로그인에 실패했습니다. 다시 시도해 주세요.');
-        });
-    }
-  }, [dispatch, navigate]);
-
   return (
     <>
       <div className='sub-title-wrab'>

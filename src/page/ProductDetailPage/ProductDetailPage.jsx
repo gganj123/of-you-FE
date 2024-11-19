@@ -1,16 +1,20 @@
 import {useState, useEffect} from 'react';
-import {useParams} from 'react-router-dom';
+import {Navigate, useNavigate, useParams} from 'react-router-dom';
 import './ProductDetailPage.style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {clearProductDetail, fetchProductDetail} from '../../features/product/productSlice';
+import {addToCart} from '../../features/cart/cartSlice';
 
 const ProductDetailPage = () => {
   const {id} = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {productDetail, loading, error} = useSelector((state) => state.products);
-
+  const {user} = useSelector((state) => state.user);
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [size, setSize] = useState('');
+  const [sizeError, setSizeError] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
@@ -44,7 +48,7 @@ const ProductDetailPage = () => {
 
       return;
     }
-
+    setSizeError(false);
     setSelectedOptions((prev) => [...prev, {option, quantity: 1}]);
     setIsOptionOpen(false);
   };
@@ -57,6 +61,36 @@ const ProductDetailPage = () => {
     setSelectedOptions((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const addItemToCart = () => {
+    if (selectedOptions.length === 0) {
+      setSizeError(true);
+      return;
+    }
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    const requests = selectedOptions.map((option) =>
+      dispatch(
+        addToCart({
+          productId: id, // 상품 ID
+          size: option.option, // 문자열로 변환
+          qty: option.quantity // 수량
+        })
+      )
+    );
+
+    // 비동기 요청 처리
+    Promise.all(requests)
+      .then(() => {
+        alert('장바구니에 추가되었습니다.');
+      })
+      .catch((err) => {
+        console.error('장바구니 추가 중 오류 발생:', err);
+        alert('장바구니 추가에 실패했습니다.');
+      });
+  };
   return (
     <div className='product-detail-page'>
       <div className='product-detail-page__left'>
@@ -100,10 +134,13 @@ const ProductDetailPage = () => {
 
         <div className='product-detail-page__options'>
           <div className='product-detail-page__option-item'>
-            <button className='product-detail-page__option-button' onClick={() => setIsOptionOpen(!isOptionOpen)}>
+            <button
+              className={`product-detail-page__option-button ${sizeError ? 'error' : ''}`}
+              onClick={() => setIsOptionOpen(!isOptionOpen)}>
               옵션을 선택해주세요
               <span className='product-detail-page__arrow-down'>▼</span>
             </button>
+
             {isOptionOpen && (
               <div className='product-detail-page__option-dropdown'>
                 {Object.entries(productDetail.stock).map(([option, quantity]) => (
@@ -140,7 +177,9 @@ const ProductDetailPage = () => {
 
         <div className='product-detail-page__buttons'>
           <button className='product-detail-page__buy-now'>바로 구매</button>
-          <button className='product-detail-page__add-cart'>장바구니 담기</button>
+          <button className='product-detail-page__add-cart' onClick={addItemToCart}>
+            장바구니 담기
+          </button>
         </div>
       </div>
     </div>

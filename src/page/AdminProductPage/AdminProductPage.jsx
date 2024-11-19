@@ -1,71 +1,57 @@
 import React, {useState, useEffect} from 'react';
-import {useNavigate} from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
 import ReactPaginate from 'react-paginate';
 import './AdminProductPage.style.css';
+import {
+  fetchProducts,
+  deleteProduct,
+} from '../../features/product/productSlice';
 
 const AdminProductPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [query] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPageNum, setTotalPageNum] = useState(10);
+  const { products, totalPageNum, totalCount } = useSelector((state) => state.products);
+
+  const [showDialog, setShowDialog] = useState(false);
+  const [mode, setMode] = useState("new");
+
+  const [searchQuery, setSearchQuery] = useState({
+    page: query.get("page") || 1,
+    name: query.get("name") || "",
+    limit: query.get("limit") || 5,
+  });
 
   const tableHeader = ['#', 'Sku', 'Name', 'Price', 'Stock', 'Image', 'Status', ''];
 
-  const handlePageClick = (data) => {
-    const selectedPage = data.selected + 1;
-    setCurrentPage(selectedPage);
+  const handlePageClick = ({ selected }) => {
+    //  쿼리에 페이지값 바꿔주기
+    setSearchQuery({...searchQuery, page: selected + 1});
   };
+
+  useEffect(() => {
+    //검색어나 페이지가 바뀌면 url바꿔주기 (검색어또는 페이지가 바뀜 => url 바꿔줌=> url쿼리 읽어옴=> 이 쿼리값 맞춰서  상품리스트 가져오기)
+    if(searchQuery.name === ""){
+      delete searchQuery.name;
+    }
+    console.log(searchQuery);
+    const params = new URLSearchParams(searchQuery);
+    const query = params.toString();
+    navigate(`?${query}`);
+
+  }, [searchQuery]);
+
+  //상품리스트 가져오기 (url쿼리 맞춰서)
+  useEffect(() => {
+    dispatch(fetchProducts({...searchQuery}));
+  }, [query, showDialog]);
 
   useEffect(() => {
     console.log('AdminProductPage');
   }, []);
 
-  const testProducts = [
-    {
-      id: 1,
-      sku: 'SKU123',
-      name: 'Product 1',
-      price: '10.00',
-      stock: 100,
-      image: 'https://via.placeholder.com/50',
-      status: 'Active'
-    },
-    {
-      id: 2,
-      sku: 'SKU124',
-      name: 'Product 2',
-      price: '20.00',
-      stock: 200,
-      image: 'https://via.placeholder.com/50',
-      status: 'Inactive'
-    },
-    {
-      id: 3,
-      sku: 'SKU125',
-      name: 'Product 3',
-      price: '30.00',
-      stock: 300,
-      image: 'https://via.placeholder.com/50',
-      status: 'Active'
-    },
-    {
-      id: 4,
-      sku: 'SKU126',
-      name: 'Product 4',
-      price: '40.00',
-      stock: 400,
-      image: 'https://via.placeholder.com/50',
-      status: 'Inactive'
-    },
-    {
-      id: 5,
-      sku: 'SKU127',
-      name: 'Product 5',
-      price: '50.00',
-      stock: 500,
-      image: 'https://via.placeholder.com/50',
-      status: 'Active'
-    }
-  ];
 
   return (
     <div className='admin-product-page'>
@@ -98,13 +84,19 @@ const AdminProductPage = () => {
             </tr>
           </thead>
           <tbody>
-            {testProducts.map((product, index) => (
-              <tr key={product.id}>
+            {products.map((product, index) => (
+              <tr key={product._id}>
                 <td>{index + 1}</td>
                 <td>{product.sku}</td>
                 <td>{product.name}</td>
-                <td>{product.price}</td>
-                <td>{product.stock}</td>
+                <td>{product.price.toLocaleString()}</td>
+                <td>
+                  {Object.keys(product.stock).map((size, index) => (
+                    <div key={index}>
+                      {size}:{product.stock[size]}
+                    </div>
+                  ))}
+                  </td>
                 <td>
                   <img src={product.image} alt={product.name} />
                 </td>
@@ -123,7 +115,7 @@ const AdminProductPage = () => {
           onPageChange={handlePageClick}
           pageRangeDisplayed={5}
           pageCount={totalPageNum}
-          forcePage={currentPage - 1}
+          forcePage={searchQuery.page - 1}
           previousLabel='< previous'
           renderOnZeroPageCount={null}
           pageClassName='page-item'

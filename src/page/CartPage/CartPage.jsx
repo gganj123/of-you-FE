@@ -270,42 +270,39 @@ const CartPage = () => {
                         // 유효한 값 업데이트
                         setTemporaryQuantities((prev) => ({
                           ...prev,
-                          [item._id]: Math.max(1, inputQuantity) // 최소값 1 유지
+                          [item._id]: Math.max(1, inputQuantity)
                         }));
                       }
                     }}
                   />
                   <div className='pc-quantity-buttons'>
-                    {/* 수량 증가 */}
                     <button
                       className='pc-quantity-up'
                       onClick={() =>
                         setTemporaryQuantities((prev) => {
-                          const currentQuantity = prev[item._id] || item.qty; // 현재 수량
-                          const stockLimit = item.productId.stock[item.size]; // 최대 재고
+                          const currentQuantity = prev[item._id] || item.qty;
+                          const stockLimit = item.productId.stock[item.size];
                           if (currentQuantity + 1 > stockLimit) {
                             alert(`최대 ${stockLimit}개까지 구매 가능합니다.`);
-                            return {...prev, [item._id]: stockLimit}; // 최대값으로 설정
+                            return {...prev, [item._id]: stockLimit};
                           }
-                          return {...prev, [item._id]: currentQuantity + 1}; // 수량 증가
+                          return {...prev, [item._id]: currentQuantity + 1};
                         })
                       }>
                       ▲
                     </button>
 
-                    {/* 수량 감소 */}
                     <button
                       className='pc-quantity-down'
                       onClick={() =>
                         setTemporaryQuantities((prev) => ({
                           ...prev,
-                          [item._id]: Math.max(1, (prev[item._id] || item.qty) - 1) // 최소값 1 유지
+                          [item._id]: Math.max(1, (prev[item._id] || item.qty) - 1)
                         }))
                       }>
                       ▼
                     </button>
                   </div>
-                  {/* 변경 버튼 */}
                   <button
                     className='pc-quantity-apply'
                     onClick={() => handleApplyQuantityChange(item._id, item.productId._id, item.size)}>

@@ -39,14 +39,14 @@ export const loginWithGoogle = createAsyncThunk('user/loginWithGoogle', async (t
   }
 });
 
-export const loginWithKakao = createAsyncThunk('user/loginWithKakao', async (code, {rejectWithValue}) => {
+export const fetchKakaoToken = createAsyncThunk('user/fetchKakaoToken', async (_, thunkAPI) => {
   try {
-    const response = await api.get(`auth/kakao/callback?code=${code}`); // GET 요청으로 변경
-    sessionStorage.setItem('token', response.data.token);
-    return response.data;
+    const response = await fetch('/api/auth/kakao/callback'); // 서버 API 호출
+    const data = await response.json();
+    return data.token; // 액세스 토큰 반환
   } catch (error) {
-    console.error('카카오 로그인 실패:', error.response?.data || error);
-    return rejectWithValue(error.response?.data || 'Kakao login failed');
+    console.error('로그인 후 처리 중 오류 발생:', error);
+    return thunkAPI.rejectWithValue(error.message);
   }
 });
 
@@ -77,7 +77,9 @@ const userSlice = createSlice({
     loading: false,
     loginError: null,
     registrationError: null,
-    success: false
+    success: false,
+    token: null,
+    status: 'idle'
   },
   reducers: {
     clearErrors: (state) => {
@@ -132,17 +134,17 @@ const userSlice = createSlice({
         state.loading = false;
         state.loginError = action.payload;
       })
-      .addCase(loginWithKakao.pending, (state, action) => {
-        state.loading = true;
+      .addCase(fetchKakaoToken.pending, (state) => {
+        state.status = 'loading';
       })
-      .addCase(loginWithKakao.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload.user;
-        state.loginError = null;
+      .addCase(fetchKakaoToken.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.token = action.payload; // 액세스 토큰 저장
+        localStorage.setItem('token', action.payload); // 토큰을 로컬 스토리지에 저장
       })
-      .addCase(loginWithKakao.rejected, (state, action) => {
-        state.loading = false;
-        state.loginError = action.payload;
+      .addCase(fetchKakaoToken.rejected, (state, action) => {
+        state.status = 'failed';
+        state.loginError = action.payload; // 에러 메시지 저장
       });
   }
 });

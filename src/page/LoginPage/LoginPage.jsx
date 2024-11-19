@@ -3,7 +3,7 @@ import '../../App.css';
 import './style/LoginPage.style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {loginWithEmail, loginWithGoogle, loginWithKakao} from '../../features/user/userSlice';
+import {loginWithEmail, loginWithGoogle, fetchKakaoToken} from '../../features/user/userSlice';
 import {GoogleLogin, GoogleOAuthProvider} from '@react-oauth/google';
 import {clearErrors} from '../../features/user/userSlice';
 import KakaoLoginButton from './KakaoLoginButton';

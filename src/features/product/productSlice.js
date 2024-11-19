@@ -5,7 +5,8 @@ import api from '../../utils/api';
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async (params, {rejectWithValue}) => {
   try {
     const response = await api.get('/product', {params});
-    return response.data.products; // API에서 받은 상품 데이터
+    console.log(response.data);
+    return response.data; // API에서 받은 상품 데이터
   } catch (error) {
     return rejectWithValue(error);
   }
@@ -21,13 +22,33 @@ export const fetchProductDetail = createAsyncThunk(`product/fetchProductDetail`,
   }
 });
 
+export const updateProduct = createAsyncThunk(`product/updateProduct`, async (product, {rejectWithValue}) => {
+  try {
+    const response = await api.put(`/product/${product.id}`, product);
+    return response.data.product;
+  } catch (error) {
+    return rejectWithValue(error.response?.data?.message || error.message);
+  }
+});
+
+export const deleteProduct = createAsyncThunk(`product/deleteProduct`, async (id, {rejectWithValue}) => {
+  try {
+    await api.delete(`/product/${id}`);
+    return id;
+  } catch (error) {
+    return rejectWithValue(error.response?.data?.message || error.message);
+  }
+});
+
 const productSlice = createSlice({
   name: 'products',
   initialState: {
     products: [],
     productDetail: null,
     loading: false,
-    error: null
+    error: null,
+    totalPageNum: 1,
+    totalCount: 0,
   },
   reducers: {
     clearProducts: (state) => {
@@ -45,7 +66,9 @@ const productSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.products = action.payload;
+        state.products = action.payload.products;
+        state.totalPageNum = action.payload.totalPageNum;
+        state.totalCount = action.payload.totalCount;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;

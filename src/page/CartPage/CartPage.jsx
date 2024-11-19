@@ -37,7 +37,14 @@ const CartPage = () => {
 
   const totalProductPrice = cartList.reduce((sum, item) => sum + item.productId.price * item.qty, 0);
   const shippingFee = 0;
-  const totalDiscount = 0;
+  const totalDiscount = cartList.reduce((sum, item) => {
+    if (item.productId.salePrice) {
+      // 할인 금액 계산
+      const discount = (item.productId.price - item.productId.salePrice) * item.qty;
+      return sum + discount;
+    }
+    return sum;
+  }, 0);
 
   const handleSelectItem = (itemId) => {
     setCheckedItems((prev) => ({
@@ -185,7 +192,23 @@ const CartPage = () => {
                   {isMobile ? (
                     <div className='cart-item-mobile-bottom'>
                       <div className='cart-item-mobile-price'>
-                        {(item.productId.price * item.qty).toLocaleString()}원
+                        {item.productId.salePrice ? (
+                          <>
+                            <span
+                              style={{
+                                textDecoration: 'line-through',
+                                color: 'gray',
+                                marginRight: '8px'
+                              }}>
+                              {(item.productId.price * item.qty).toLocaleString()}원
+                            </span>
+                            <span style={{color: 'red', fontWeight: 'bold'}}>
+                              {(item.productId.salePrice * item.qty).toLocaleString()}원
+                            </span>
+                          </>
+                        ) : (
+                          `${(item.productId.price * item.qty).toLocaleString()}원`
+                        )}
                       </div>
                       <button className='cart-option-change' onClick={() => handleOptionChange(item)}>
                         옵션/수량변경 <IoChevronDown className='cart-option-change-icon' size={12} />
@@ -246,7 +269,25 @@ const CartPage = () => {
               )}
 
               {!isMobile && (
-                <div className='cart-item-price'>{(item.productId.price * item.qty).toLocaleString()}원</div>
+                <div className='cart-item-price'>
+                  {item.productId.salePrice ? (
+                    <>
+                      <span
+                        style={{
+                          textDecoration: 'line-through',
+                          color: 'gray',
+                          marginRight: '8px'
+                        }}>
+                        {(item.productId.price * item.qty).toLocaleString()}원
+                      </span>
+                      <span style={{color: 'red', fontWeight: 'bold'}}>
+                        {(item.productId.salePrice * item.qty).toLocaleString()}원
+                      </span>
+                    </>
+                  ) : (
+                    `${(item.productId.price * item.qty).toLocaleString()}원`
+                  )}
+                </div>
               )}
               <button className='cart-item-delete' onClick={() => handleRemoveItem(item._id)}>
                 <IoClose />

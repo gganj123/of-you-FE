@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react';
 import BannerSlider from './components/BannerSlider/BannerSlider';
 import RecommendedProducts from './components/RecommendedProducts/RecommendedProducts';
 import BrandBanner from './components/BrandBanner/BrandBanner';
@@ -30,17 +31,6 @@ const HomePage = () => {
         salePrice: 199000,
         originalPrice: 399000,
         discountRate: 50
-      }))
-    },
-    {
-      name: 'MEN',
-      products: Array.from({length: 10}, (_, index) => ({
-        id: index + 11, // ID가 중복되지 않도록 오프셋 추가
-        image: '/images/banner3.jpg',
-        title: 'ADER ERROR',
-        salePrice: 698000,
-        originalPrice: null,
-        discountRate: null
       }))
     },
     {
@@ -113,8 +103,8 @@ const HomePage = () => {
       <BrandBanner banners={brandBanners} />
 
       {/* 카테고리별 추천 상품 */}
-      {categories.map((category) => (
-        <CategorySection key={category.name} categoryName={category.name} products={category.products} />
+      {categories.map((category, index) => (
+        <CategorySection key={index} categoryName={category.name} products={category.products} />
       ))}
     </div>
   );

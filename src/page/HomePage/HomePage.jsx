@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React from 'react';
 import BannerSlider from './components/BannerSlider/BannerSlider';
 import RecommendedProducts from './components/RecommendedProducts/RecommendedProducts';
 import BrandBanner from './components/BrandBanner/BrandBanner';

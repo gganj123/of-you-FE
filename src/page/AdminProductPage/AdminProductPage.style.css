@@ -1,0 +1,139 @@
+.product-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.search-box {
+  flex: 1;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.add-new-item-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 20px;
+  font-size: 14px;
+}
+
+.add-new-item-btn:hover {
+  background-color: #0056b3;
+}
+
+.item-count-dropdown select {
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.product-table {
+  width: 90%;
+  border-collapse: collapse;
+  margin: 250px auto 40px auto;
+}
+
+.product-table th,
+.product-table td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.product-table img {
+  width: 50px;
+  height: auto;
+  object-fit: cover;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  list-style-type: none;
+  padding: 0;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #666;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.page-link:hover {
+  background-color: #ccc;
+  color: #333;
+}
+
+.page-item.active .page-link {
+  background-color: #999;
+  color: white;
+  border-color: #999;
+}
+
+.page-item.disabled .page-link {
+  background-color: #e0e0e0;
+  color: #b0b0b0;
+  cursor: not-allowed;
+  border-color: #e0e0e0;
+}
+
+.page-item.break {
+  padding: 10px 15px;
+  cursor: default;
+  background-color: #e0e0e0;
+  color: #999;
+}
+
+.page-item .page-link {
+  font-weight: bold;
+}
+
+.display-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.list-style-none {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pagination .disabled .page-link {
+  background-color: #e0e0e0;
+  color: #b0b0b0;
+  cursor: not-allowed;
+}

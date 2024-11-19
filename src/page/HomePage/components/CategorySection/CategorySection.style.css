@@ -1,102 +1,174 @@
 .homepage-category-section {
-    padding: 40px;
-    max-width: 1400px;
-    margin: 0 auto;
-    overflow: hidden;
+  padding-bottom: 80px;
+  width: 90%;
+  margin: 0 auto;
+  overflow: hidden;
 }
 
 .homepage-section-content {
-    display: flex;
-    align-items: flex-start;
-    gap: 30px;
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  width: 100%;
 }
 
 .homepage-category-header {
-    flex-shrink: 0;
-    width: 120px;
+  flex-shrink: 0;
+  width: 120px;
 }
 
 .homepage-category-title {
-    font-size: 2rem;
-    font-weight: 500;
-    color: #333;
-    margin-bottom: 12px;
+  font-size: 2rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 12px;
 }
 
 .homepage-more-link {
-    color: #666;
-    text-decoration: none;
-    font-size: 1rem;
-    display: block;
+  color: #666;
+  text-decoration: none;
+  font-size: 1rem;
+  display: block;
 }
 
 .homepage-product-list-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: calc(100% - 120px);
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: calc(100% - 120px);
 }
 
 .homepage-product-list {
-    display: flex;
-    gap: 50px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    padding: 0 0px;
-}
-
-.homepage-product-list:active {
-    cursor: grabbing;
+  display: flex;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  gap: 20px;
+  padding: 0;
+  flex-wrap: nowrap;
 }
 
 .homepage-product-list::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .category-nav-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 2.5rem;
-    color: white;
-    padding: 0px;
-    position: absolute;
-    top: 43%;
-    transform: translateY(-50%);
-    z-index: 1;
-    transition: color 0.2s ease-in-out;
-}
-
-.category-nav-button:hover {
-    color: white;
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 1.2rem;
+  color: #666;
 }
 
 .category-prev-button {
-    left: 10px;
+  left: 0;
 }
 
 .category-next-button {
-    right: 10px;
+  right: 30px;
+}
+
+.category-page-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: -10px;
+  margin-bottom: 30px;
 }
 
 @media (max-width: 1200px) {
-    .homepage-product-list {
-        padding: 0 40px;
-    }
+  .homepage-category-section {
+    padding: 0 30px;
+    width: 100%;
+  }
+
+  .homepage-section-content {
+    display: block;
+  }
+
+  .homepage-category-header {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .homepage-product-list-wrapper {
+    width: 100%;
+  }
+
+  .homepage-product-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .homepage-product-item {
+    width: 100%;
+  }
+
+  .category-next-button {
+    right: 0;
+  }
+
+  .homepage-category-title {
+    margin-top: 20px;
+  }
 }
 
 @media (max-width: 768px) {
-    .homepage-product-list-wrapper {
-        width: calc(100% - 60px);
-    }
+  .homepage-category-section {
+    padding: 0 20px;
+  }
 
-    .category-nav-button {
-        font-size: 1.5rem;
-        padding: 5px;
-    }
+  .homepage-product-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+    padding-bottom: 5px;
+  }
 
-    .homepage-product-list {
-        padding: 0 20px;
-    }
+  .homepage-category-title {
+    font-size: 1.5rem;
+  }
+
+  .homepage-more-link {
+    font-size: 0.9rem;
+  }
+
+  .homepage-category-header {
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .homepage-category-section {
+    padding: 0 15px;
+  }
+
+  .homepage-product-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding-bottom: 0;
+  }
+
+  .homepage-category-title {
+    font-size: 1.2rem;
+  }
+
+  .homepage-more-link {
+    font-size: 0.8rem;
+  }
 }

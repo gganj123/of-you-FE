@@ -1,10 +1,11 @@
-import React, {useEffect} from 'react';
-import Navbar from '../common/components/Navbar';
-import Footer from '../common/components/Footer';
+import {useEffect} from 'react';
+import Navbar from '../common/components/Navbar/Navbar';
+import Footer from '../common/components/Footer/Footer';
 import './AppLayout.style.css';
 import {useLocation} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {loginWithToken} from '../features/user/userSlice';
+import Mypagebar from '../common/components/Mypagebar/Mypagebar';
 
 const AppLayout = ({children}) => {
   const location = useLocation();
@@ -14,11 +15,12 @@ const AppLayout = ({children}) => {
   useEffect(() => {
     dispatch(loginWithToken());
   }, []);
+  const isMyPage = location.pathname.startsWith('/mypage');
 
   return (
     <div className='app-layout'>
       <Navbar user={user} />
-      <main>{children}</main>
+      {isMyPage ? <Mypagebar /> : <main>{children}</main>}
       <Footer />
     </div>
   );

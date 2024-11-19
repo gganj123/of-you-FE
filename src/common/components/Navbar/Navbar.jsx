@@ -1,21 +1,27 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { FiHeart, FiLogIn, FiUser, FiShoppingBag, FiSearch, FiChevronDown, FiMenu, FiArrowLeft } from 'react-icons/fi';
+import React, {useState, useRef, useEffect} from 'react';
+import {FiHeart, FiLogIn, FiUser, FiShoppingBag, FiSearch, FiChevronDown, FiMenu, FiArrowLeft} from 'react-icons/fi';
 import './Navbar.style.css';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { logout } from '../../features/user/userSlice';
+import {useNavigate, useLocation} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
+import {logout} from '../../../features/user/userSlice';
+import {persistor} from '../../../features/store';
+import {resetLikes} from '../../../features/like/likeSlice';
 
-const Navbar = ({ user }) => {
+const Navbar = ({user}) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('WOMAN');
+  const [selectedCategory, setSelectedCategory] = useState('WOMEN');
+  const [selectedAdminCategory, setSelectedAdminCategory] = useState('PRODUCT');
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isPopularSearchVisible, setIsPopularSearchVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const popularSearchRef = useRef(null);
+  const categoryMenuRef = useRef(null);
+  const location = useLocation();
 
   const categories = {
-    WOMAN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'DRESS', 'ACCESSORIES'],
-    MAN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'ACCESSORIES'],
+    WOMEN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'DRESS', 'ACCESSORIES'],
+    MEN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'ACCESSORIES'],
     BEAUTY: ['SKINCARE', 'MAKEUP', 'HAIR & BODY', 'DEVICES'],
     LIFE: ['HOME', 'TRAVEL', 'DIGITAL', 'CULTURE', 'FOOD']
   };
@@ -23,12 +29,43 @@ const Navbar = ({ user }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // 페이지 이동 시 카테고리 메뉴 닫기
+  useEffect(() => {
+    setIsCategoryOpen(false);
+  }, [location]);
+
   const handleCategoryToggle = () => {
     setIsCategoryOpen(!isCategoryOpen);
   };
 
+  // 토글박스의 중분류 카테고리 선택을 위한 함수
+  const handleSubCategorySelect = (category) => {
+    setSelectedCategory(category);
+  };
+
+  // 중분류 카테고리 클릭 시의 함수
+  const handleSubCategoryClick = (subcategory) => {
+    if (selectedCategory && categories[selectedCategory]) {
+      navigate(`/products/category/${selectedCategory.toLowerCase()}/${subcategory.toLowerCase()}`);
+      setIsCategoryOpen(false);
+    }
+  };
+
+  // 메뉴의 대분류 카테고리 페이지 이동을 위한 함수
+  const handleCategoryPageNavigate = (category) => {
+    navigate(`/products/category/${category.toLowerCase()}`);
+  };
+
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
+    navigate(`/products/category/${category.toLowerCase()}`);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/products/category/all?name=${encodeURIComponent(searchTerm)}`);
+    }
   };
 
   const handleSearchIconClick = () => {
@@ -45,21 +82,29 @@ const Navbar = ({ user }) => {
     setIsSearchModalOpen(false);
   };
 
-  // 인기 검색어 목록 닫기
+  // 카테고리 메뉴 외부 클릭 시 닫기
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (popularSearchRef.current && !popularSearchRef.current.contains(event.target)) {
-        setIsPopularSearchVisible(false);
+      if (
+        categoryMenuRef.current &&
+        !categoryMenuRef.current.contains(event.target) &&
+        !event.target.closest('.navbar-category-button') &&
+        !event.target.closest('.navbar-hamburger button')
+      ) {
+        setIsCategoryOpen(false);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleLogout = () => {
+    persistor.pause(); // Redux Persist가 저장 작업을 멈추도록 설정
+    persistor.purge(); // Redux Persist 상태 초기화
+    localStorage.removeItem('persist:root');
+    sessionStorage.clear();
+    dispatch(resetLikes());
     dispatch(logout());
   };
 
@@ -76,18 +121,25 @@ const Navbar = ({ user }) => {
   };
 
   const handleMy = () => {
-    navigate('/account');
+    navigate('/mypage');
   };
 
   const handleMain = () => {
     navigate('/');
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+  const handleAdmin = () => {
+    navigate('/admin/product');
+  };
+
   return (
     <>
       <div className='navbar-container'>
         <div className='navbar-top-banner'>
-          <img src='./images/banner-top.jpeg' alt='banner-top' className='navbar-top-banner-img' />
+          <img src='/images/banner-top.jpeg' alt='banner-top' className='navbar-top-banner-img' />
           <div className='navbar-top-banner-text'>
             <div className='navbar-top-banner-text-line1'>차원이 다른 역대급 세일</div>
             <div className='navbar-top-banner-text-line2'>WEEK OF YOU</div>
@@ -107,7 +159,7 @@ const Navbar = ({ user }) => {
                       <div
                         key={category}
                         className='navbar-category-item'
-                        onClick={() => handleCategorySelect(category)}>
+                        onClick={() => handleSubCategorySelect(category)}>
                         {category} {selectedCategory === category && <span className='navbar-arrow'>▶</span>}
                       </div>
                     ))}
@@ -115,7 +167,10 @@ const Navbar = ({ user }) => {
                   {selectedCategory && (
                     <div className='navbar-subcategory-list'>
                       {categories[selectedCategory].map((subcategory) => (
-                        <div key={subcategory} className='navbar-subcategory-item'>
+                        <div
+                          key={subcategory}
+                          className='navbar-subcategory-item'
+                          onClick={() => handleSubCategoryClick(subcategory)}>
                           {subcategory}
                         </div>
                       ))}
@@ -131,13 +186,24 @@ const Navbar = ({ user }) => {
 
           <div className='navbar-right-section'>
             <div className='navbar-search-bar'>
-              <input type='text' placeholder='Search...' onFocus={handleSearchIconClick} />
+              <input
+                type='text'
+                placeholder='Search...'
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearchSubmit(e);
+                  }
+                }}
+                onFocus={handleSearchIconClick}
+              />
               <FiSearch onClick={handleSearchIconClick} />
               {isPopularSearchVisible && (
                 <div className='navbar-popular-search-list' ref={popularSearchRef}>
                   <h4>급상승 검색어</h4>
                   <ul>
-                    {Array.from({ length: 10 }, (_, i) => (
+                    {Array.from({length: 10}, (_, i) => (
                       <li key={`popular-${i}`}>{i + 1}. 검색어</li>
                     ))}
                   </ul>
@@ -146,8 +212,8 @@ const Navbar = ({ user }) => {
             </div>
             <div className='navbar-icons'>
               {user && user.level === 'admin' && (
-                <div className='navbar-icon-item'>
-                  <FiPower />
+                <div className='navbar-icon-item' onClick={handleAdmin}>
+                  <FiHeart />
                   ADMIN
                 </div>
               )}
@@ -191,7 +257,7 @@ const Navbar = ({ user }) => {
                 <div className='navbar-popular-searches'>
                   <h4>급상승 검색어</h4>
                   <ul>
-                    {Array.from({ length: 10 }, (_, i) => (
+                    {Array.from({length: 10}, (_, i) => (
                       <li key={`popular-${i}`}> {i + 1}. 검색어</li>
                     ))}
                   </ul>
@@ -210,7 +276,10 @@ const Navbar = ({ user }) => {
               <div className='navbar-category-menu'>
                 <div className='navbar-category-list'>
                   {Object.keys(categories).map((category) => (
-                    <div key={category} className='navbar-category-item' onClick={() => handleCategorySelect(category)}>
+                    <div
+                      key={category}
+                      className='navbar-category-item'
+                      onClick={() => handleSubCategorySelect(category)}>
                       {category} {selectedCategory === category && <span className='navbar-arrow'>▶</span>}
                     </div>
                   ))}
@@ -218,7 +287,10 @@ const Navbar = ({ user }) => {
                 {selectedCategory && (
                   <div className='navbar-subcategory-list'>
                     {categories[selectedCategory].map((subcategory) => (
-                      <div key={subcategory} className='navbar-subcategory-item'>
+                      <div
+                        key={subcategory}
+                        className='navbar-subcategory-item'
+                        onClick={() => handleSubCategoryClick(subcategory)}>
                         {subcategory}
                       </div>
                     ))}
@@ -228,33 +300,49 @@ const Navbar = ({ user }) => {
             )}
           </div>
           <div className='navbar-menu'>
-            <div className='navbar-menu-item'>WOMEN</div>
-            <div className='navbar-menu-item'>MEN</div>
-            <div className='navbar-menu-item'>BEAUTY</div>
-            <div className='navbar-menu-item'>LIFE</div>
-            <div className='navbar-divider'></div>
-            <div className='navbar-menu-item'>BEST</div>
-            <div className='navbar-menu-item'>SALE</div>
-            <div className='navbar-menu-item'>NEW</div>
+            {location.pathname.startsWith('/admin')
+              ? ['PRODUCT', 'ORDER'].map((menuItem, index, array) => (
+                  <React.Fragment key={menuItem}>
+                    <div className='navbar-menu-item' onClick={() => handleAdminCategorySelect(menuItem)}>
+                      {menuItem}
+                    </div>
+                    {index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
+                  </React.Fragment>
+                ))
+              : ['WOMEN', 'MEN', 'BEAUTY', 'LIFE', 'BEST', 'SALE', 'NEW'].map((menuItem, index, array) => (
+                  <React.Fragment key={menuItem}>
+                    <div className='navbar-menu-item' onClick={() => handleCategoryPageNavigate(menuItem)}>
+                      {menuItem}
+                    </div>
+                    {menuItem === 'LIFE' && index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
+                  </React.Fragment>
+                ))}
           </div>
         </div>
       </div>
 
       {/* 모바일 전용 하단 메뉴 */}
       <div className='mobile-navbar'>
-        <div className='mobile-nav-item'>
+        <div className='mobile-nav-item' onClick={handleBack}>
           <FiArrowLeft />
           <span>BACK</span>
         </div>
-        <div className='mobile-nav-item'>
+        <div className='mobile-nav-item' onClick={handleLike}>
           <FiHeart />
           <span>LIKE</span>
         </div>
-        <div className='mobile-nav-item'>
-          <FiLogIn />
-          <span>LOGIN</span>
-        </div>
-        <div className='mobile-nav-item'>
+        {user ? (
+          <div className='mobile-nav-item' onClick={handleLogout}>
+            <FiLogIn />
+            <span>LOGOUT</span>
+          </div>
+        ) : (
+          <div className='mobile-nav-item' onClick={handleLogin}>
+            <FiLogIn />
+            <span>LOGIN</span>
+          </div>
+        )}
+        <div className='mobile-nav-item' onClick={handleMy}>
           <FiUser />
           <span>MY</span>
         </div>

@@ -1,64 +1,36 @@
 import {useEffect, useState} from 'react';
 import ProductCard from '../../common/components/ProductCard/ProductCard';
 import './LikePage.style.css';
+import {useDispatch, useSelector} from 'react-redux';
+import {getLikeList} from '../../features/like/likeSlice';
 
 const LikePage = () => {
-  const [likedProducts] = useState([
-    {
-      id: 1,
-      image: '/images/banner4.jpg',
-      brand: 'LE',
-      title: '[30%쿠폰] hood duck-down padding_2color',
-      salePrice: 148260,
-      originalPrice: 397000,
-      discountRate: 62
-    },
-    {
-      id: 2,
-      brand: 'demeriel',
-      title: 'Veneta Hobo Bag Medium Chestnut',
-      image: '/images/banner2.jpg',
-      salePrice: 200208,
-      originalPrice: 258000,
-      discountRate: 22
-    },
-    {
-      id: 3,
-      brand: 'demeriel',
-      title: 'Veneta Hobo Bag Medium Chestnut',
-      image: '/images/banner5.jpg',
-      salePrice: 200208,
-      originalPrice: 258000,
-      discountRate: 22,
-      tags: ['예약', '쿠폰']
-    },
-    {
-      id: 4,
-      brand: 'demeriel',
-      title: 'Veneta Hobo Bag Medium Chestnut',
-      image: '/images/banner7.jpg',
-      salePrice: 200208,
-      originalPrice: 258000,
-      discountRate: 22
-    },
-    {
-      id: 5,
-      brand: 'demeriel',
-      title: 'Veneta Hobo Bag Medium Chestnut',
-      image: '/images/banner8.jpg',
-      salePrice: 200208,
-      originalPrice: 258000,
-      discountRate: 22
-    }
-  ]);
+  const dispatch = useDispatch();
+  const {likes, loading, error} = useSelector((state) => state.like);
 
+  // 탭 상태 관리
   const [activeTab, setActiveTab] = useState('All');
-  const [viewType, setViewType] = useState('grid');
+  const [viewType, setViewType] = useState('grid'); // 현재는 미사용 상태, 필요 시 추가 구현 가능
+
+  // 좋아요 리스트 가져오기
+  useEffect(() => {
+    dispatch(getLikeList()); // 좋아요 리스트 호출
+  }, [dispatch]);
+
+  // 카테고리별 데이터 필터링
+  const filteredLikes = likes.filter((like) => {
+    if (activeTab === 'All') return true; // 전체 탭
+    return like.productId.category?.includes(activeTab.toLowerCase()); // 해당 카테고리에 속한 아이템만 반환
+  });
+
+  // 로딩 또는 에러 처리
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className='like-page'>
       <div className='like-page-header'>
-        <h1 className='like-page-title'>MY♡ITEM ({likedProducts.length})</h1>
+        <h1 className='like-page-title'>MY♡ITEM ({filteredLikes.length})</h1>
         <div className='like-page-tabs'>
           <div className={`tab-button ${activeTab === 'All' ? 'active' : ''}`} onClick={() => setActiveTab('All')}>
             All
@@ -81,18 +53,21 @@ const LikePage = () => {
       </div>
 
       <div className={`products-container ${viewType}`}>
-        {likedProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            id={product.id}
-            image={product.image}
-            brand={product.brand}
-            title={product.title}
-            salePrice={product.salePrice}
-            originalPrice={product.originalPrice}
-            discountRate={product.discountRate}
-          />
-        ))}
+        {filteredLikes.length > 0 ? (
+          filteredLikes.map((like) => (
+            <ProductCard
+              key={like.productId._id}
+              id={like.productId._id}
+              image={like.productId.image}
+              title={like.productId.name}
+              salePrice={like.productId.salePrice}
+              originalPrice={like.productId.price}
+              discountRate={like.productId.saleRate}
+            />
+          ))
+        ) : (
+          <div className='empty-message'>No items found in this category.</div>
+        )}
       </div>
     </div>
   );

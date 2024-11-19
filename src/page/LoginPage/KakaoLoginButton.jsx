@@ -29,7 +29,7 @@ const KakaoLoginButton = () => {
 
   const handleKakaoLogin = () => {
     const KAKAO_CLIENT_ID = import.meta.env.VITE_APP_KAKAO_CLIENT_ID;
-    const KAKAO_REDIRECT_URI = 'https://of-you.netlify.app/redirect.html';
+    const KAKAO_REDIRECT_URI = 'https://of-you-150add69b1bb.herokuapp.com/api/auth/kakao/callback';
 
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
 

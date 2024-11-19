@@ -1,0 +1,202 @@
+.payment_wrapper {
+    width: 100%;
+    min-height: 100vh;
+    margin-top: 280px;
+}
+
+.payment_container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 40px;
+}
+
+.payment_content {
+    flex: 1;
+}
+
+.payment_side {
+    width: 300px;
+    position: sticky;
+    top: 100px;
+}
+
+.payment_delivery_section,
+.payment_order_section {
+    background: white;
+    border: 1px solid #e5e7eb;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.payment_section_title {
+    font-size: 18px;
+    font-weight: 500;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 16px;
+}
+
+.payment_delivery_form {
+    padding: 20px 0;
+}
+
+.payment_form_row {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.payment_form_label {
+    width: 120px;
+    font-size: 14px;
+    padding-top: 10px;
+}
+
+.required {
+    color: #ff0000;
+    margin-left: 2px;
+}
+
+.payment_form_input {
+    flex: 1;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.payment_form_select {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    font-size: 14px;
+    background: #f9fafb;
+}
+
+.payment_phone_select {
+    width: 200px;
+}
+
+.payment_form_button {
+    width: 120px;
+    height: 40px;
+    margin-left: 8px;
+    background: #666;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.payment_order_item {
+    display: flex;
+    gap: 16px;
+}
+
+.payment_item_image {
+    width: 100px;
+    height: 100px;
+}
+
+.payment_item_image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.payment_item_info {
+    flex: 1;
+}
+
+.payment_brand {
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.payment_item_name {
+    margin-bottom: 4px;
+}
+
+.payment_item_option {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.payment_item_quantity {
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.payment_price_wrap {
+    margin-top: 8px;
+}
+
+.payment_price_original {
+    display: block;
+    text-decoration: line-through;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.payment_price_sale {
+    font-weight: 500;
+}
+
+.payment_delivery_notice {
+    color: #6b7280;
+    font-size: 12px;
+    margin-top: 16px;
+}
+
+.payment_summary_sticky {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    padding: 20px;
+}
+
+.payment_button {
+    width: 100%;
+    height: 52px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.payment_button:hover {
+    background: #e74c3c;
+}
+
+.payment_summary_row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.payment_total {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 12px;
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    color: #e74c3c;
+}
+
+.payment_price_emphasis {
+    color: #e74c3c;
+}

@@ -1,6 +1,7 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import api from '../../utils/api';
 
+
 const initialState = {
   loading: false,
   error: '',
@@ -58,6 +59,7 @@ export const getCartQty = createAsyncThunk('cart/getCartQty', async (_, {rejectW
     return response.data.qty;
   } catch (error) {
     return rejectWithValue(error.error);
+
   }
 });
 
@@ -144,3 +146,4 @@ const cartSlice = createSlice({
 
 export default cartSlice.reducer;
 export const {initialCart} = cartSlice.actions;
+

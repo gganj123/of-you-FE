@@ -6,6 +6,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {deleteCartItem, getCartList, updateQty} from '../../features/cart/cartSlice';
 
 const CartPage = () => {
+  const dispatch = useDispatch();
+  const {items, loading, error} = useSelector((state) => state.cart); // Redux state
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 486);
@@ -333,10 +335,12 @@ const CartPage = () => {
                 </div>
               )}
               <button className='cart-item-delete' onClick={() => handleRemoveItem(item._id)}>
+
                 <IoClose />
               </button>
             </div>
           ))}
+
         </div>
 
         <div className='cart-summary'>
@@ -359,9 +363,8 @@ const CartPage = () => {
               <span>{(totalCheckedPrice + shippingFee - totalCheckedDiscount).toLocaleString()}원</span>
             </div>
           </div>
-          <button className='cart-checkout-button' onClick={handleCheckout}>
-            주문하기
-          </button>
+
+          <button className="cart-checkout-button" onClick={handleCheckout}>주문하기</button>
         </div>
       </div>
 

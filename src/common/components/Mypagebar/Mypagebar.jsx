@@ -17,13 +17,13 @@ const Mypagebar = () => {
       <div className='snb_header'>
         <ul>
           <li>
-            <a href='/MyPage'>MY 🤍</a>
+            <a href='/mypage'>MY 🤍</a>
           </li>
           <li>
-            <a href='/MyPage/Order'>주문관리</a>
+            <a href='/mypage/Order'>주문관리</a>
           </li>
           <li>
-            <a href='/MyPage/MemberInfo'>정보관리</a>
+            <a href='/mypage/memberInfo'>정보관리</a>
           </li>
         </ul>
       </div>
@@ -32,23 +32,23 @@ const Mypagebar = () => {
         <div className='inner'>
           <ul>
             <li>
-              <a href='/MyPage/MyHeart'>My 🤍 Like</a>
+              <a href='/mypage/like'>My 🤍 Like</a>
             </li>
             <li>
-              <a href='/MyPage/MyReview'>My 🤍 Review</a>
-            </li>
-          </ul>
-          <ul>
-            <li>
-              <a href='/MyPage/Order'>주문/배송조회</a>
+              <a href='/mypage/myreview'>My 🤍 Review</a>
             </li>
           </ul>
           <ul>
             <li>
-              <a href='/MyPage/Address'>배송지관리</a>
+              <a href='/mypage/order'>주문/배송조회</a>
+            </li>
+          </ul>
+          <ul>
+            <li>
+              <a href='/mypage/address'>배송지관리</a>
             </li>
             <li>
-              <a href='/MyPage/Secession'>회원탈퇴</a>
+              <a href='/mypage/secession'>회원탈퇴</a>
             </li>
           </ul>
         </div>

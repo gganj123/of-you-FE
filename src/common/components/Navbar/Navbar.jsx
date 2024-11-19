@@ -83,9 +83,9 @@ const Navbar = ({user}) => {
   // 카테고리 메뉴 외부 클릭 시 닫기
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        categoryMenuRef.current &&
-        !categoryMenuRef.current.contains(event.target) &&
+
+
+      if (categoryMenuRef.current && !categoryMenuRef.current.contains(event.target) &&
         !event.target.closest('.navbar-category-button') &&
         !event.target.closest('.navbar-hamburger button')
       ) {
@@ -152,7 +152,9 @@ const Navbar = ({user}) => {
                       <div
                         key={category}
                         className='navbar-category-item'
-                        onClick={() => handleSubCategorySelect(category)}>
+                        onClick={() => handleSubCategorySelect(category)}
+                      >
+
                         {category} {selectedCategory === category && <span className='navbar-arrow'>▶</span>}
                       </div>
                     ))}
@@ -160,9 +162,10 @@ const Navbar = ({user}) => {
                   {selectedCategory && (
                     <div className='navbar-subcategory-list'>
                       {categories[selectedCategory].map((subcategory) => (
-                        <div
-                          key={subcategory}
-                          className='navbar-subcategory-item'
+
+
+                        <div key={subcategory} className='navbar-subcategory-item'
+
                           onClick={() => handleSubCategoryClick(subcategory)}>
                           {subcategory}
                         </div>
@@ -269,10 +272,9 @@ const Navbar = ({user}) => {
               <div className='navbar-category-menu'>
                 <div className='navbar-category-list'>
                   {Object.keys(categories).map((category) => (
-                    <div
-                      key={category}
-                      className='navbar-category-item'
-                      onClick={() => handleSubCategorySelect(category)}>
+
+                    <div key={category} className='navbar-category-item' onClick={() => handleSubCategorySelect(category)}>
+
                       {category} {selectedCategory === category && <span className='navbar-arrow'>▶</span>}
                     </div>
                   ))}

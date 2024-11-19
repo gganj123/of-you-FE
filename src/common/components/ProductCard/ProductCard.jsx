@@ -1,27 +1,31 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {IoHeartOutline, IoHeart} from 'react-icons/io5';
 import './ProductCard.style.css';
 import {useDispatch, useSelector} from 'react-redux';
+import {toggleLike} from '../../../features/like/likeSlice';
 
 const ProductCard = ({id, image, title, salePrice, originalPrice, discountRate}) => {
   const dispatch = useDispatch();
-  const {products, loading, error} = useSelector((state) => state.products);
-
-  const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
+
+  // `like`와 `products` 상태를 가져옴
+  const {likes, loading: likeLoading, error: likeError} = useSelector((state) => state.like);
+  const {products, loading: productLoading, error: productError} = useSelector((state) => state.products);
+
+  const isLiked = likes.some((like) => like.productId === id);
 
   const handleLikeClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsLiked(!isLiked);
+    dispatch(toggleLike(id)); // 좋아요/취소 액션 호출
   };
+
   const handleCardClick = () => {
     if (id) {
-      navigate(`/product/${id}`); // id를 기반으로 상세 페이지로 이동
+      navigate(`/product/${id}`);
     } else {
-      alert('상품 정보를 찾을 수 없습니다.'); // 사용자에게 경고
-
+      alert('상품 정보를 찾을 수 없습니다.');
       console.error('Product ID is missing. Cannot navigate to the product detail page.');
     }
   };

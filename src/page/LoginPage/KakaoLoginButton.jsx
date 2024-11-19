@@ -8,7 +8,7 @@ import api from '../../utils/api';
 const KakaoLoginButton = () => {
   const fetchTokenAfterPopupClosed = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/auth/kakao/callback');
+      const response = await fetch('https://of-you-150add69b1bb.herokuapp.com/api/auth/kakao/callback');
       const data = await response.json();
 
       if (data.token) {
@@ -62,7 +62,7 @@ const KakaoLoginButton = () => {
   const fetchAccessToken = async (code) => {
     try {
       // code를 쿼리 파라미터로 전달
-      const response = await api.get(`http://localhost:5001/api/auth/kakao/callback?code=${code}`, {
+      const response = await api.get(`https://of-you-150add69b1bb.herokuapp.com/api/auth/kakao/callback?code=${code}`, {
         headers: {'Content-Type': 'application/json'}
       });
       const data = response.data; // api.get은 이미 JSON 데이터를 반환

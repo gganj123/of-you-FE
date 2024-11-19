@@ -166,10 +166,12 @@ const CartPage = () => {
     console.log(`옵션 변경: ${size}, 상품 ID: ${selectedProduct.productId._id}`);
   };
   const handleCheckout = () => {
+    const selectedItems = cartList.filter((item) => checkedItems[item._id]);
     if (cartList.length === 0) {
       alert('주문할 상품을 선택해주세요.');
       return;
     }
+
     navigate('/payment', {
       state: {
         items: cartList,

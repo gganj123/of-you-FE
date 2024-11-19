@@ -15,6 +15,7 @@ const CartPage = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [temporaryQuantities, setTemporaryQuantities] = useState({});
   const [checkedItems, setCheckedItems] = useState({});
+  const [isAllChecked, setIsAllChecked] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -35,36 +36,59 @@ const CartPage = () => {
     }
   }, [selectedProduct]);
 
-  const totalProductPrice = cartList.reduce((sum, item) => sum + item.productId.price * item.qty, 0);
-  const shippingFee = 0;
-  const totalDiscount = cartList.reduce((sum, item) => {
-    if (item.productId.salePrice) {
-      // 할인 금액 계산
-      const discount = (item.productId.price - item.productId.salePrice) * item.qty;
-      return sum + discount;
-    }
-    return sum;
-  }, 0);
-
-  const handleSelectItem = (itemId) => {
-    setCheckedItems((prev) => ({
-      ...prev,
-      [itemId]: !prev[itemId] // 현재 상태를 토글
-    }));
-  };
-
-  const handleSelectAll = (e) => {
-    const isChecked = e.target.checked;
-    const newCheckedState = {};
+  useEffect(() => {
+    const initialCheckedState = {};
     cartList.forEach((item) => {
-      newCheckedState[item._id] = isChecked; // 모든 항목의 상태를 설정
+      initialCheckedState[item._id] = true; // 모든 항목 체크
     });
-    setCheckedItems(newCheckedState);
-  };
+    setCheckedItems(initialCheckedState);
+    setIsAllChecked(true); // 전체 체크박스 활성화
+  }, [cartList]);
 
   const totalCheckedPrice = cartList
     .filter((item) => checkedItems[item._id]) // 체크된 항목만 필터링
     .reduce((sum, item) => sum + item.productId.price * item.qty, 0);
+
+  const totalCheckedDiscount = cartList
+    .filter((item) => checkedItems[item._id]) // 체크된 항목만 필터링
+    .reduce((sum, item) => {
+      if (item.productId.salePrice) {
+        // 할인 금액 계산
+        const discount = (item.productId.price - item.productId.salePrice) * item.qty;
+        return sum + discount;
+      }
+      return sum;
+    }, 0);
+
+  const shippingFee = 4000;
+
+  const handleSelectItem = (itemId) => {
+    setCheckedItems((prev) => {
+      const newCheckedState = {...prev, [itemId]: !prev[itemId]};
+
+      // 전체 체크박스 상태 업데이트
+      const isAllChecked = cartList.every((item) => newCheckedState[item._id]);
+      setIsAllChecked(isAllChecked);
+
+      return newCheckedState;
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (isAllChecked) {
+      // 현재 전체 체크 상태이면 모든 체크 해제
+      setCheckedItems({});
+      setIsAllChecked(false);
+    } else {
+      // 현재 전체 체크 상태가 아니면 모든 체크 활성화
+      const newCheckedState = {};
+      cartList.forEach((item) => {
+        newCheckedState[item._id] = true;
+      });
+      setCheckedItems(newCheckedState);
+      setIsAllChecked(true);
+    }
+  };
 
   const handleRemoveItem = (itemId) => {
     if (window.confirm('이 상품을 삭제하시겠습니까?')) {
@@ -148,9 +172,9 @@ const CartPage = () => {
     navigate('/payment', {
       state: {
         items: cartList,
-        totalPrice: totalProductPrice,
+        totalPrice: totalCheckedPrice,
         shippingFee,
-        totalDiscount
+        totalCheckedDiscount
       }
     });
   };
@@ -171,7 +195,7 @@ const CartPage = () => {
         <div className='cart-list'>
           <div className='cart-list-header'>
             <div className='cart-item-checkbox'>
-              <input type='checkbox' onChange={handleSelectAll} />
+              <input type='checkbox' checked={isAllChecked} onChange={handleSelectAll} />
             </div>
             <div className='cart-list-header-info'>상품정보</div>
             {!isMobile && <div>수량</div>}
@@ -181,7 +205,11 @@ const CartPage = () => {
           {cartList.map((item) => (
             <div key={item._id} className='cart-list-item'>
               <div className='cart-item-checkbox'>
-                <input type='checkbox' />
+                <input
+                  type='checkbox'
+                  checked={!!checkedItems[item._id]} // 개별 체크박스 상태 연결
+                  onChange={() => handleSelectItem(item._id)}
+                />
               </div>
               <div className='cart-item-content'>
                 <img src={item.productId.image} alt={item.productId.name} className='cart-item-img' />
@@ -227,22 +255,40 @@ const CartPage = () => {
                     type='number'
                     value={temporaryQuantities[item._id] || item.qty} // 로컬 상태에 수량 저장
                     className='pc-quantity-input'
-                    onChange={(e) =>
-                      setTemporaryQuantities((prev) => ({
-                        ...prev,
-                        [item._id]: Math.max(1, parseInt(e.target.value) || 1) // 최소값 1 유지
-                      }))
-                    }
+                    onChange={(e) => {
+                      const inputQuantity = parseInt(e.target.value) || 1; // 사용자가 입력한 값
+                      const stockLimit = item.productId.stock[item.size]; // 해당 상품 옵션의 최대 재고
+                      console.log(stockLimit);
+                      if (inputQuantity > stockLimit) {
+                        // 초과 시 경고 메시지 및 최대값으로 제한
+                        alert(`최대 ${stockLimit}개까지 구매 가능합니다.`);
+                        setTemporaryQuantities((prev) => ({
+                          ...prev,
+                          [item._id]: stockLimit // 최대 재고로 강제 설정
+                        }));
+                      } else {
+                        // 유효한 값 업데이트
+                        setTemporaryQuantities((prev) => ({
+                          ...prev,
+                          [item._id]: Math.max(1, inputQuantity) // 최소값 1 유지
+                        }));
+                      }
+                    }}
                   />
                   <div className='pc-quantity-buttons'>
                     {/* 수량 증가 */}
                     <button
                       className='pc-quantity-up'
                       onClick={() =>
-                        setTemporaryQuantities((prev) => ({
-                          ...prev,
-                          [item._id]: (prev[item._id] || item.qty) + 1
-                        }))
+                        setTemporaryQuantities((prev) => {
+                          const currentQuantity = prev[item._id] || item.qty; // 현재 수량
+                          const stockLimit = item.productId.stock[item.size]; // 최대 재고
+                          if (currentQuantity + 1 > stockLimit) {
+                            alert(`최대 ${stockLimit}개까지 구매 가능합니다.`);
+                            return {...prev, [item._id]: stockLimit}; // 최대값으로 설정
+                          }
+                          return {...prev, [item._id]: currentQuantity + 1}; // 수량 증가
+                        })
                       }>
                       ▲
                     </button>
@@ -253,7 +299,7 @@ const CartPage = () => {
                       onClick={() =>
                         setTemporaryQuantities((prev) => ({
                           ...prev,
-                          [item._id]: Math.max(1, (prev[item._id] || item.qty) - 1)
+                          [item._id]: Math.max(1, (prev[item._id] || item.qty) - 1) // 최소값 1 유지
                         }))
                       }>
                       ▼
@@ -301,7 +347,7 @@ const CartPage = () => {
           <div className='cart-price-detail'>
             <div className='cart-price-row'>
               <span>총 상품 금액</span>
-              <span>{totalProductPrice.toLocaleString()}원</span>
+              <span>{totalCheckedPrice.toLocaleString()}원</span>
             </div>
             <div className='cart-price-row'>
               <span>배송비</span>
@@ -309,11 +355,11 @@ const CartPage = () => {
             </div>
             <div className='cart-price-row'>
               <span>할인금액</span>
-              <span>-{totalDiscount.toLocaleString()}원</span>
+              <span>-{totalCheckedDiscount.toLocaleString()}원</span>
             </div>
             <div className='cart-price-row cart-price-row-total'>
               <span>총 결제금액</span>
-              <span>{(totalPrice + shippingFee - totalDiscount).toLocaleString()}원</span>
+              <span>{(totalCheckedPrice + shippingFee - totalCheckedDiscount).toLocaleString()}원</span>
             </div>
           </div>
           <button className='cart-checkout-button' onClick={handleCheckout}>

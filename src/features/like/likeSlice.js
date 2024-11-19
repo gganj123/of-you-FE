@@ -27,6 +27,11 @@ const likeSlice = createSlice({
     loading: false,
     error: null
   },
+  reducers: {
+    resetLikes: (state) => {
+      state.likes = []; // likes 초기화
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getLikeList.pending, (state) => {
@@ -34,10 +39,14 @@ const likeSlice = createSlice({
         state.error = null;
       })
       .addCase(getLikeList.fulfilled, (state, action) => {
+        console.log('Fetched likes:', action.payload); // 확인용
+
         state.loading = false;
         state.likes = action.payload;
       })
       .addCase(getLikeList.rejected, (state, action) => {
+        console.error('Error fetching likes:', action.payload); // 확인용
+
         state.loading = false;
         state.error = action.payload;
       })
@@ -61,5 +70,6 @@ const likeSlice = createSlice({
       });
   }
 });
+export const {resetLikes} = likeSlice.actions;
 
 export default likeSlice.reducer;

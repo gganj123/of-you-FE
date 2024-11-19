@@ -4,8 +4,13 @@ import RecommendedProducts from './components/RecommendedProducts/RecommendedPro
 import BrandBanner from './components/BrandBanner/BrandBanner';
 import CategorySection from './components/CategorySection/CategorySection';
 import './HomePage.style.css';
+import {useDispatch, useSelector} from 'react-redux';
+import {getLikeList} from '../../features/like/likeSlice';
 
 const HomePage = () => {
+  const dispatch = useDispatch();
+  const {user} = useSelector((state) => state.user); // 로그인 상태 확인
+
   const baseProduct = {
     id: 1,
     image: '/images/banner8.jpg',
@@ -72,6 +77,13 @@ const HomePage = () => {
       buttonText: '상품 확인하기'
     }
   ];
+
+  useEffect(() => {
+    if (user) {
+      // 로그인된 상태라면 좋아요 리스트 호출
+      dispatch(getLikeList());
+    }
+  }, [user, dispatch]);
 
   return (
     <div className='homepage-container'>

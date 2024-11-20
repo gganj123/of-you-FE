@@ -1,14 +1,35 @@
-import React, {useState, useEffect} from 'react';
-import {useLocation} from 'react-router-dom';
+import {useState, useEffect} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
 import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import './PaymentPage.style.css';
+import {cc_expires_format} from '../../utils/number';
+import {useDispatch} from 'react-redux';
+import {createOrder} from '../../features/order/orderSlice';
+import DaumPostcode from 'react-daum-postcode';
 
 const PaymentPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {items, totalPrice} = location.state || {items: [], totalPrice: 0}; // items와 totalPrice를 전달받음
 
   const [isMobileView, setIsMobileView] = useState(false);
+  const [shipInfo, setShipInfo] = useState({
+    address: '',
+    city: '',
+    zip: '',
+    firstName: '',
+    lastName: '',
+    contact: ''
+  });
+
+  const [contactParts, setContactParts] = useState({
+    prefix: '',
+    middle: '',
+    last: ''
+  });
+
   const [cardData, setCardData] = useState({
     number: '',
     expiry: '',
@@ -17,13 +38,85 @@ const PaymentPage = () => {
     focus: ''
   });
 
+  const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
+
+  const handleFormChange = (e) => {
+    const {name, value} = e.target;
+    setShipInfo({...shipInfo, [name]: value});
+  };
+
+  const handleContactChange = (e) => {
+    const {name, value} = e.target;
+    const updatedContactParts = {
+      ...contactParts,
+      [name]: value
+    };
+    const updatedContact = `${updatedContactParts.prefix || ''}-${updatedContactParts.middle || ''}-${
+      updatedContactParts.last || ''
+    }`;
+
+    setContactParts(updatedContactParts);
+    setShipInfo((prev) => ({
+      ...prev,
+      contact: updatedContact
+    }));
+  };
+
   const handleInputChange = (e) => {
     const {name, value} = e.target;
-    setCardData((prev) => ({...prev, [name]: value}));
+
+    const formattedValue = name === 'expiry' ? cc_expires_format(value) : value;
+
+    setCardData((prev) => ({
+      ...prev,
+      [name]: formattedValue
+    }));
   };
 
   const handleInputFocus = (e) => {
     setCardData((prev) => ({...prev, focus: e.target.name}));
+  };
+
+  const handleCompletePostcode = (data) => {
+    const fullAddress = data.address; // 도로명 주소
+    const zonecode = data.zonecode; // 우편번호
+
+    setShipInfo((prev) => ({
+      ...prev,
+      address: fullAddress,
+      zip: zonecode
+    }));
+
+    setIsPostcodeOpen(false); // 모달 닫기
+  };
+
+  const handleSubmitOrder = () => {
+    // 주문 데이터 형식에 맞게 변환
+    const orderData = {
+      shipto: {
+        address: shipInfo.address,
+        city: shipInfo.city,
+        zip: shipInfo.zip
+      },
+      contact: {
+        firstName: shipInfo.firstName,
+        lastName: shipInfo.lastName,
+        contact: shipInfo.contact
+      },
+      orderList: items.map((item) => ({
+        productId: item.productId._id,
+        size: item.size,
+        qty: item.qty,
+        price: item.productId.salePrice || item.productId.price
+      })),
+      totalPrice: totalPrice
+    };
+
+    console.log('Order Data:', orderData); // 디버깅용
+
+    // createOrder 액션 호출
+    dispatch(createOrder(orderData));
+    navigate('/payment/success');
   };
 
   useEffect(() => {
@@ -38,7 +131,7 @@ const PaymentPage = () => {
   }, []);
 
   if (items.length === 0) {
-    return <div className='payment_wrapper'>결제할 상품이 없습니다.</div>;
+    navigate('/cart');
   }
 
   return (
@@ -56,15 +149,21 @@ const PaymentPage = () => {
                 <label className='payment_form_label'>
                   받으시는 분<span className='required'>*</span>
                 </label>
-                <input type='text' className='payment_form_input' />
+                성
+                <input type='text' className='payment_form_input' onChange={handleFormChange} name='lastName' /> 이름
+                <input type='text' className='payment_form_input' onChange={handleFormChange} name='firstName' />
               </div>
               <div className='payment_form_row'>
                 <label className='payment_form_label'>
                   휴대폰번호<span className='required'>*</span>
                 </label>
                 <div className='payment_phone_select'>
-                  <select className='payment_form_select'>
-                    <option value='' disabled selected>
+                  <select
+                    className='payment_form_select'
+                    name='prefix'
+                    value={contactParts.prefix}
+                    onChange={handleContactChange}>
+                    <option value='' disabled>
                       선택
                     </option>
                     <option value='010'>010</option>
@@ -74,17 +173,77 @@ const PaymentPage = () => {
                     <option value='018'>018</option>
                     <option value='019'>019</option>
                   </select>
-                  <input type='text' className='payment_form_input phone_input' maxLength='4' />
-                  <input type='text' className='payment_form_input phone_input' maxLength='4' />
+                  <input
+                    type='text'
+                    className='payment_form_input phone_input'
+                    name='middle'
+                    value={contactParts.middle}
+                    onChange={handleContactChange}
+                    maxLength='4'
+                    placeholder='중간 번호'
+                  />
+                  <input
+                    type='text'
+                    className='payment_form_input phone_input'
+                    name='last'
+                    value={contactParts.last}
+                    onChange={handleContactChange}
+                    maxLength='4'
+                    placeholder='마지막 번호'
+                  />
                 </div>
               </div>
               <div className='payment_form_row'>
                 <label className='payment_form_label'>
                   배송지<span className='required'>*</span>
                 </label>
-                <input type='text' className='payment_form_input' />
-                <button className='payment_form_button'>우편번호 찾기</button>
+                <div>
+                  <input
+                    type='text'
+                    className='payment_form_input'
+                    placeholder='우편번호'
+                    value={shipInfo.zip}
+                    readOnly
+                  />
+                  <button className='payment_form_button' type='button' onClick={() => setIsPostcodeOpen(true)}>
+                    우편번호 찾기
+                  </button>
+                </div>
+                <div>
+                  <input
+                    type='text'
+                    className='payment_form_input'
+                    placeholder='도로명 주소'
+                    value={shipInfo.city}
+                    readOnly
+                  />
+                  <input
+                    type='text'
+                    className='payment_form_input'
+                    placeholder='상세 주소'
+                    value={shipInfo.address}
+                    onChange={(e) => setShipInfo((prev) => ({...prev, address: e.target.value}))}
+                  />
+                </div>
               </div>
+
+              {isPostcodeOpen && (
+                <div className='postcode_modal'>
+                  <DaumPostcode
+                    onComplete={(data) => {
+                      const fullAddress = data.address; // 도로명 주소
+                      const zonecode = data.zonecode; // 우편번호
+                      setShipInfo((prev) => ({
+                        ...prev,
+                        city: fullAddress,
+                        zip: zonecode
+                      }));
+                      setIsPostcodeOpen(false); // 모달 닫기
+                    }}
+                  />
+                  <button onClick={() => setIsPostcodeOpen(false)}>닫기</button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -190,7 +349,7 @@ const PaymentPage = () => {
                   value={cardData.expiry}
                   onChange={handleInputChange}
                   onFocus={handleInputFocus}
-                  maxLength={4}
+                  maxLength={5}
                 />
               </div>
               <div className='payment_form_row'>
@@ -246,7 +405,9 @@ const PaymentPage = () => {
               </span>
             </div>
 
-            <button className='payment_button'>결제하기</button>
+            <button className='payment_button' onClick={handleSubmitOrder}>
+              결제하기
+            </button>
           </div>
         </div>
       </div>

@@ -22,8 +22,6 @@
 .like-page {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 20px var(--page-padding);
-    margin-top: 270px;
     overflow: hidden;
 }
 
@@ -158,10 +156,6 @@
         --page-padding: 32px;
     }
 
-    .like-page {
-        margin-top: 200px;
-    }
-
     .products-container.grid {
         grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     }
@@ -178,10 +172,6 @@
 @media screen and (max-width: 768px) {
     :root {
         --page-padding: 24px;
-    }
-
-    .like-page {
-        margin-top: 160px;
     }
 
     .products-container.grid {
@@ -230,11 +220,6 @@
 @media screen and (max-width: 480px) {
     :root {
         --page-padding: 16px;
-    }
-
-    .like-page {
-        margin-top: 140px;
-        padding: 16px var(--page-padding);
     }
 
     .products-container.grid {

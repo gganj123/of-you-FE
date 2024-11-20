@@ -1,59 +1,64 @@
-import './Mypagebar.style.css';
+import { Link, useLocation } from 'react-router-dom';
+import "./Mypagebar.style.css"
 
 const Mypagebar = () => {
+  const location = useLocation();
+
   return (
-    <section className='container'>
-      <div className='sub-title-wrap'>
-        <h2 className='sub-title'>MY PAGE</h2>
-        <div className='breadcrumb-container'>
-          <ol className='breadcrumb'>
-            <li className='li-title'>HOME</li>
-            <li className='li-title'>MY PAGE</li>
-            <li className='li-title'>정보관리</li>
-          </ol>
+    <div className="mypage-sidebar">
+      <h2 className="mypage-username">홍길동님❤</h2>
+      <br />
+      <div className="mypage-menu">
+        <div className="mypage-section">
+          <h3 className="mypage-section-title">주문관리</h3>
+          <ul>
+            <li>
+              <Link to="/mypage/order"
+                className={location.pathname === '/mypage/order' ? 'active' : ''}>
+                주문/배송조회
+              </Link>
+            </li>
+            <li>
+              <Link to="/mypage/addresslist"
+                className={location.pathname === '/mypage/addresslist' ? 'active' : ''}>
+                배송지 관리
+              </Link>
+            </li>
+
+          </ul>
         </div>
-      </div>
 
-      <div className='snb_header'>
-        <ul>
-          <li>
-            <a href='/mypage'>MY 🤍</a>
-          </li>
-          <li>
-            <a href='/mypage/Order'>주문관리</a>
-          </li>
-          <li>
-            <a href='/mypage/memberInfo'>정보관리</a>
-          </li>
-        </ul>
-      </div>
-
-      <div className='snb_sub'>
-        <div className='inner'>
+        <div className="mypage-section">
+          <h3 className="mypage-section-title">정보관리</h3>
           <ul>
             <li>
-              <a href='/mypage/like'>My 🤍 Like</a>
-            </li>
-            <li>
-              <a href='/mypage/myreview'>My 🤍 Review</a>
-            </li>
-          </ul>
-          <ul>
-            <li>
-              <a href='/mypage/order'>주문/배송조회</a>
-            </li>
-          </ul>
-          <ul>
-            <li>
-              <a href='/mypage/address'>배송지관리</a>
-            </li>
-            <li>
-              <a href='/mypage/secession'>회원탈퇴</a>
+              <Link to="/mypage/edit"
+                className={location.pathname === '/mypage/edit' ? 'active' : ''}>
+                회원정보수정
+              </Link>
             </li>
           </ul>
         </div>
+
+        <div className="mypage-section">
+          <h3 className="mypage-section-title">마이페이지</h3>
+          <ul>
+            <li>
+              <Link to="/mypage/like"
+                className={location.pathname === '/mypage/like' ? 'active' : ''}>
+                나의 LIKE
+              </Link>
+            </li>
+            <li>
+              <Link to="/mypage/myreview"
+                className={location.pathname === '/mypage/myreview' ? 'active' : ''}>
+                상품 리뷰
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
-    </section>
+    </div>
   );
 };
 

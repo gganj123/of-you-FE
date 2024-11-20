@@ -34,7 +34,7 @@ const Mypagebar = () => {
             <li>
               <Link to="/mypage/edit"
                 className={location.pathname === '/mypage/edit' ? 'active' : ''}>
-                회원정보수정
+                회원정보
               </Link>
             </li>
           </ul>
@@ -49,12 +49,7 @@ const Mypagebar = () => {
                 나의 LIKE
               </Link>
             </li>
-            <li>
-              <Link to="/mypage/myreview"
-                className={location.pathname === '/mypage/myreview' ? 'active' : ''}>
-                상품 리뷰
-              </Link>
-            </li>
+
           </ul>
         </div>
       </div>

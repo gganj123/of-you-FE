@@ -34,7 +34,7 @@ export const updateProduct = createAsyncThunk(`product/updateProduct`, async (pr
 export const deleteProduct = createAsyncThunk(`product/deleteProduct`, async (id, {rejectWithValue, dispatch}) => {
   try {
     const response = await api.delete(`/product/${id}`);
-    dispatch(fetchProducts({page: 1}));
+    dispatch(fetchProducts({page: 1, limit: 5}));
     return response.data;
   } catch (error) {
     return rejectWithValue(error.response?.data?.message || error.message);

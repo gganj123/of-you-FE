@@ -375,7 +375,7 @@ const CartPage = () => {
         </ul>
       </div>
       {/* 옵션 변경 모달 */}
-      {isModalOpen && selectedProduct && selectedProduct.productId && (
+      {isModalOpen && (
         <div className='cart-modal-overlay'>
           <div className='cart-modal'>
             <div className='cart-modal-header'>
@@ -393,30 +393,32 @@ const CartPage = () => {
                     </option>
                   ))}
                 </select>
-                <div className='modal-quantity'>
-                  <div className='modal-quantity-control'>
-                    <button
-                      className='modal-quantity-down'
-                      onClick={() => setTemporaryQuantity((prevQuantity) => Math.max(1, prevQuantity - 1))}>
-                      -
-                    </button>
-                    <input type='number' value={temporaryQuantity} className='modal-quantity-input' readOnly />
-                    <button
-                      className='modal-quantity-up'
-                      onClick={() =>
-                        setTemporaryQuantity((prevQuantity) => {
-                          const stockLimit = selectedProduct.productId.stock[selectedProduct.size];
-                          if (prevQuantity + 1 > stockLimit) {
-                            alert(`최대 ${stockLimit}개까지 구매 가능합니다.`);
-                            return stockLimit;
-                          }
-                          return prevQuantity + 1;
-                        })
-                      }>
-                      +
-                    </button>
+                {isMobile && (
+                  <div className='modal-quantity'>
+                    <div className='modal-quantity-control'>
+                      <button
+                        className='modal-quantity-down'
+                        onClick={() => setTemporaryQuantity((prevQuantity) => Math.max(1, prevQuantity - 1))}>
+                        -
+                      </button>
+                      <input type='number' value={temporaryQuantity} className='modal-quantity-input' readOnly />
+                      <button
+                        className='modal-quantity-up'
+                        onClick={() =>
+                          setTemporaryQuantity((prevQuantity) => {
+                            const stockLimit = selectedProduct.productId.stock[selectedProduct.size];
+                            if (prevQuantity + 1 > stockLimit) {
+                              alert(`최대 ${stockLimit}개까지 구매 가능합니다.`);
+                              return stockLimit;
+                            }
+                            return prevQuantity + 1;
+                          })
+                        }>
+                        +
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
             <div className='cart-modal-footer'>

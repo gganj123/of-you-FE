@@ -10,10 +10,9 @@ const ProductCard = ({id, image, title, salePrice, originalPrice, discountRate})
   const navigate = useNavigate();
 
   // `like`와 `products` 상태를 가져옴
-  const {likes, loading: likeLoading, error: likeError} = useSelector((state) => state.like);
-  const {products, loading: productLoading, error: productError} = useSelector((state) => state.products);
+  const {likes} = useSelector((state) => state.like);
 
-  const isLiked = likes.some((like) => like.productId === id);
+  const isLiked = likes.some((like) => like.productId && like.productId._id === id);
 
   const handleLikeClick = (e) => {
     e.preventDefault();

@@ -13,6 +13,7 @@ import PrivateRoute from './PrivateRoute';
 import CategoryPage from '../page/CategoryPage/CategoryPage';
 import ProductDetail from '../page/ProductDetailPage/ProductDetailPage';
 import LikePage from '../page/LikePage/LikePage';
+import SignupCompletePage from '../page/SignupCompletePage/SignupCompletePage';
 
 function AppRouter() {
   return (
@@ -22,6 +23,8 @@ function AppRouter() {
       <Route path='/signup' element={<SignupPage />} />
       <Route path='/products/category/:category' element={<CategoryPage />} />
       <Route path='/product/:id' element={<ProductDetail />} />
+      <Route path='/signup/success' element={<SignupCompletePage />} />
+
       <Route element={<PrivateRoute permissionLevel='customer' />}>
         <Route path='/cart' element={<CartPage />} />
         <Route path='/payment' element={<PaymentPage />} />

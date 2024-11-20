@@ -203,6 +203,7 @@ const Navbar = ({user}) => {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     handleSearchSubmit(e);
+                    setIsPopularSearchVisible(false);
                   }
                 }}
                 onFocus={handleSearchIconClick}

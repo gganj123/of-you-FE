@@ -1,18 +1,18 @@
-import {useState, useEffect} from 'react';
-import {useLocation, useNavigate} from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import './PaymentPage.style.css';
-import {cc_expires_format} from '../../utils/number';
-import {useDispatch} from 'react-redux';
-import {createOrder} from '../../features/order/orderSlice';
+import { cc_expires_format } from '../../utils/number';
+import { useDispatch } from 'react-redux';
+import { createOrder } from '../../features/order/orderSlice';
 import DaumPostcode from 'react-daum-postcode';
 
 const PaymentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {items, totalPrice} = location.state || {items: [], totalPrice: 0}; // items와 totalPrice를 전달받음
+  const { items, totalPrice } = location.state || { items: [], totalPrice: 0 }; // items와 totalPrice를 전달받음
 
   const [isMobileView, setIsMobileView] = useState(false);
   const [shipInfo, setShipInfo] = useState({
@@ -41,19 +41,18 @@ const PaymentPage = () => {
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
 
   const handleFormChange = (e) => {
-    const {name, value} = e.target;
-    setShipInfo({...shipInfo, [name]: value});
+    const { name, value } = e.target;
+    setShipInfo({ ...shipInfo, [name]: value });
   };
 
   const handleContactChange = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     const updatedContactParts = {
       ...contactParts,
       [name]: value
     };
-    const updatedContact = `${updatedContactParts.prefix || ''}-${updatedContactParts.middle || ''}-${
-      updatedContactParts.last || ''
-    }`;
+    const updatedContact = `${updatedContactParts.prefix || ''}-${updatedContactParts.middle || ''}-${updatedContactParts.last || ''
+      }`;
 
     setContactParts(updatedContactParts);
     setShipInfo((prev) => ({
@@ -63,7 +62,7 @@ const PaymentPage = () => {
   };
 
   const handleInputChange = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
 
     if (name === 'number' && value.length > 16) {
       return; // 16자 초과 시 무시
@@ -78,7 +77,7 @@ const PaymentPage = () => {
   };
 
   const handleInputFocus = (e) => {
-    setCardData((prev) => ({...prev, focus: e.target.name}));
+    setCardData((prev) => ({ ...prev, focus: e.target.name }));
   };
 
   const handleCompletePostcode = (data) => {
@@ -173,9 +172,22 @@ const PaymentPage = () => {
                 <label className='payment_form_label'>
                   받으시는 분<span className='required'>*</span>
                 </label>
-                성
-                <input type='text' className='payment_form_input' onChange={handleFormChange} name='lastName' /> 이름
-                <input type='text' className='payment_form_input' onChange={handleFormChange} name='firstName' />
+                <div className='payment_name_wrapper'>
+                  <input
+                    type='text'
+                    className='payment_form_input name_input'
+                    placeholder='성'
+                    onChange={handleFormChange}
+                    name='lastName'
+                  />
+                  <input
+                    type='text'
+                    className='payment_form_input name_input'
+                    placeholder='이름'
+                    onChange={handleFormChange}
+                    name='firstName'
+                  />
+                </div>
               </div>
               <div className='payment_form_row'>
                 <label className='payment_form_label'>
@@ -204,7 +216,6 @@ const PaymentPage = () => {
                     value={contactParts.middle}
                     onChange={handleContactChange}
                     maxLength='4'
-                    placeholder='중간 번호'
                   />
                   <input
                     type='text'
@@ -213,43 +224,51 @@ const PaymentPage = () => {
                     value={contactParts.last}
                     onChange={handleContactChange}
                     maxLength='4'
-                    placeholder='마지막 번호'
                   />
                 </div>
               </div>
-              <div className='payment_form_row'>
-                <label className='payment_form_label'>
-                  배송지<span className='required'>*</span>
+              <div className="payment_form_row">
+                <label className="payment_form_label">
+                  배송지<span className="required">*</span>
                 </label>
-                <div>
-                  <input
-                    type='text'
-                    className='payment_form_input'
-                    placeholder='우편번호'
-                    value={shipInfo.zip}
-                    readOnly
-                  />
-                  <button className='payment_form_button' type='button' onClick={() => setIsPostcodeOpen(true)}>
-                    우편번호 찾기
-                  </button>
-                </div>
-                <div>
-                  <input
-                    type='text'
-                    className='payment_form_input'
-                    placeholder='도로명 주소'
-                    value={shipInfo.city}
-                    readOnly
-                  />
-                  <input
-                    type='text'
-                    className='payment_form_input'
-                    placeholder='상세 주소'
-                    value={shipInfo.address}
-                    onChange={(e) => setShipInfo((prev) => ({...prev, address: e.target.value}))}
-                  />
+                <div className="payment_address_wrapper">
+                  <div className="payment_postcode_row">
+                    <input
+                      type="text"
+                      className="payment_form_input postcode_input"
+                      placeholder="우편번호"
+                      value={shipInfo.zip}
+                      readOnly
+                    />
+                    <button
+                      className="payment_form_button postcode_button"
+                      type="button"
+                      onClick={() => setIsPostcodeOpen(true)}
+                    >
+                      우편번호 찾기
+                    </button>
+                  </div>
+                  <div className="payment_address_fields">
+                    <input
+                      type="text"
+                      className="payment_form_input"
+                      placeholder="도로명 주소"
+                      value={shipInfo.city}
+                      readOnly
+                    />
+                    <input
+                      type="text"
+                      className="payment_form_input"
+                      placeholder="상세 주소"
+                      value={shipInfo.address}
+                      onChange={(e) =>
+                        setShipInfo((prev) => ({ ...prev, address: e.target.value }))
+                      }
+                    />
+                  </div>
                 </div>
               </div>
+
 
               {isPostcodeOpen && (
                 <div className='postcode_modal'>

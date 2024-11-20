@@ -404,7 +404,7 @@ const PaymentPage = () => {
             </div>
             <div className='payment_summary_row'>
               <span>배송비</span>
-              <span>+ 0원</span>
+              <span>+ 4000원</span>
             </div>
             <div className='payment_summary_row'>
               <span>할인금액</span>
@@ -424,7 +424,8 @@ const PaymentPage = () => {
                   items.reduce((sum, item) => sum + (item.productId.price || 0) * (item.qty || 1), 0) -
                   items
                     .filter((item) => item.productId.salePrice)
-                    .reduce((sum, item) => sum + (item.productId.price - item.productId.salePrice) * item.qty, 0)
+                    .reduce((sum, item) => sum + (item.productId.price - item.productId.salePrice) * item.qty, 0) +
+                  4000
                 ).toLocaleString()}
                 원
               </span>

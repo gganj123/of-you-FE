@@ -31,10 +31,11 @@ export const updateProduct = createAsyncThunk(`product/updateProduct`, async (pr
   }
 });
 
-export const deleteProduct = createAsyncThunk(`product/deleteProduct`, async (id, {rejectWithValue}) => {
+export const deleteProduct = createAsyncThunk(`product/deleteProduct`, async (id, {rejectWithValue, dispatch}) => {
   try {
-    await api.delete(`/product/${id}`);
-    return id;
+    const response = await api.delete(`/product/${id}`);
+    dispatch(fetchProducts({page: 1}));
+    return response.data;
   } catch (error) {
     return rejectWithValue(error.response?.data?.message || error.message);
   }
@@ -86,6 +87,18 @@ const productSlice = createSlice({
         console.log(Object.entries(state.productDetail.stock));
       })
       .addCase(fetchProductDetail.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ? action.payload.message : 'Something went wrong.';
+      })
+      .addCase(deleteProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ? action.payload.message : 'Something went wrong.';
       });

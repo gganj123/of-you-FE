@@ -54,7 +54,7 @@ export const updateQty = createAsyncThunk(
 
 export const getCartQty = createAsyncThunk('cart/getCartQty', async (_, {rejectWithValue, dispatch}) => {
   try {
-    const response = await api.get('cart/qty');
+    const response = await api.get('cart/count');
     return response.data.qty;
   } catch (error) {
     return rejectWithValue(error.error);

@@ -1,10 +1,11 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import api from '../../utils/api';
 
-export const getLikeList = createAsyncThunk('like/getLikeList', async ({rejectWithValue}) => {
+export const getLikeList = createAsyncThunk('like/getLikeList', async (_, {rejectWithValue}) => {
   try {
     const response = await api.get('/like');
-    return response.data;
+    console.log(response.data);
+    return response.data.data;
   } catch (error) {
     return rejectWithValue(error);
   }
@@ -39,10 +40,8 @@ const likeSlice = createSlice({
         state.error = null;
       })
       .addCase(getLikeList.fulfilled, (state, action) => {
-        console.log('Fetched likes:', action.payload); // 확인용
-
         state.loading = false;
-        state.likes = action.payload;
+        state.likes = action.payload.filter((like) => like.productId); // productId가 null이 아닌 항목만 유지
       })
       .addCase(getLikeList.rejected, (state, action) => {
         console.error('Error fetching likes:', action.payload); // 확인용

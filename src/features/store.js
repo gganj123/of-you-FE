@@ -6,6 +6,7 @@ import userSlice from './user/userSlice';
 import productSlice from './product/productSlice';
 import cartSlice from './cart/cartSlice';
 import likeSlice from './like/likeSlice';
+import orderSlice from './order/orderSlice';
 
 // persist 설정
 const persistConfig = {
@@ -19,7 +20,8 @@ const rootReducer = combineReducers({
   user: userSlice,
   products: productSlice, // products는 필요에 따라 제외 가능
   cart: cartSlice,
-  like: likeSlice
+  like: likeSlice,
+  order: orderSlice
 });
 
 // persistReducer 생성

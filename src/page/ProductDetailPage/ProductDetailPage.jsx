@@ -60,8 +60,25 @@ const ProductDetailPage = () => {
   const handleRemoveOption = (index) => {
     setSelectedOptions((prev) => prev.filter((_, i) => i !== index));
   };
+  const handleBuyNow = () => {
+    if (selectedOptions.length === 0) {
+      setSizeError(true);
+      return;
+    }
 
-  const addItemToCart = () => {
+    const orderItems = selectedOptions.map((option) => ({
+      productId: productDetail, // 상품 ID
+      size: option.option, // 선택된 옵션
+      qty: option.quantity, // 수량
+      price: productDetail.salePrice || productDetail.price // 가격
+    }));
+
+    const totalPrice = orderItems.reduce((sum, item) => sum + item.qty * item.price, 0);
+
+    navigate('/payment', {state: {items: orderItems, totalPrice}});
+  };
+
+  const addItemToCart = async () => {
     if (selectedOptions.length === 0) {
       setSizeError(true);
       return;
@@ -71,25 +88,23 @@ const ProductDetailPage = () => {
       return;
     }
 
-    const requests = selectedOptions.map((option) =>
-      dispatch(
-        addToCart({
-          productId: id, // 상품 ID
-          size: option.option, // 문자열로 변환
-          qty: option.quantity // 수량
-        })
-      )
-    );
+    for (const option of selectedOptions) {
+      try {
+        console.log('요청 정보:', option);
+        await dispatch(
+          addToCart({
+            productId: id, // 상품 ID
+            size: option.option, // 선택된 옵션
+            qty: option.quantity // 수량
+          })
+        ).unwrap();
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        alert(`옵션 ${option.option} 추가에 실패했습니다.`);
+      }
+    }
 
-    // 비동기 요청 처리
-    Promise.all(requests)
-      .then(() => {
-        alert('장바구니에 추가되었습니다.');
-      })
-      .catch((err) => {
-        console.error('장바구니 추가 중 오류 발생:', err);
-        alert('장바구니 추가에 실패했습니다.');
-      });
+    alert('모든 옵션이 장바구니에 추가되었습니다.');
   };
   return (
     <div className='product-detail-page'>
@@ -176,7 +191,9 @@ const ProductDetailPage = () => {
         ))}
 
         <div className='product-detail-page__buttons'>
-          <button className='product-detail-page__buy-now'>바로 구매</button>
+          <button className='product-detail-page__buy-now' onClick={handleBuyNow}>
+            바로 구매
+          </button>
           <button className='product-detail-page__add-cart' onClick={addItemToCart}>
             장바구니 담기
           </button>

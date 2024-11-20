@@ -6,6 +6,8 @@ import {useNavigate} from 'react-router-dom';
 import {loginWithEmail, loginWithGoogle, fetchKakaoToken} from '../../features/user/userSlice';
 import {GoogleLogin, GoogleOAuthProvider} from '@react-oauth/google';
 import {clearErrors} from '../../features/user/userSlice';
+import {getLikeList} from '../../features/like/likeSlice';
+import {getCartQty} from '../../features/cart/cartSlice';
 import KakaoLoginButton from './KakaoLoginButton';
 
 const LoginPage = () => {
@@ -52,7 +54,7 @@ const LoginPage = () => {
     }
   };
 
-  const handleLoginWithEmail = (e) => {
+  const handleLoginWithEmail = async (e) => {
     e.preventDefault();
     setError(''); // 기존 에러 메시지 초기화
 
@@ -71,8 +73,15 @@ const LoginPage = () => {
       localStorage.setItem('savedEmail', email);
     }
 
-    // 로그인 요청
-    dispatch(loginWithEmail({email, password}));
+    try {
+      const result = await dispatch(loginWithEmail({email, password})).unwrap(); // 로그인 성공 여부 확인
+      if (result) {
+        dispatch(getLikeList()); // 좋아요 리스트 가져오기
+        dispatch(getCartQty()); // 카트 아이템 수량 가져오기
+      }
+    } catch (error) {
+      setError(error || '로그인에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
   const handleGoogleLogin = async (googleData) => {

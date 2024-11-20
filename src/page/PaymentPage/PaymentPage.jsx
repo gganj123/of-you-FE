@@ -1,18 +1,18 @@
-import {useState, useEffect} from 'react';
-import {useLocation, useNavigate} from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import './PaymentPage.style.css';
-import {cc_expires_format} from '../../utils/number';
-import {useDispatch} from 'react-redux';
-import {createOrder} from '../../features/order/orderSlice';
+import { cc_expires_format } from '../../utils/number';
+import { useDispatch } from 'react-redux';
+import { createOrder } from '../../features/order/orderSlice';
 import DaumPostcode from 'react-daum-postcode';
 
 const PaymentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {items, totalPrice} = location.state || {items: [], totalPrice: 0}; // items와 totalPrice를 전달받음
+  const { items, totalPrice } = location.state || { items: [], totalPrice: 0 }; // items와 totalPrice를 전달받음
 
   const [isMobileView, setIsMobileView] = useState(false);
   const [shipInfo, setShipInfo] = useState({
@@ -41,19 +41,18 @@ const PaymentPage = () => {
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
 
   const handleFormChange = (e) => {
-    const {name, value} = e.target;
-    setShipInfo({...shipInfo, [name]: value});
+    const { name, value } = e.target;
+    setShipInfo({ ...shipInfo, [name]: value });
   };
 
   const handleContactChange = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     const updatedContactParts = {
       ...contactParts,
       [name]: value
     };
-    const updatedContact = `${updatedContactParts.prefix || ''}-${updatedContactParts.middle || ''}-${
-      updatedContactParts.last || ''
-    }`;
+    const updatedContact = `${updatedContactParts.prefix || ''}-${updatedContactParts.middle || ''}-${updatedContactParts.last || ''
+      }`;
 
     setContactParts(updatedContactParts);
     setShipInfo((prev) => ({
@@ -63,7 +62,7 @@ const PaymentPage = () => {
   };
 
   const handleInputChange = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
 
     if (name === 'number' && value.length > 16) {
       return; // 16자 초과 시 무시
@@ -78,7 +77,7 @@ const PaymentPage = () => {
   };
 
   const handleInputFocus = (e) => {
-    setCardData((prev) => ({...prev, focus: e.target.name}));
+    setCardData((prev) => ({ ...prev, focus: e.target.name }));
   };
 
   const handleCompletePostcode = (data) => {
@@ -246,7 +245,7 @@ const PaymentPage = () => {
                     className='payment_form_input'
                     placeholder='상세 주소'
                     value={shipInfo.address}
-                    onChange={(e) => setShipInfo((prev) => ({...prev, address: e.target.value}))}
+                    onChange={(e) => setShipInfo((prev) => ({ ...prev, address: e.target.value }))}
                   />
                 </div>
               </div>

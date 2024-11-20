@@ -68,7 +68,7 @@ const CategoryPage = () => {
     navigate(`/products/category/${category.toLowerCase()}?${params.toString()}`);
   };
   const loadMoreProducts = () => {
-    if (!hasMoreProducts || loading) return;
+    if (!hasMoreProducts || loading || products.length === 0 || searchTerm) return;
 
     const nextPage = pageRef.current + 1;
     pageRef.current = nextPage;
@@ -79,7 +79,8 @@ const CategoryPage = () => {
         subcategory,
         page: nextPage,
         limit: productsPerPage,
-        sort: sortType
+        sort: sortType,
+        name: searchTerm
       })
     ).then((result) => {
       if (!result.payload || result.payload.length < productsPerPage) {
@@ -123,23 +124,23 @@ const CategoryPage = () => {
       return (
         <div className='category-page__sort'>
           <button
-            className={`category-page__sort-btn ${sortType === 'latest' ? 'active' : ''}`}
-            onClick={() => handleSortChange('latest')}>
+            className={`category-page__sort-btn ${sortType === '' ? 'active' : ''}`}
+            onClick={() => handleSortChange('')}>
             신상품순
           </button>
           <button
             className={`category-page__sort-btn ${sortType === 'highSale' ? 'active' : ''}`}
-            onClick={() => handleSortChange('discount')}>
+            onClick={() => handleSortChange('highSale')}>
             할인율순
           </button>
           <button
-            className={`category-page__sort-btn ${sortType === 'lowprice' ? 'active' : ''}`}
-            onClick={() => handleSortChange('lowprice')}>
+            className={`category-page__sort-btn ${sortType === 'lowPrice' ? 'active' : ''}`}
+            onClick={() => handleSortChange('lowPrice')}>
             가격낮은순
           </button>
           <button
-            className={`category-page__sort-btn ${sortType === 'highprice' ? 'active' : ''}`}
-            onClick={() => handleSortChange('highprice')}>
+            className={`category-page__sort-btn ${sortType === 'highPrice' ? 'active' : ''}`}
+            onClick={() => handleSortChange('highPrice')}>
             가격높은순
           </button>
         </div>
@@ -148,8 +149,8 @@ const CategoryPage = () => {
     return (
       <div className='category-page__sort-mobile'>
         <button className='category-page__sort-toggle' onClick={() => setIsSortOpen(!isSortOpen)}>
-          {sortType === 'latest' && '신상품순'}
-          {sortType === 'discount' && '할인율순'}
+          {sortType === '' && '신상품순'}
+          {sortType === 'highSale' && '할인율순'}
           {sortType === 'lowPrice' && '가격낮은순'}
           {sortType === 'highPrice' && '가격높은순'}
           <span className={`arrow ${isSortOpen ? 'open' : ''}`}>▼</span>
@@ -162,8 +163,8 @@ const CategoryPage = () => {
               신상품순
             </button>
             <button
-              className={`category-page__sort-btn ${sortType === 'discount' ? 'active' : ''}`}
-              onClick={() => handleSortChange('discount')}>
+              className={`category-page__sort-btn ${sortType === 'highSale' ? 'active' : ''}`}
+              onClick={() => handleSortChange('highSale')}>
               할인율순
             </button>
             <button

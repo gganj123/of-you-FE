@@ -174,7 +174,7 @@ const CartPage = () => {
 
     navigate('/payment', {
       state: {
-        items: cartList,
+        items: selectedItems,
         totalPrice: totalCheckedPrice,
         shippingFee,
         totalCheckedDiscount

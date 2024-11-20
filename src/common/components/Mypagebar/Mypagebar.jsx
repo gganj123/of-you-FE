@@ -29,6 +29,18 @@ const Mypagebar = () => {
         </div>
 
         <div className="mypage-section">
+          <h3 className="mypage-section-title">마이페이지</h3>
+          <ul>
+            <li>
+              <Link to="/mypage/like"
+                className={location.pathname === '/mypage/like' ? 'active' : ''}>
+                나의 LIKE
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        <div className="mypage-section">
           <h3 className="mypage-section-title">정보관리</h3>
           <ul>
             <li>
@@ -40,18 +52,6 @@ const Mypagebar = () => {
           </ul>
         </div>
 
-        <div className="mypage-section">
-          <h3 className="mypage-section-title">마이페이지</h3>
-          <ul>
-            <li>
-              <Link to="/mypage/like"
-                className={location.pathname === '/mypage/like' ? 'active' : ''}>
-                나의 LIKE
-              </Link>
-            </li>
-
-          </ul>
-        </div>
       </div>
     </div>
   );

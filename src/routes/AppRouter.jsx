@@ -1,4 +1,4 @@
-import {Route, Routes} from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import HomePage from './../page/HomePage/HomePage';
 import LoginPage from '../page/LoginPage/LoginPage';
 import SignupPage from '../page/SignupPage/SignupPage';
@@ -14,6 +14,8 @@ import CategoryPage from '../page/CategoryPage/CategoryPage';
 import ProductDetail from '../page/ProductDetailPage/ProductDetailPage';
 import LikePage from '../page/LikePage/LikePage';
 import SignupCompletePage from '../page/SignupCompletePage/SignupCompletePage';
+import OrderPage from '../page/OrderPage/OrderPage';
+import Mypage from '../page/MyPage/MyPage';
 
 function AppRouter() {
   return (
@@ -29,8 +31,12 @@ function AppRouter() {
         <Route path='/cart' element={<CartPage />} />
         <Route path='/payment' element={<PaymentPage />} />
         <Route path='/payment/success' element={<OrderCompletePage />} />
-        <Route path='/mypage/' element={<MyPage />} />
-        <Route path='/like' element={<LikePage />} />
+
+        <Route path='/mypage' element={<Mypage />}>
+          <Route index element={<Navigate to="/mypage/order" replace />} />
+          <Route path='order' element={<OrderPage />} />
+          <Route path='like' element={<LikePage />} />
+        </Route>
       </Route>
 
       <Route element={<PrivateRoute permissionLevel='admin' />}>

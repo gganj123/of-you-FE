@@ -368,16 +368,14 @@ const CartPage = () => {
           </button>
         </div>
       </div>
-
       <div className='cart-notice'>
         <ul className='cart-notice-list'>
           <li className='cart-notice-item'>쇼핑백에 담긴 상품은 최대 100개까지 담을 수 있습니다.</li>
           <li className='cart-notice-item'>쇼핑백에 담긴 상품은 30일간 보관후 삭제됩니다.</li>
         </ul>
       </div>
-
       {/* 옵션 변경 모달 */}
-      {isModalOpen && (
+      {isModalOpen && selectedProduct && selectedProduct.productId && (
         <div className='cart-modal-overlay'>
           <div className='cart-modal'>
             <div className='cart-modal-header'>
@@ -388,36 +386,37 @@ const CartPage = () => {
             </div>
             <div className='cart-modal-content'>
               <div className='cart-option-group'>
-                {/* 옵션 선택 */}
-                <div className='cart-option-select-wrapper'>
-                  <select
-                    value={selectedProduct.size}
-                    onChange={(e) => handlePickOption(e.target.value, selectedProduct.qty)}>
-                    {Object.keys(selectedProduct.productId.stock).map((size) => (
-                      <option key={size} value={size}>
-                        {size} (재고: {selectedProduct.productId.stock[size]})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* 수량 조절 - 모바일에서만 표시 */}
-                {isMobile && (
-                  <div className='modal-quantity'>
-                    <div className='modal-quantity-title'>수량</div>
-                    <div className='modal-quantity-control'>
-                      <button
-                        className='modal-quantity-down'
-                        onClick={() => setTemporaryQuantity(Math.max(1, temporaryQuantity - 1))}>
-                        -
-                      </button>
-                      <input type='number' value={temporaryQuantity} className='modal-quantity-input' readOnly />
-                      <button className='modal-quantity-up' onClick={() => setTemporaryQuantity(temporaryQuantity + 1)}>
-                        +
-                      </button>
-                    </div>
+                <select value={selectedProduct.size} onChange={(e) => handlePickOption(e.target.value)}>
+                  {Object.keys(selectedProduct.productId.stock).map((size) => (
+                    <option key={size} value={size}>
+                      {size} (재고: {selectedProduct.productId.stock[size]})
+                    </option>
+                  ))}
+                </select>
+                <div className='modal-quantity'>
+                  <div className='modal-quantity-control'>
+                    <button
+                      className='modal-quantity-down'
+                      onClick={() => setTemporaryQuantity((prevQuantity) => Math.max(1, prevQuantity - 1))}>
+                      -
+                    </button>
+                    <input type='number' value={temporaryQuantity} className='modal-quantity-input' readOnly />
+                    <button
+                      className='modal-quantity-up'
+                      onClick={() =>
+                        setTemporaryQuantity((prevQuantity) => {
+                          const stockLimit = selectedProduct.productId.stock[selectedProduct.size];
+                          if (prevQuantity + 1 > stockLimit) {
+                            alert(`최대 ${stockLimit}개까지 구매 가능합니다.`);
+                            return stockLimit;
+                          }
+                          return prevQuantity + 1;
+                        })
+                      }>
+                      +
+                    </button>
                   </div>
-                )}
+                </div>
               </div>
             </div>
             <div className='cart-modal-footer'>

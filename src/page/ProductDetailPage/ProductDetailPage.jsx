@@ -60,6 +60,23 @@ const ProductDetailPage = () => {
   const handleRemoveOption = (index) => {
     setSelectedOptions((prev) => prev.filter((_, i) => i !== index));
   };
+  const handleBuyNow = () => {
+    if (selectedOptions.length === 0) {
+      setSizeError(true);
+      return;
+    }
+
+    const orderItems = selectedOptions.map((option) => ({
+      productId: productDetail, // 상품 ID
+      size: option.option, // 선택된 옵션
+      qty: option.quantity, // 수량
+      price: productDetail.salePrice || productDetail.price // 가격
+    }));
+
+    const totalPrice = orderItems.reduce((sum, item) => sum + item.qty * item.price, 0);
+
+    navigate('/payment', {state: {items: orderItems, totalPrice}});
+  };
 
   const addItemToCart = async () => {
     if (selectedOptions.length === 0) {
@@ -174,7 +191,9 @@ const ProductDetailPage = () => {
         ))}
 
         <div className='product-detail-page__buttons'>
-          <button className='product-detail-page__buy-now'>바로 구매</button>
+          <button className='product-detail-page__buy-now' onClick={handleBuyNow}>
+            바로 구매
+          </button>
           <button className='product-detail-page__add-cart' onClick={addItemToCart}>
             장바구니 담기
           </button>

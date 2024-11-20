@@ -363,7 +363,12 @@ const CartPage = () => {
             </div>
           </div>
 
-          <button className='cart-checkout-button' onClick={handleCheckout}>
+          <button
+            className={`cart-checkout-button ${
+              Object.values(checkedItems).some((isChecked) => isChecked) ? 'active' : 'disabled'
+            }`}
+            onClick={handleCheckout}
+            disabled={cartList.length === 0}>
             주문하기
           </button>
         </div>

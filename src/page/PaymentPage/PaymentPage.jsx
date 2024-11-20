@@ -65,6 +65,10 @@ const PaymentPage = () => {
   const handleInputChange = (e) => {
     const {name, value} = e.target;
 
+    if (name === 'number' && value.length > 16) {
+      return; // 16자 초과 시 무시
+    }
+
     const formattedValue = name === 'expiry' ? cc_expires_format(value) : value;
 
     setCardData((prev) => ({
@@ -91,6 +95,21 @@ const PaymentPage = () => {
   };
 
   const handleSubmitOrder = () => {
+    if (
+      !shipInfo.address ||
+      !shipInfo.city ||
+      !shipInfo.zip ||
+      !shipInfo.firstName ||
+      !shipInfo.lastName ||
+      !shipInfo.contact ||
+      cardData.number.length !== 16 || // 카드 번호는 정확히 16자리여야 함
+      cardData.expiry.length !== 5 ||
+      cardData.cvc.length !== 3 ||
+      !cardData.name
+    ) {
+      alert('모든 입력란을 정확히 채워주세요.');
+      return;
+    }
     // 주문 데이터 형식에 맞게 변환
     const orderData = {
       shipto: {
@@ -107,7 +126,7 @@ const PaymentPage = () => {
         productId: item.productId._id,
         size: item.size,
         qty: item.qty,
-        price: item.productId.salePrice || item.productId.price
+        price: item.productId.price
       })),
       totalPrice: totalPrice
     };
@@ -118,6 +137,11 @@ const PaymentPage = () => {
     dispatch(createOrder(orderData));
     navigate('/payment/success');
   };
+  useEffect(() => {
+    if (!location.state || !items || items.length === 0) {
+      navigate('/cart'); // 데이터가 없으면 장바구니로 리디렉션
+    }
+  }, [location, navigate]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -256,43 +280,42 @@ const PaymentPage = () => {
                 <span>상품 금액</span>
                 <span>총 상품 금액</span>
               </div>
-              {items.map((item) => (
-                <div className='payment_order_item' key={item._id}>
-                  <div className='payment_item_info'>
-                    <div className='payment_item_image'>
-                      <img src={item.productId.image || '/images/default-image.jpg'} alt={item.productId.name} />
-                    </div>
-                    <div className='payment_item_details'>
-                      <div className='payment_brand'>{item.productId.brand}</div>
-                      <div className='payment_item_name'>{item.productId.name}</div>
-                      <div className='payment_item_option'>옵션: {item.size}</div>
-                      <div className='payment_mobile_price'>
-                        {item.productId.salePrice
-                          ? `${(item.productId.salePrice * item.qty).toLocaleString()}원 / ${item.qty}개`
-                          : `${(item.productId.price * item.qty).toLocaleString()}원 / ${item.qty}개`}
+              {items.map((item, index) => {
+                // 안전하게 데이터를 처리
+                const product = item.productId || {};
+                const price = product.salePrice || product.price || 0; // salePrice가 없으면 price 사용, 둘 다 없으면 0
+                const totalPrice = price * (item.qty || 1); // qty가 없으면 기본값 1
+
+                return (
+                  <div className='payment_order_item' key={product._id || index}>
+                    <div className='payment_item_info'>
+                      <div className='payment_item_image'>
+                        <img src={product.image || '/images/default-image.jpg'} alt={product.name || '상품 이미지'} />
+                      </div>
+                      <div className='payment_item_details'>
+                        <div className='payment_brand'>{product.brand || '브랜드 없음'}</div>
+                        <div className='payment_item_name'>{product.name || '상품명 없음'}</div>
+                        <div className='payment_item_option'>옵션: {item.size || '옵션 없음'}</div>
+                        <div className='payment_mobile_price'>
+                          {price ? `${totalPrice.toLocaleString()}원 / ${item.qty || 1}개` : '가격 정보 없음'}
+                        </div>
                       </div>
                     </div>
+                    <div className='payment_item_quantity'>{item.qty || 1}</div>
+                    <div className='payment_price'>
+                      {product.salePrice ? (
+                        <>
+                          <span className='payment_price_original'>{product.price?.toLocaleString() || 0}원</span>
+                          <span className='payment_price_sale'>{product.salePrice?.toLocaleString() || 0}원</span>
+                        </>
+                      ) : (
+                        <span className='payment_price_sale'>{product.price?.toLocaleString() || 0}원</span>
+                      )}
+                    </div>
+                    <div className='payment_total_price'>{totalPrice.toLocaleString()}원</div>
                   </div>
-                  <div className='payment_item_quantity'>{item.qty}</div>
-                  <div className='payment_price'>
-                    {item.productId.salePrice ? (
-                      <>
-                        <span className='payment_price_original'>{item.productId.price.toLocaleString()}원</span>
-                        <span className='payment_price_sale'>{item.productId.salePrice.toLocaleString()}원</span>
-                      </>
-                    ) : (
-                      <span className='payment_price_sale'>{item.productId.price.toLocaleString()}원</span>
-                    )}
-                  </div>
-                  <div className='payment_total_price'>
-                    {(item.productId.salePrice
-                      ? item.productId.salePrice * item.qty
-                      : item.productId.price * item.qty
-                    ).toLocaleString()}
-                    원
-                  </div>
-                </div>
-              ))}
+                );
+              })}
               <p className='payment_delivery_notice'>* 제주/도서산간 지역의 경우 추가 배송비가 발생할 수 있습니다.</p>
             </div>
           </div>
@@ -375,7 +398,9 @@ const PaymentPage = () => {
           <div className='payment_summary_sticky'>
             <div className='payment_summary_row'>
               <span>총 상품 금액</span>
-              <span>{totalPrice.toLocaleString()}원</span>
+              <span>
+                {items.reduce((sum, item) => sum + (item.productId.price || 0) * (item.qty || 1), 0).toLocaleString()}원
+              </span>
             </div>
             <div className='payment_summary_row'>
               <span>배송비</span>
@@ -396,7 +421,7 @@ const PaymentPage = () => {
               <span>총 결제 금액</span>
               <span className='payment_price_emphasis'>
                 {(
-                  totalPrice -
+                  items.reduce((sum, item) => sum + (item.productId.price || 0) * (item.qty || 1), 0) -
                   items
                     .filter((item) => item.productId.salePrice)
                     .reduce((sum, item) => sum + (item.productId.price - item.productId.salePrice) * item.qty, 0)

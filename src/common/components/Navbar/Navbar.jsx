@@ -2,10 +2,11 @@ import React, {useState, useRef, useEffect} from 'react';
 import {FiHeart, FiLogIn, FiUser, FiShoppingBag, FiSearch, FiChevronDown, FiMenu, FiArrowLeft} from 'react-icons/fi';
 import './Navbar.style.css';
 import {useNavigate, useLocation} from 'react-router-dom';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {logout} from '../../../features/user/userSlice';
 import {persistor} from '../../../features/store';
 import {resetLikes} from '../../../features/like/likeSlice';
+import {getCartQty} from '../../../features/cart/cartSlice';
 
 const Navbar = ({user}) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
@@ -14,6 +15,7 @@ const Navbar = ({user}) => {
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isPopularSearchVisible, setIsPopularSearchVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const cartItemCount = useSelector((state) => state.cart.cartItemCount);
 
   const popularSearchRef = useRef(null);
   const categoryMenuRef = useRef(null);
@@ -33,6 +35,13 @@ const Navbar = ({user}) => {
   useEffect(() => {
     setIsCategoryOpen(false);
   }, [location]);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(getCartQty());
+      console.log('유저의 카트 카운트정보를 불러옵니다.', cartItemCount);
+    }
+  }, [dispatch, user]);
 
   const handleCategoryToggle = () => {
     setIsCategoryOpen(!isCategoryOpen);
@@ -238,7 +247,8 @@ const Navbar = ({user}) => {
                 <FiUser /> MY
               </div>
               <div className='navbar-icon-item' onClick={handleCart}>
-                <FiShoppingBag /> 0
+                <FiShoppingBag />
+                <span className='cart-item-count'>{typeof cartItemCount === 'number' ? cartItemCount : 0}</span>{' '}
               </div>
             </div>
           </div>

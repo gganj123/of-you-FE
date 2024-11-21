@@ -16,6 +16,7 @@ import LikePage from '../page/LikePage/LikePage';
 import SignupCompletePage from '../page/SignupCompletePage/SignupCompletePage';
 import OrderPage from '../page/OrderPage/OrderPage';
 import Mypage from '../page/MyPage/MyPage';
+import AddressPage from '../page/AddressPage/AddressPage';
 
 function AppRouter() {
   return (
@@ -36,6 +37,8 @@ function AppRouter() {
           <Route index element={<Navigate to="/mypage/order" replace />} />
           <Route path='order' element={<OrderPage />} />
           <Route path='like' element={<LikePage />} />
+          <Route path="addresslist" element={<AddressPage />} />
+
         </Route>
       </Route>
 

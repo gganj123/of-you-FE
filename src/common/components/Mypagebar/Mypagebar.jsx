@@ -29,18 +29,6 @@ const Mypagebar = () => {
         </div>
 
         <div className="mypage-section">
-          <h3 className="mypage-section-title">정보관리</h3>
-          <ul>
-            <li>
-              <Link to="/mypage/edit"
-                className={location.pathname === '/mypage/edit' ? 'active' : ''}>
-                회원정보수정
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        <div className="mypage-section">
           <h3 className="mypage-section-title">마이페이지</h3>
           <ul>
             <li>
@@ -49,14 +37,21 @@ const Mypagebar = () => {
                 나의 LIKE
               </Link>
             </li>
+          </ul>
+        </div>
+
+        <div className="mypage-section">
+          <h3 className="mypage-section-title">정보관리</h3>
+          <ul>
             <li>
-              <Link to="/mypage/myreview"
-                className={location.pathname === '/mypage/myreview' ? 'active' : ''}>
-                상품 리뷰
+              <Link to="/mypage/edit"
+                className={location.pathname === '/mypage/edit' ? 'active' : ''}>
+                회원정보
               </Link>
             </li>
           </ul>
         </div>
+
       </div>
     </div>
   );

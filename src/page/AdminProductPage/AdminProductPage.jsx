@@ -13,7 +13,7 @@ const AdminProductPage = () => {
   const dispatch = useDispatch();
   const [query] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
-  const { products, totalPageNum, totalCount } = useSelector((state) => state.products);
+  const { products, totalPageNum, totalCount, loading } = useSelector((state) => state.products);
 
   const [showDialog, setShowDialog] = useState(false);
   const [mode, setMode] = useState("new");
@@ -36,7 +36,6 @@ const AdminProductPage = () => {
     if(searchQuery.name === ""){
       delete searchQuery.name;
     }
-    console.log(searchQuery);
     const params = new URLSearchParams(searchQuery);
     const query = params.toString();
     navigate(`?${query}`);
@@ -51,6 +50,21 @@ const AdminProductPage = () => {
   useEffect(() => {
     console.log('AdminProductPage');
   }, []);
+
+  const handleDelete = (id) => {
+    const isConfirmed = window.confirm("정말로 삭제하시겠습니까?");
+    if (!isConfirmed) {
+      return;
+    }
+    try {
+      dispatch(deleteProduct(id));
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      alert('상품 삭제에 실패했습니다.');
+    }
+
+    alert('상품이 삭제되었습니다.');
+  };
 
 
   return (
@@ -74,9 +88,11 @@ const AdminProductPage = () => {
             </div>
           </div>
         </div>
-
-        <table className='product-table'>
-          <thead>
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
+          <table className='product-table'>
+            <thead>
             <tr>
               {tableHeader.map((header, index) => (
                 <th key={index}>{header}</th>
@@ -103,12 +119,13 @@ const AdminProductPage = () => {
                 <td>{product.status}</td>
                 <td>
                   <button onClick={() => alert('Edit')}>Edit</button>
-                  <button onClick={() => alert('Delete')}>Delete</button>
+                  <button onClick={() => handleDelete(product._id)}>Delete</button>
                 </td>
               </tr>
             ))}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        )}
 
         <ReactPaginate
           nextLabel='next >'

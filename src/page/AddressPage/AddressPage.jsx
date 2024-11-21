@@ -2,19 +2,14 @@ import React, { useState } from "react";
 import DaumPostcode from 'react-daum-postcode';
 import "./AddressPage.style.css";
 
+
 const AddressPage = () => {
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
 
-  // 임시로 localStorage 사용 (나중에 백엔드 연동 시 대체될 부분)
-  const [addresses, setAddresses] = useState(() => {
-    const savedAddresses = localStorage.getItem('addresses');
-    return savedAddresses ? JSON.parse(savedAddresses) : [];
-  });
-
-  // 폼 데이터 상태
-  const [formData, setFormData] = useState({
+  // 초기 formData 상태
+  const initialFormData = {
     id: null,
     name: '',
     zipCode: '',
@@ -22,7 +17,24 @@ const AddressPage = () => {
     detailAddress: '',
     phone: '',
     isDefault: false
+  };
+
+  // 폼 데이터 상태
+  const [formData, setFormData] = useState(initialFormData);
+
+  // 임시로 localStorage 사용 (나중에 백엔드 연동 시 대체될 부분)
+  const [addresses, setAddresses] = useState(() => {
+    const savedAddresses = localStorage.getItem('addresses');
+    return savedAddresses ? JSON.parse(savedAddresses) : [];
   });
+
+  // 상태 초기화 함수
+  const resetAllStates = () => {
+    setFormData(initialFormData);
+    setSelectedAddress(null);
+    setIsAddressModalOpen(false);
+    setIsPostcodeOpen(false);
+  };
 
   // 주소 선택 핸들러 (우편번호 서비스)
   const handlePostcodeComplete = (data) => {
@@ -36,6 +48,7 @@ const AddressPage = () => {
 
   // 주소 수정 버튼 핸들러
   const handleEditClick = (address) => {
+    resetAllStates(); // 먼저 모든 상태 초기화
     setSelectedAddress(address);
     setFormData({
       id: address.id,
@@ -49,46 +62,52 @@ const AddressPage = () => {
     setIsAddressModalOpen(true);
   };
 
+  // 새 배송지 등록 버튼 핸들러
+  const handleAddClick = () => {
+    resetAllStates(); // 모든 상태 초기화
+    setIsAddressModalOpen(true);
+  };
+
+  // 모달 닫기 핸들러
+  const handleCloseModal = () => {
+    resetAllStates();
+  };
+
   // 주소 저장 핸들러
   const handleSaveAddress = (e) => {
     e.preventDefault();
 
+    const updatedAddresses = [...addresses];
+
     // 기본 배송지 처리
     if (formData.isDefault) {
-      setAddresses(prev => prev.map(addr => ({
-        ...addr,
-        isDefault: false
-      })));
+      updatedAddresses.forEach(addr => {
+        addr.isDefault = false;
+      });
     }
 
     if (formData.id) {
       // 수정
-      setAddresses(prev => prev.map(addr =>
-        addr.id === formData.id ? formData : addr
-      ));
+      const index = updatedAddresses.findIndex(addr => addr.id === formData.id);
+      if (index !== -1) {
+        updatedAddresses[index] = formData;
+      }
     } else {
       // 새로 추가
-      const newAddress = {
+      updatedAddresses.push({
         ...formData,
         id: Date.now()
-      };
-      setAddresses(prev => [...prev, newAddress]);
+      });
     }
 
-    // localStorage 업데이트 (임시)
-    localStorage.setItem('addresses', JSON.stringify(addresses));
+    // 상태 업데이트
+    setAddresses(updatedAddresses);
 
-    // 모달 닫기 및 폼 초기화
-    setIsAddressModalOpen(false);
-    setFormData({
-      id: null,
-      name: '',
-      zipCode: '',
-      address: '',
-      detailAddress: '',
-      phone: '',
-      isDefault: false
-    });
+    // localStorage 업데이트
+    localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
+
+    // 모달 닫기 및 상태 초기화
+    resetAllStates();
   };
 
   return (
@@ -131,7 +150,7 @@ const AddressPage = () => {
       <div className="address-page-add-wrapper">
         <button
           className="address-page-add-btn"
-          onClick={() => setIsAddressModalOpen(true)}
+          onClick={handleAddClick}
         >
           배송지 등록
         </button>
@@ -142,7 +161,7 @@ const AddressPage = () => {
         <div className="address-page-modal-overlay">
           <div className="address-page-modal">
             <h3 className="address-page-modal-title">
-              {formData.id ? '배송지 수정' : '배송지 등록'}
+              {selectedAddress ? '배송지 수정' : '배송지 등록'}
             </h3>
             <form onSubmit={handleSaveAddress} className="address-page-form">
               <div className="address-page-form-row">
@@ -224,7 +243,7 @@ const AddressPage = () => {
                 <button
                   type="button"
                   className="address-page-cancel-btn"
-                  onClick={() => setIsAddressModalOpen(false)}
+                  onClick={handleCloseModal}
                 >
                   취소
                 </button>

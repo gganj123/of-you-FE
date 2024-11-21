@@ -8,6 +8,7 @@ import {GoogleLogin, GoogleOAuthProvider} from '@react-oauth/google';
 import {clearErrors} from '../../features/user/userSlice';
 import {getLikeList} from '../../features/like/likeSlice';
 import {getCartQty} from '../../features/cart/cartSlice';
+import KakaoLoginButton from './KakaoLoginButton';
 
 const LoginPage = () => {
   const dispatch = useDispatch();

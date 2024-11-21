@@ -15,12 +15,22 @@ export const createOrder = createAsyncThunk('order/createOrder', async (orderDat
   }
 });
 
+export const fetchOrder = createAsyncThunk('/order/fetchOrder', async (_, {rejectWithValue}) => {
+  try {
+    const response = await api.get('/order');
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data?.message || error.message);
+  }
+});
+
 // 주문 관련 슬라이스
 const orderSlice = createSlice({
   name: 'order',
   initialState: {
+    orderList: [],
     order: null, // 주문 데이터
-    status: 'idle', // 상태: idle, loading, succeeded, failed
+    loading: false,
     error: null // 에러 메시지
   },
   reducers: {
@@ -33,15 +43,27 @@ const orderSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createOrder.pending, (state) => {
-        state.status = 'loading';
+        state.loading = true;
         state.error = null;
       })
       .addCase(createOrder.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.loading = false;
         state.order = action.payload.orderNum;
       })
       .addCase(createOrder.rejected, (state, action) => {
-        state.status = 'failed';
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchOrder.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchOrder.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orderList = action.payload.orders;
+      })
+      .addCase(fetchOrder.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload;
       });
   }

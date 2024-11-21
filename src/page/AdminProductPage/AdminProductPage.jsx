@@ -87,17 +87,16 @@ const AdminProductPage = () => {
   };
 
   return (
-    <div className='banner-section'>
+    <div className='admin-product-page admin-product-section'>
       <div className='product-content'>
-        <div className='product-header'>
-          <div className='search-box'>
-            <input type='text' id='search-query' placeholder='제품 이름으로 검색' className='search-input' />
-          </div>
-          <div className='header-actions'>
-            <button className='add-new-item-btn' onClick={handleClickNewItem}>
-              Add New Item +
-            </button>
-            <div className='item-count-dropdown'>
+        <div className='admin-order-header'>
+          <h1>제품 관리</h1>
+          <div>
+            <div className='search-box'>
+              <input type='text' id='search-query' placeholder='제품 이름으로 검색' className='search-input' />
+              <button className='add-new-item-btn' onClick={handleClickNewItem}>
+                Add New Item +
+              </button>
               <select id='items-per-page' onChange={handleLimitChange}>
                 <option value='10'>10</option>
                 <option value='20'>20</option>

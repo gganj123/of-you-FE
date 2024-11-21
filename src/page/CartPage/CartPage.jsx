@@ -53,9 +53,9 @@ const CartPage = () => {
   const totalCheckedDiscount = cartList
     .filter((item) => checkedItems[item._id]) // 체크된 항목만 필터링
     .reduce((sum, item) => {
-      if (item.productId.salePrice) {
+      if (item.productId.realPrice) {
         // 할인 금액 계산
-        const discount = (item.productId.price - item.productId.salePrice) * item.qty;
+        const discount = (item.productId.price - item.productId.realPrice) * item.qty;
         return sum + discount;
       }
       return sum;
@@ -223,7 +223,7 @@ const CartPage = () => {
                   {isMobile ? (
                     <div className='cart-item-mobile-bottom'>
                       <div className='cart-item-mobile-price'>
-                        {item.productId.salePrice ? (
+                        {item.productId.realPrice ? (
                           <>
                             <span
                               style={{
@@ -234,7 +234,7 @@ const CartPage = () => {
                               {(item.productId.price * item.qty).toLocaleString()}원
                             </span>
                             <span style={{color: 'red', fontWeight: 'bold'}}>
-                              {(item.productId.salePrice * item.qty).toLocaleString()}원
+                              {(item.productId.realPrice * item.qty).toLocaleString()}원
                             </span>
                           </>
                         ) : (
@@ -316,7 +316,7 @@ const CartPage = () => {
 
               {!isMobile && (
                 <div className='cart-item-price'>
-                  {item.productId.salePrice ? (
+                  {item.productId.realPrice ? (
                     <>
                       <span
                         style={{
@@ -327,7 +327,7 @@ const CartPage = () => {
                         {(item.productId.price * item.qty).toLocaleString()}원
                       </span>
                       <span style={{color: 'red', fontWeight: 'bold'}}>
-                        {(item.productId.salePrice * item.qty).toLocaleString()}원
+                        {(item.productId.realPrice * item.qty).toLocaleString()}원
                       </span>
                     </>
                   ) : (
@@ -368,7 +368,7 @@ const CartPage = () => {
               Object.values(checkedItems).some((isChecked) => isChecked) ? 'active' : 'disabled'
             }`}
             onClick={handleCheckout}
-            disabled={cartList.length === 0}>
+            disabled={!Object.values(checkedItems).some((isChecked) => isChecked) || cartList.length === 0}>
             주문하기
           </button>
         </div>

@@ -127,7 +127,6 @@ const OrderPage = () => {
           <span>수량</span>
           <span>상품금액</span>
           <span>진행상황</span>
-          <span>리뷰</span>
         </div>
 
         {orderList.map((order) => {
@@ -156,7 +155,6 @@ const OrderPage = () => {
                 <div className='order-history-quantity'>{order.items.reduce((sum, item) => sum + item.qty, 0)}</div>
                 <div className='order-history-price'>{totalAmount.toLocaleString()}원</div>
                 <div className='order-history-order-status'>{order.status}</div>
-                <button className='order-history-write-review-button'>리뷰 작성</button>
               </div>
 
               {/* 모바일 뷰 */}
@@ -187,7 +185,6 @@ const OrderPage = () => {
 
                 <div className='order-history-status-review'>
                   <div className='order-history-order-status'>{order.status}</div>
-                  <button className='order-history-write-review-button'>리뷰 작성</button>
                 </div>
               </div>
             </div>

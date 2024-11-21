@@ -25,7 +25,7 @@ const LikePage = () => {
 
   // 로딩 또는 에러 처리
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <div>Error: {error.message || JSON.stringify(error)}</div>;
 
   return (
     <div className='like-page'>
@@ -60,7 +60,7 @@ const LikePage = () => {
               id={like.productId._id}
               image={like.productId.image}
               title={like.productId.name}
-              salePrice={like.productId.salePrice}
+              realPrice={like.productId.realPrice}
               originalPrice={like.productId.price}
               discountRate={like.productId.saleRate}
             />

@@ -106,7 +106,7 @@ const CategorySection = ({categoryName}) => {
                     id={product._id}
                     image={product.image}
                     title={product.name}
-                    salePrice={product.salePrice}
+                    realPrice={product.realPrice}
                     originalPrice={product.price}
                     discountRate={product.saleRate}
                   />

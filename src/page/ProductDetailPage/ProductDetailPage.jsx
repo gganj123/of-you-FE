@@ -71,7 +71,7 @@ const ProductDetailPage = () => {
       productId: productDetail, // 상품 ID
       size: option.option, // 선택된 옵션
       qty: option.quantity, // 수량
-      price: productDetail.salePrice || productDetail.price // 가격
+      price: productDetail.realPrice || productDetail.price // 가격
     }));
 
     const totalPrice = orderItems.reduce((sum, item) => sum + item.qty * item.price, 0);
@@ -127,15 +127,15 @@ const ProductDetailPage = () => {
 
         <div className='product-detail-page__price'>
           {productDetail.price && (
-            <div className={`product-detail-page__original-price ${productDetail.salePrice ? 'line-through' : ''}`}>
+            <div className={`product-detail-page__original-price ${productDetail.realPrice ? 'line-through' : ''}`}>
               {productDetail.price.toLocaleString()}원
             </div>
           )}
 
-          {productDetail.salePrice && (
+          {productDetail.realPrice && (
             <div className='product-detail-page__sale-price'>
               <span className='discount-rate'>{productDetail.saleRate}%</span>
-              <span className='price'>{productDetail.salePrice.toLocaleString()}원</span>
+              <span className='price'>{productDetail.realPrice.toLocaleString()}원</span>
             </div>
           )}
         </div>
@@ -188,7 +188,7 @@ const ProductDetailPage = () => {
                 min='1'
                 onChange={(e) => handleQuantityChange(index, parseInt(e.target.value))}
               />
-              <span>{(productDetail.salePrice || productDetail.price) * selected.quantity}원</span>
+              <span>{(productDetail.realPrice || productDetail.price) * selected.quantity}원</span>
               <button className='product-detail-page__remove-option' onClick={() => handleRemoveOption(index)}>
                 ✖
               </button>

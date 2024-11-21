@@ -46,9 +46,9 @@ export const updateQty = createAsyncThunk(
     try {
       const response = await api.put(`/cart`, {productId, size, qty});
       dispatch(getCartList());
-      return response.data;
+      return {productId, size, qty};
     } catch (error) {
-      return rejectWithValue(error.error);
+      return rejectWithValue(error.response?.data || '옵션/수량 수정에 실패하였습니다.');
     }
   }
 );

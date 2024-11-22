@@ -79,6 +79,7 @@ const HomePage = () => {
       <BrandBanner banners={brandBanners} />
 
       <CategorySection categoryName={'여성'} />
+      <CategorySection categoryName={'남성'} />
       <CategorySection categoryName={'뷰티'} />
       <CategorySection categoryName={'라이프'} />
     </div>

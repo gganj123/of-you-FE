@@ -3,6 +3,7 @@ import ProductCard from '../../common/components/ProductCard/ProductCard';
 import './LikePage.style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {getLikeList} from '../../features/like/likeSlice';
+import {getCategoryName} from '../../utils/categories';
 
 const LikePage = () => {
   const dispatch = useDispatch();
@@ -10,7 +11,8 @@ const LikePage = () => {
 
   // 탭 상태 관리
   const [activeTab, setActiveTab] = useState('All');
-  const [viewType, setViewType] = useState('grid'); // 현재는 미사용 상태, 필요 시 추가 구현 가능
+  const [viewType, setViewType] = useState('grid');
+  const [groupedLikes, setGroupedLikes] = useState({});
 
   // 좋아요 리스트 가져오기
   useEffect(() => {
@@ -19,10 +21,16 @@ const LikePage = () => {
 
   const filteredLikes = useMemo(() => {
     return likes
-      .filter((like) => like.productId) // productId가 존재하는 항목만 유지
-      .filter((like) => like.productId._id && like.productId.image); // 추가 검증
+      .filter((like) => like.productId)
+      .filter((like) => like.productId._id && like.productId.image)
+      .filter((like) => {
+        if (activeTab === 'All') {
+          return true;
+        }
+        return like.productId.category?.some((category) => getCategoryName(category) === getCategoryName(activeTab));
+      });
   }, [likes, activeTab]);
-  // 로딩 또는 에러 처리
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 

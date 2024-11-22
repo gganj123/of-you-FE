@@ -1,5 +1,6 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import api from '../../utils/api';
+import {initialCart} from '../cart/cartSlice';
 
 export const registerUser = createAsyncThunk(
   'user/registerUser',
@@ -68,6 +69,7 @@ export const loginWithToken = createAsyncThunk('user/loginWithToken', async (_, 
 export const logout = () => (dispatch) => {
   sessionStorage.removeItem('token');
   dispatch(userSlice.actions.logout());
+  dispatch(initialCart());
 };
 
 const userSlice = createSlice({

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {getOrderList, updateOrderStatus} from '../../features/order/orderSlice';
 import OrderDetailDialog from './component/OrderDetailDialog';
-import './adminOrder.style.css';
+import './AdminOrder.style.css';
 import ReactPaginate from 'react-paginate';
 import 'bootstrap/dist/css/bootstrap.min.css';
 

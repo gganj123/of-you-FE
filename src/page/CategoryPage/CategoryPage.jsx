@@ -217,7 +217,7 @@ const CategoryPage = () => {
               image={product.image}
               brand={product.brand}
               title={product.name}
-              salePrice={product.salePrice}
+              realPrice={product.realPrice}
               originalPrice={product.price}
               discountRate={product.saleRate}
             />

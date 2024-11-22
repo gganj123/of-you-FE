@@ -53,16 +53,31 @@ const CartPage = () => {
   const totalCheckedDiscount = cartList
     .filter((item) => checkedItems[item._id]) // 체크된 항목만 필터링
     .reduce((sum, item) => {
-      if (item.productId.salePrice) {
+      if (item.productId.realPrice) {
         // 할인 금액 계산
-        const discount = (item.productId.price - item.productId.salePrice) * item.qty;
+        const discount = (item.productId.price - item.productId.realPrice) * item.qty;
         return sum + discount;
       }
       return sum;
     }, 0);
   const hasCheckedItems = Object.values(checkedItems).some((isChecked) => isChecked);
   const shippingFee = hasCheckedItems ? 4000 : 0;
+  const handleCheckout = () => {
+    const selectedItems = cartList.filter((item) => checkedItems[item._id]);
+    if (selectedItems.length === 0) {
+      alert('주문할 상품을 선택해주세요.');
+      return;
+    }
 
+    navigate('/payment', {
+      state: {
+        items: selectedItems,
+        totalPrice: totalCheckedPrice,
+        shippingFee,
+        totalCheckedDiscount
+      }
+    });
+  };
   const handleSelectItem = (itemId) => {
     setCheckedItems((prev) => {
       const newCheckedState = {...prev, [itemId]: !prev[itemId]};
@@ -127,31 +142,56 @@ const CartPage = () => {
   };
 
   const handleApplyOption = (newSize, newQty) => {
+    if (!selectedProduct) return;
+
     dispatch(
       updateQty({
-        productId: selectedProduct.productId._id,
+        cartItemId: selectedProduct._id, // 기존 cartItemId
         size: newSize,
         qty: newQty
       })
-    );
-    setIsModalOpen(false); // 모달 닫기
+    )
+      .unwrap()
+      .then(() => {
+        alert(`옵션이 성공적으로 변경되었습니다.\n새 옵션: 사이즈 - ${newSize}, 수량 - ${newQty}`);
+        setIsModalOpen(false); // 모달 닫기
+        dispatch(getCartList());
+      })
+      .catch((err) => {
+        console.error('옵션 변경 실패:', err);
+        alert('옵션 변경에 실패했습니다.');
+      });
   };
 
-  const handleApplyQuantityChange = (cartItemId, productId, size) => {
-    const newQty = temporaryQuantities[cartItemId]; // 임시 수량 가져오기
-    if (newQty === undefined) return; // 변경된 값이 없으면 아무 작업도 하지 않음
+  const handleApplyQuantityChange = (itemId) => {
+    console.log('cartItemId:', itemId);
+
+    console.log('temporaryQuantities:', temporaryQuantities); // temporaryQuantities 상태 확인
+
+    const newQty = temporaryQuantities[itemId];
+    if (newQty === undefined) {
+      console.error('New quantity is undefined for cartItemId:', itemId);
+      return;
+    }
 
     dispatch(
       updateQty({
-        productId,
-        size,
-        qty: newQty // 새로운 수량 전달
+        cartItemId: itemId,
+        qty: newQty
       })
     )
+      .unwrap()
       .then(() => {
-        alert('수량이 변경되었습니다.');
+        alert(`수량이 ${newQty}개로 변경되었습니다.`);
+        // 상태 초기화
+        setTemporaryQuantities((prev) => {
+          const {[itemId]: _, ...rest} = prev;
+          return rest;
+        });
+        dispatch(getCartList());
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error('수량 변경 실패:', err);
         alert('수량 변경에 실패했습니다.');
       });
   };
@@ -159,29 +199,13 @@ const CartPage = () => {
   const handlePickOption = (size) => {
     if (!selectedProduct) return;
 
+    const selectedProductId = selectedProduct.productId._id;
+
     setSelectedProduct((prev) => ({
       ...prev,
       size // 선택된 옵션 업데이트
     }));
-    console.log(`옵션 변경: ${size}, 상품 ID: ${selectedProduct.productId._id}`);
   };
-  const handleCheckout = () => {
-    const selectedItems = cartList.filter((item) => checkedItems[item._id]);
-    if (cartList.length === 0) {
-      alert('주문할 상품을 선택해주세요.');
-      return;
-    }
-
-    navigate('/payment', {
-      state: {
-        items: selectedItems,
-        totalPrice: totalCheckedPrice,
-        shippingFee,
-        totalCheckedDiscount
-      }
-    });
-  };
-
   // 로딩 또는 에러 처리
   if (loading) {
     return <div>Loading...</div>;
@@ -219,11 +243,13 @@ const CartPage = () => {
                 <div className='cart-item-info'>
                   <div className='cart-item-brand'>{item.productId.brand}</div>
                   <div className='cart-item-name'>{item.productId.name}</div>
-                  <div className='cart-item-option'>옵션 : {item.size}</div>
+                  <div className='cart-item-option'>
+                    옵션 : {item.size} {isMobile ? ` 수량: ${item.qty}개` : ''}
+                  </div>
                   {isMobile ? (
                     <div className='cart-item-mobile-bottom'>
                       <div className='cart-item-mobile-price'>
-                        {item.productId.salePrice ? (
+                        {item.productId.realPrice ? (
                           <>
                             <span
                               style={{
@@ -234,7 +260,7 @@ const CartPage = () => {
                               {(item.productId.price * item.qty).toLocaleString()}원
                             </span>
                             <span style={{color: 'red', fontWeight: 'bold'}}>
-                              {(item.productId.salePrice * item.qty).toLocaleString()}원
+                              {(item.productId.realPrice * item.qty).toLocaleString()}원
                             </span>
                           </>
                         ) : (
@@ -256,28 +282,29 @@ const CartPage = () => {
                 <div className='pc-quantity-control'>
                   <input
                     type='number'
-                    value={temporaryQuantities[item._id] || item.qty} // 로컬 상태에 수량 저장
+                    value={temporaryQuantities[item._id] || item.qty}
                     className='pc-quantity-input'
                     onChange={(e) => {
-                      const inputQuantity = parseInt(e.target.value) || 1; // 사용자가 입력한 값
+                      const inputQuantity = parseInt(e.target.value) || 1; // 입력된 값
                       const stockLimit = item.productId.stock[item.size]; // 해당 상품 옵션의 최대 재고
-                      console.log(stockLimit);
+
                       if (inputQuantity > stockLimit) {
                         // 초과 시 경고 메시지 및 최대값으로 제한
                         alert(`최대 ${stockLimit}개까지 구매 가능합니다.`);
                         setTemporaryQuantities((prev) => ({
                           ...prev,
-                          [item._id]: stockLimit // 최대 재고로 강제 설정
+                          [item._id]: stockLimit
                         }));
                       } else {
                         // 유효한 값 업데이트
                         setTemporaryQuantities((prev) => ({
                           ...prev,
-                          [item._id]: Math.max(1, inputQuantity)
+                          [item._id]: Math.max(1, inputQuantity) // cartItemId로 상태 업데이트
                         }));
                       }
                     }}
                   />
+
                   <div className='pc-quantity-buttons'>
                     <button
                       className='pc-quantity-up'
@@ -308,7 +335,10 @@ const CartPage = () => {
                   </div>
                   <button
                     className='pc-quantity-apply'
-                    onClick={() => handleApplyQuantityChange(item._id, item.productId._id, item.size)}>
+                    onClick={() => {
+                      console.log('item.cartItemId:', item.cartItemId); // 디버깅용
+                      handleApplyQuantityChange(item._id); // cartItemId 전달
+                    }}>
                     변경
                   </button>
                 </div>
@@ -316,7 +346,7 @@ const CartPage = () => {
 
               {!isMobile && (
                 <div className='cart-item-price'>
-                  {item.productId.salePrice ? (
+                  {item.productId.realPrice ? (
                     <>
                       <span
                         style={{
@@ -327,7 +357,7 @@ const CartPage = () => {
                         {(item.productId.price * item.qty).toLocaleString()}원
                       </span>
                       <span style={{color: 'red', fontWeight: 'bold'}}>
-                        {(item.productId.salePrice * item.qty).toLocaleString()}원
+                        {(item.productId.realPrice * item.qty).toLocaleString()}원
                       </span>
                     </>
                   ) : (
@@ -368,7 +398,7 @@ const CartPage = () => {
               Object.values(checkedItems).some((isChecked) => isChecked) ? 'active' : 'disabled'
             }`}
             onClick={handleCheckout}
-            disabled={cartList.length === 0}>
+            disabled={!Object.values(checkedItems).some((isChecked) => isChecked) || cartList.length === 0}>
             주문하기
           </button>
         </div>
@@ -393,7 +423,12 @@ const CartPage = () => {
               <div className='cart-option-group'>
                 <select value={selectedProduct.size} onChange={(e) => handlePickOption(e.target.value)}>
                   {Object.keys(selectedProduct.productId.stock).map((size) => (
-                    <option key={size} value={size}>
+                    <option
+                      key={size}
+                      value={size}
+                      disabled={cartList.some(
+                        (item) => item.productId._id === selectedProduct.productId._id && item.size === size
+                      )}>
                       {size} (재고: {selectedProduct.productId.stock[size]})
                     </option>
                   ))}

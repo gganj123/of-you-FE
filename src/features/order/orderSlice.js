@@ -24,6 +24,33 @@ export const fetchOrder = createAsyncThunk('/order/fetchOrder', async (_, {rejec
   }
 });
 
+export const getOrderList = createAsyncThunk('order/getOrderList', async (query, {rejectWithValue}) => {
+  try {
+    const response = await api.get('/order/admin', {params: {...query}});
+    return {
+      orders: response.data.orders,
+      totalPageNum: response.data.totalPageNum,
+      totalCount: response.data.totalCount
+    };
+  } catch (e) {
+    return rejectWithValue(e.message);
+  }
+});
+
+export const updateOrderStatus = createAsyncThunk(
+  'order/updateStatus',
+  async ({orderId, newStatus}, {rejectWithValue}) => {
+    try {
+      const response = await api.put(`/order/${orderId}`, {
+        status: newStatus
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 // 주문 관련 슬라이스
 const orderSlice = createSlice({
   name: 'order',
@@ -31,7 +58,9 @@ const orderSlice = createSlice({
     orderList: [],
     order: null, // 주문 데이터
     loading: false,
-    error: null // 에러 메시지
+    error: null, // 에러 메시지
+    totalCount: 0,
+    totalPageNum: 0
   },
   reducers: {
     resetOrderState: (state) => {
@@ -63,6 +92,38 @@ const orderSlice = createSlice({
         state.orderList = action.payload.orders;
       })
       .addCase(fetchOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getOrderList.pending, (state) => {
+        state.status = 'loading';
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getOrderList.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.loading = false;
+        state.orders = action.payload.orders;
+        state.totalPageNum = action.payload.totalPageNum;
+        state.totalCount = action.payload.totalCount;
+      })
+      .addCase(getOrderList.rejected, (state, action) => {
+        state.status = 'failed';
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateOrderStatus.pending, (state) => {
+        state.status = 'loading';
+        state.loading = true;
+      })
+      .addCase(updateOrderStatus.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.loading = false;
+        const updatedOrder = action.payload;
+        state.orders = state.orders.map((order) => (order._id === updatedOrder._id ? updatedOrder : order));
+      })
+      .addCase(updateOrderStatus.rejected, (state, action) => {
+        state.status = 'failed';
         state.loading = false;
         state.error = action.payload;
       });

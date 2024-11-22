@@ -3,13 +3,14 @@ import {Navigate, useNavigate, useParams} from 'react-router-dom';
 import './ProductDetailPage.style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {clearProductDetail, fetchProductDetail} from '../../features/product/productSlice';
-import {addToCart} from '../../features/cart/cartSlice';
+import {addToCart, getCartList} from '../../features/cart/cartSlice';
 
 const ProductDetailPage = () => {
   const {id} = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {productDetail, loading, error} = useSelector((state) => state.products);
+  const cartList = useSelector((state) => state.cart.cartList) || [];
   const {user} = useSelector((state) => state.user);
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -71,7 +72,7 @@ const ProductDetailPage = () => {
       productId: productDetail, // 상품 ID
       size: option.option, // 선택된 옵션
       qty: option.quantity, // 수량
-      price: productDetail.salePrice || productDetail.price // 가격
+      price: productDetail.realPrice || productDetail.price // 가격
     }));
 
     const totalPrice = orderItems.reduce((sum, item) => sum + item.qty * item.price, 0);
@@ -79,7 +80,7 @@ const ProductDetailPage = () => {
     navigate('/payment', {state: {items: orderItems, totalPrice}});
   };
 
-  const addItemToCart = () => {
+  const addItemToCart = async () => {
     if (selectedOptions.length === 0) {
       setSizeError(true);
       return;
@@ -97,19 +98,32 @@ const ProductDetailPage = () => {
       qty: option.quantity // 수량
     }));
 
-    console.log('요청 정보 (cartItems):', {cartItems});
-    console.log('Array 여부 확인:', Array.isArray(cartItems));
+    try {
+      // 중복 확인
+      const isDuplicate = cartItems.some((cartItem) =>
+        cartList.some(
+          (existingItem) => existingItem.productId === cartItem.productId && existingItem.size === cartItem.size
+        )
+      );
 
-    // Redux Thunk 호출: cartItems 배열 전송
-    dispatch(addToCart({cartItems}))
-      .unwrap()
-      .then(() => {
-        alert('선택된 옵션들이 장바구니에 추가되었습니다.');
-      })
-      .catch((error) => {
-        console.error('장바구니 추가 실패:', error);
-        alert('장바구니 추가 중 문제가 발생했습니다.');
-      });
+      if (isDuplicate) {
+        alert('이미 장바구니에 있는 옵션이 있습니다.');
+        return;
+      }
+
+      // Redux Thunk 호출: cartItems 배열 전송
+      const response = await dispatch(addToCart({cartItems})).unwrap();
+
+      if (response.status === 'fail') {
+        alert(`중복된 항목: ${response.falseItems.join(', ')}`);
+        return;
+      }
+
+      alert('선택된 옵션들이 장바구니에 추가되었습니다.');
+    } catch (error) {
+      console.error('장바구니 추가 실패:', error);
+      alert('장바구니 추가 중 문제가 발생했습니다.');
+    }
   };
 
   return (
@@ -127,15 +141,15 @@ const ProductDetailPage = () => {
 
         <div className='product-detail-page__price'>
           {productDetail.price && (
-            <div className={`product-detail-page__original-price ${productDetail.salePrice ? 'line-through' : ''}`}>
+            <div className={`product-detail-page__original-price ${productDetail.realPrice ? 'line-through' : ''}`}>
               {productDetail.price.toLocaleString()}원
             </div>
           )}
 
-          {productDetail.salePrice && (
+          {productDetail.realPrice && (
             <div className='product-detail-page__sale-price'>
               <span className='discount-rate'>{productDetail.saleRate}%</span>
-              <span className='price'>{productDetail.salePrice.toLocaleString()}원</span>
+              <span className='price'>{productDetail.realPrice.toLocaleString()}원</span>
             </div>
           )}
         </div>
@@ -188,7 +202,7 @@ const ProductDetailPage = () => {
                 min='1'
                 onChange={(e) => handleQuantityChange(index, parseInt(e.target.value))}
               />
-              <span>{(productDetail.salePrice || productDetail.price) * selected.quantity}원</span>
+              <span>{(productDetail.realPrice || productDetail.price) * selected.quantity}원</span>
               <button className='product-detail-page__remove-option' onClick={() => handleRemoveOption(index)}>
                 ✖
               </button>

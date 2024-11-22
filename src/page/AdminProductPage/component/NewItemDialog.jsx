@@ -113,9 +113,12 @@ const NewItemDialog = ({mode, showDialog, setShowDialog}) => {
     if (id === 'saleRate' || id === 'price') {
       const price = Number(newFormData.price);
       const saleRate = Number(newFormData.saleRate) ? Number(newFormData.saleRate) : 0;
-
+      console.log('price ', price);
+      console.log('saleRate ', saleRate);
       newFormData.realPrice = price * (1 - saleRate / 100);
       newFormData.salePrice = price - newFormData.realPrice;
+      console.log('newFormData.realPrice ', newFormData.realPrice);
+      console.log('newFormData.salePrice ', newFormData.salePrice);
     }
 
     setFormData(newFormData);

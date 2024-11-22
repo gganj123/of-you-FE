@@ -5,7 +5,7 @@ import ReactPaginate from 'react-paginate';
 import NewItemDialog from './component/NewItemDialog';
 import './AdminProductPage.style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {fetchProducts, deleteProduct, setSelectedProduct} from '../../features/product/productSlice';
+import {getProductList, deleteProduct, setSelectedProduct} from '../../features/product/productSlice';
 
 const AdminProductPage = () => {
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ const AdminProductPage = () => {
   //상품리스트 가져오기 (url쿼리 맞춰서)
   useEffect(() => {
     if (showDialog) return;
-    dispatch(fetchProducts({...searchQuery}));
+    dispatch(getProductList({...searchQuery}));
   }, [query, showDialog]);
 
   const handleClickNewItem = () => {

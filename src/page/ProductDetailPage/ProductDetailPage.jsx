@@ -3,15 +3,14 @@ import {Navigate, useNavigate, useParams} from 'react-router-dom';
 import './ProductDetailPage.style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {clearProductDetail, fetchProductDetail} from '../../features/product/productSlice';
-import {addToCart} from '../../features/cart/cartSlice';
+import {addToCart, getCartList} from '../../features/cart/cartSlice';
 
 const ProductDetailPage = () => {
   const {id} = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {productDetail, loading, error} = useSelector((state) => state.products);
-  const {cartList} = useSelector((state) => state.cart);
-
+  const cartList = useSelector((state) => state.cart.cartList) || [];
   const {user} = useSelector((state) => state.user);
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -99,12 +98,8 @@ const ProductDetailPage = () => {
       qty: option.quantity // 수량
     }));
 
-    // Redux Thunk 호출: 장바구니 목록 최신화
     try {
-      await dispatch(getCartList()).unwrap(); // 장바구니 최신 데이터 가져오기
-      const {cartList} = store.getState().cart; // 최신 Redux 상태 가져오기
-
-      // 현재 장바구니와 비교하여 중복 확인
+      // 중복 확인
       const isDuplicate = cartItems.some((cartItem) =>
         cartList.some(
           (existingItem) => existingItem.productId === cartItem.productId && existingItem.size === cartItem.size
@@ -112,16 +107,22 @@ const ProductDetailPage = () => {
       );
 
       if (isDuplicate) {
-        alert('이미 담으신 아이템이 있습니다.');
+        alert('이미 장바구니에 있는 옵션이 있습니다.');
         return;
       }
 
       // Redux Thunk 호출: cartItems 배열 전송
-      await dispatch(addToCart({cartItems})).unwrap();
+      const response = await dispatch(addToCart({cartItems})).unwrap();
+
+      if (response.status === 'fail') {
+        alert(`중복된 항목: ${response.falseItems.join(', ')}`);
+        return;
+      }
+
       alert('선택된 옵션들이 장바구니에 추가되었습니다.');
     } catch (error) {
       console.error('장바구니 추가 실패:', error);
-      alert('이미 장바구니에 있는 옵션이 있습니다. 장바구니를 확인해주세요');
+      alert('장바구니 추가 중 문제가 발생했습니다.');
     }
   };
 

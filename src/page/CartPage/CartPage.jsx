@@ -62,7 +62,22 @@ const CartPage = () => {
     }, 0);
   const hasCheckedItems = Object.values(checkedItems).some((isChecked) => isChecked);
   const shippingFee = hasCheckedItems ? 4000 : 0;
+  const handleCheckout = () => {
+    const selectedItems = cartList.filter((item) => checkedItems[item._id]);
+    if (selectedItems.length === 0) {
+      alert('주문할 상품을 선택해주세요.');
+      return;
+    }
 
+    navigate('/payment', {
+      state: {
+        items: selectedItems,
+        totalPrice: totalCheckedPrice,
+        shippingFee,
+        totalCheckedDiscount
+      }
+    });
+  };
   const handleSelectItem = (itemId) => {
     setCheckedItems((prev) => {
       const newCheckedState = {...prev, [itemId]: !prev[itemId]};
@@ -127,25 +142,40 @@ const CartPage = () => {
   };
 
   const handleApplyOption = (newSize, newQty) => {
+    const isOptionInCart = cartList.some(
+      (item) => item.productId._id === selectedProduct.productId._id && item.size === newSize
+    );
+
+    if (isOptionInCart) {
+      alert('이미 장바구니에 담긴 옵션입니다.');
+      return;
+    }
+
     dispatch(
       updateQty({
         productId: selectedProduct.productId._id,
         size: newSize,
         qty: newQty
       })
-    );
-    setIsModalOpen(false); // 모달 닫기
+    )
+      .then(() => {
+        alert('옵션이 변경되었습니다.');
+        setIsModalOpen(false);
+      })
+      .catch(() => {
+        alert('옵션 변경에 실패했습니다.');
+      });
   };
 
   const handleApplyQuantityChange = (cartItemId, productId, size) => {
-    const newQty = temporaryQuantities[cartItemId]; // 임시 수량 가져오기
-    if (newQty === undefined) return; // 변경된 값이 없으면 아무 작업도 하지 않음
+    const newQty = temporaryQuantities[cartItemId];
+    if (newQty === undefined) return;
 
     dispatch(
       updateQty({
         productId,
         size,
-        qty: newQty // 새로운 수량 전달
+        qty: newQty
       })
     )
       .then(() => {
@@ -159,27 +189,20 @@ const CartPage = () => {
   const handlePickOption = (size) => {
     if (!selectedProduct) return;
 
+    const selectedProductId = selectedProduct.productId._id;
+    const cartItemId = `${selectedProductId}_${size}`;
+
+    const isOptionInCart = cartList.some((item) => item.cartItemId === cartItemId);
+
+    if (isOptionInCart) {
+      alert('이미 장바구니에 담긴 옵션입니다.');
+      return;
+    }
+
     setSelectedProduct((prev) => ({
       ...prev,
       size // 선택된 옵션 업데이트
     }));
-    console.log(`옵션 변경: ${size}, 상품 ID: ${selectedProduct.productId._id}`);
-  };
-  const handleCheckout = () => {
-    const selectedItems = cartList.filter((item) => checkedItems[item._id]);
-    if (cartList.length === 0) {
-      alert('주문할 상품을 선택해주세요.');
-      return;
-    }
-
-    navigate('/payment', {
-      state: {
-        items: selectedItems,
-        totalPrice: totalCheckedPrice,
-        shippingFee,
-        totalCheckedDiscount
-      }
-    });
   };
 
   // 로딩 또는 에러 처리
@@ -393,7 +416,12 @@ const CartPage = () => {
               <div className='cart-option-group'>
                 <select value={selectedProduct.size} onChange={(e) => handlePickOption(e.target.value)}>
                   {Object.keys(selectedProduct.productId.stock).map((size) => (
-                    <option key={size} value={size}>
+                    <option
+                      key={size}
+                      value={size}
+                      disabled={cartList.some(
+                        (item) => item.productId._id === selectedProduct.productId._id && item.size === size
+                      )}>
                       {size} (재고: {selectedProduct.productId.stock[size]})
                     </option>
                   ))}

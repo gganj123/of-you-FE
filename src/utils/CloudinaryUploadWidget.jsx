@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import '../App.css';
 // import '../common/style/common.style.css';
 
-const CLOUDNAME = `${import.meta.env.REACT_APP_CLOUDINARY_CLOUD_NAME}`;
-const UPLOADPRESET = `${import.meta.env.REACT_APP_CLOUDINARY_PRESET}`;
+const CLOUDNAME = `${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}`;
+const UPLOADPRESET = `${import.meta.env.VITE_CLOUDINARY_PRESET}`;
 
 class CloudinaryUploadWidget extends Component {
   static propTypes = {
@@ -37,6 +37,8 @@ class CloudinaryUploadWidget extends Component {
     document.getElementById('upload_widget').addEventListener(
       'click',
       function () {
+        console.log('CLOUDNAME : ', CLOUDNAME);
+        console.log('UPLOADPRESET : ', UPLOADPRESET);
         myWidget.open();
       },
       false

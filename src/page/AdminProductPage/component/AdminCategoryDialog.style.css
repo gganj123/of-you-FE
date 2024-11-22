@@ -1,0 +1,13 @@
+.admin-category-menu {
+  display: flex;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 20px;
+  z-index: 1000;
+  width: 400px;
+  height: 300px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: slideDown 0.3s ease forwards;
+}

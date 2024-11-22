@@ -3,8 +3,6 @@ import {IoChevronBack, IoChevronForward} from 'react-icons/io5';
 import ProductCard from '../../../../common/components/ProductCard/ProductCard';
 import './CategorySection.style.css';
 import api from '../../../../utils/api'; // Axios 유틸리티를 가져옵니다.
-import {fetchProducts, clearProducts} from '../../../../features/product/productSlice';
-import {useDispatch, useSelector} from 'react-redux';
 
 const categoryMapping = {
   MEN: '남성',
@@ -15,8 +13,9 @@ const categoryMapping = {
 
 const CategorySection = ({categoryName}) => {
   const scrollRef = useRef(null);
-  const dispatch = useDispatch();
-  const {products, loading, error} = useSelector((state) => state.products);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const translatedCategory = categoryMapping[categoryName?.toUpperCase?.()] || '기타';
@@ -39,24 +38,36 @@ const CategorySection = ({categoryName}) => {
   }, []);
 
   useEffect(() => {
-    // 카테고리별 데이터를 가져오기
     const fetchCategoryProducts = async () => {
-      if (!translatedCategory) {
-        console.error(`Invalid category: ${categoryName}`);
-        return;
-      }
-      dispatch(clearProducts()); // 이전 데이터 초기화
+      setLoading(true);
+      setError(null);
 
-      dispatch(
-        fetchProducts({
-          category: translatedCategory, // 카테고리 이름
-          page: 1, // 첫 페이지
-          limit: 10 // 최대 10개
-        })
-      );
+      try {
+        // mainCate와 subCate를 동적으로 포함하여 엔드포인트 생성
+        let endpoint = `/product/category/${encodeURIComponent(categoryName)}`;
+
+        console.log('Fetching products from endpoint:', endpoint);
+
+        // API 호출
+        const response = await api.get(endpoint, {
+          params: {
+            page: 1,
+            limit: 10
+          }
+        });
+
+        console.log('API Response:', response.data.products);
+        setProducts(response.data.products);
+      } catch (err) {
+        console.error('Fetch failed with error:', err);
+        setError(err.message || 'Failed to fetch products');
+      } finally {
+        setLoading(false);
+      }
     };
+
     fetchCategoryProducts();
-  }, [dispatch, categoryName]);
+  }, [categoryName]);
 
   const handleScroll = (direction) => {
     const container = document.querySelector(`.homepage-product-list-${categoryName}`);
@@ -97,7 +108,7 @@ const CategorySection = ({categoryName}) => {
             {loading ? (
               <div className='category-page__loading'>상품을 불러오는 중입니다...</div>
             ) : error ? (
-              <div className='category-page__error'>상품을 불러오는데 실패했습니다.</div>
+              <div className='category-page__error'>상품을 불러오는데 실패했습니다: {error}</div>
             ) : (
               displayedProducts.map((product) => (
                 <div key={product._id} className='homepage-product-item'>

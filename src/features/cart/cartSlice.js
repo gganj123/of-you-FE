@@ -40,18 +40,15 @@ export const deleteCartItem = createAsyncThunk('cart/deleteCartItem', async (id,
   }
 });
 
-export const updateQty = createAsyncThunk(
-  'cart/updateQty',
-  async ({productId, size, qty}, {rejectWithValue, dispatch}) => {
-    try {
-      const response = await api.put(`/cart`, {productId, size, qty});
-      dispatch(getCartList());
-      return {productId, size, qty};
-    } catch (error) {
-      return rejectWithValue(error.response?.data || '옵션/수량 수정에 실패하였습니다.');
-    }
+export const updateQty = createAsyncThunk('cart/updateQty', async ({cartItemId, size, qty}, {rejectWithValue}) => {
+  try {
+    const response = await api.put('/cart', {cartItemId, size, qty});
+    return response.data;
+  } catch (error) {
+    console.error('UpdateQty API Error:', error.response?.data || error.message);
+    return rejectWithValue(error.response?.data || '옵션/수량 수정에 실패하였습니다.');
   }
-);
+});
 
 export const getCartQty = createAsyncThunk('cart/getCartQty', async (_, {rejectWithValue, dispatch}) => {
   try {
@@ -90,16 +87,22 @@ const cartSlice = createSlice({
     builder.addCase(getCartList.fulfilled, (state, action) => {
       state.loading = false;
       state.error = '';
+
       const cartData = action.payload.data || [];
 
-      state.cartList = cartData;
+      // cartItemId를 유지하면서 cartList 업데이트
+      state.cartList = cartData.map((item) => ({
+        ...item,
+        cartItemId: item.cartItemId || `${item.productId}_${item.size}` // 고유 cartItemId 유지 또는 생성
+      }));
 
       // 총 금액 계산
-      state.totalPrice = cartData.reduce(
+      state.totalPrice = state.cartList.reduce(
         (total, item) => total + item.productId.price * item.qty,
         0 // 초기값 설정
       );
     });
+
     builder.addCase(getCartList.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;

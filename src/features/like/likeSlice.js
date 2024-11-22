@@ -7,7 +7,7 @@ export const getLikeList = createAsyncThunk('like/getLikeList', async (_, {rejec
     console.log(response.data);
     return response.data.data;
   } catch (error) {
-    return rejectWithValue(error);
+    return rejectWithValue(error.response?.data?.message || '토큰이 없습니다');
   }
 });
 

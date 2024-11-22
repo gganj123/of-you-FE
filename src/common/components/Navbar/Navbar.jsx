@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {logout} from '../../../features/user/userSlice';
 import {persistor} from '../../../features/store';
 import {resetLikes} from '../../../features/like/likeSlice';
-import {getCartQty} from '../../../features/cart/cartSlice';
+import {getCartList, getCartQty} from '../../../features/cart/cartSlice';
 
 const Navbar = ({user}) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
@@ -119,6 +119,7 @@ const Navbar = ({user}) => {
     sessionStorage.clear();
     dispatch(resetLikes());
     dispatch(logout());
+    dispatch(getCartList());
   };
 
   const handleLogin = () => {

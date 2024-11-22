@@ -55,7 +55,7 @@ const CategoryPage = () => {
       .catch((err) => {
         console.error('Fetch failed with error:', err);
       });
-  }, [location.pathname, searchParams, dispatch]);
+  }, [location.pathname, searchParams, sortType, dispatch]);
 
   const handleSubcategoryClick = (category, subcat) => {
     console.log('Navigating to:', `/products/category/${category}/${subcat}`);
@@ -84,9 +84,7 @@ const CategoryPage = () => {
   };
 
   const handleSortChange = (newSortType) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('sort', newSortType);
-    navigate(`/products/category/${category.toLowerCase()}?${params.toString()}`);
+    setSortType(newSortType);
   };
 
   const handleScroll = () => {

@@ -5,7 +5,7 @@ import ReactPaginate from 'react-paginate';
 import NewItemDialog from './component/NewItemDialog';
 import './AdminProductPage.style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {fetchProducts, deleteProduct, setSelectedProduct} from '../../features/product/productSlice';
+import {getProductList, deleteProduct, setSelectedProduct} from '../../features/product/productSlice';
 
 const AdminProductPage = () => {
   const navigate = useNavigate();
@@ -32,6 +32,7 @@ const AdminProductPage = () => {
   };
 
   useEffect(() => {
+    console.log('searchQuery', searchQuery);
     //검색어나 페이지가 바뀌면 url바꿔주기 (검색어또는 페이지가 바뀜 => url 바꿔줌=> url쿼리 읽어옴=> 이 쿼리값 맞춰서  상품리스트 가져오기)
     if (searchQuery.name === '') {
       delete searchQuery.name;
@@ -41,10 +42,16 @@ const AdminProductPage = () => {
     navigate(`?${query}`);
   }, [searchQuery]);
 
+  const onCheckEnter = (event) => {
+    if (event.key === 'Enter') {
+      setSearchQuery({...searchQuery, page: 1, name: event.target.value});
+    }
+  };
+
   //상품리스트 가져오기 (url쿼리 맞춰서)
   useEffect(() => {
     if (showDialog) return;
-    dispatch(fetchProducts({...searchQuery}));
+    dispatch(getProductList({...searchQuery}));
   }, [query, showDialog]);
 
   const handleClickNewItem = () => {
@@ -93,7 +100,18 @@ const AdminProductPage = () => {
           <h1>제품 관리</h1>
           <div>
             <div className='search-box'>
-              <input type='text' id='search-query' placeholder='제품 이름으로 검색' className='search-input' />
+              <input
+                type='text'
+                id='search-query'
+                placeholder='제품 이름으로 검색'
+                className='search-input'
+                value={keyword}
+                onKeyPress={onCheckEnter}
+                onChange={(e) => setKeyword(e.target.value)}
+              />
+              <button className='search-btn' onClick={handleSearchSubmit}>
+                검색
+              </button>
               <button className='add-new-item-btn' onClick={handleClickNewItem}>
                 Add New Item +
               </button>

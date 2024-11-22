@@ -2,10 +2,13 @@ import React, {useState, useEffect} from 'react';
 import {Form, Modal, Button, Row, Col, Alert} from 'react-bootstrap';
 import {useDispatch, useSelector} from 'react-redux';
 import '../AdminProductPage.style.css';
+import {getCategoryName} from '../../../utils/categories';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CloudinaryUploadWidget from '../../../utils/CloudinaryUploadWidget.jsx';
 // import {CATEGORY, STATUS, SIZE} from '../../../constants/product.constants';
 import {clearError, createProduct, updateProduct} from '../../../features/product/productSlice';
+import CategoryDialog from './CategoryDialog';
 
 const InitialFormData = {
   name: '',
@@ -26,6 +29,8 @@ const NewItemDialog = ({mode, showDialog, setShowDialog}) => {
   const [stockError, setStockError] = useState(false);
   const [priceError, setPriceError] = useState(false);
   const [categoryError, setCategoryError] = useState(false);
+  const [category, setCategory] = useState([]);
+  const [showCategoryDialog, setShowCategoryDialog] = useState(false);
 
   useEffect(() => {
     if (success) {
@@ -107,8 +112,13 @@ const NewItemDialog = ({mode, showDialog, setShowDialog}) => {
     // saleRate나 price가 변경될 때 realPrice 계산
     if (id === 'saleRate' || id === 'price') {
       const price = Number(newFormData.price);
-      const saleRate = Number(newFormData.saleRate);
+      const saleRate = Number(newFormData.saleRate) ? Number(newFormData.saleRate) : 0;
+      console.log('price ', price);
+      console.log('saleRate ', saleRate);
       newFormData.realPrice = price * (1 - saleRate / 100);
+      newFormData.salePrice = price - newFormData.realPrice;
+      console.log('newFormData.realPrice ', newFormData.realPrice);
+      console.log('newFormData.salePrice ', newFormData.salePrice);
     }
 
     setFormData(newFormData);
@@ -141,19 +151,8 @@ const NewItemDialog = ({mode, showDialog, setShowDialog}) => {
     setStock(newStock);
   };
 
-  const onHandleCategory = (event) => {
-    if (formData.category.includes(event.target.value)) {
-      const newCategory = formData.category.filter((item) => item !== event.target.value);
-      setFormData({
-        ...formData,
-        category: [...newCategory]
-      });
-    } else {
-      setFormData({
-        ...formData,
-        category: [...formData.category, event.target.value]
-      });
-    }
+  const handleShowCategoryDialog = () => {
+    setShowCategoryDialog(true);
   };
 
   const uploadImage = (url) => {
@@ -163,6 +162,16 @@ const NewItemDialog = ({mode, showDialog, setShowDialog}) => {
       image: url
     });
   };
+
+  // 카테고리 추가시 폼에 추가
+  useEffect(() => {
+    if (category.length > 0) {
+      setFormData({
+        ...formData,
+        category: category
+      });
+    }
+  }, [showCategoryDialog]);
 
   return (
     <Modal show={showDialog} onHide={handleClose}>
@@ -182,17 +191,27 @@ const NewItemDialog = ({mode, showDialog, setShowDialog}) => {
               <Form.Control onChange={handleChange} type='string' placeholder='상품 ID' required value={formData.sku} />
             </Form.Group>
 
-            <Form.Group as={Col} controlId='name'>
-              <Form.Label>상품 이름</Form.Label>
+            <Form.Group as={Col} controlId='brand'>
+              <Form.Label>브랜드 이름</Form.Label>
               <Form.Control
-                onChange={handleChange}
                 type='string'
-                placeholder='상품 이름'
+                placeholder='브랜드 이름'
+                onChange={handleChange}
+                value={formData.brand}
                 required
-                value={formData.name}
               />
             </Form.Group>
           </Row>
+          <Form.Group className='mb-3' controlId='name'>
+            <Form.Label>상품 이름</Form.Label>
+            <Form.Control
+              onChange={handleChange}
+              type='string'
+              placeholder='상품 이름'
+              required
+              value={formData.name}
+            />
+          </Form.Group>
 
           <Form.Group className='mb-3' controlId='description'>
             <Form.Label>상품 설명</Form.Label>
@@ -217,22 +236,13 @@ const NewItemDialog = ({mode, showDialog, setShowDialog}) => {
               {stock.map((item, index) => (
                 <Row key={index}>
                   <Col sm={4}>
-                    <Form.Select
+                    <Form.Control
+                      type='text'
                       onChange={(event) => handleSizeChange(event.target.value, index)}
                       required
-                      defaultValue={item[0] ? item[0].toLowerCase() : ''}>
-                      <option value='' disabled selected hidden>
-                        선택해주세요...
-                      </option>
-                      {Object.keys(formData.stock).map((item, index) => (
-                        <option
-                          value={item.toLowerCase()}
-                          disabled={stock.some((size) => size[0] === item.toLowerCase())}
-                          key={index}>
-                          {item}
-                        </option>
-                      ))}
-                    </Form.Select>
+                      value={item[0] || ''}
+                      placeholder='사이즈 입력'
+                    />
                   </Col>
                   <Col sm={6}>
                     <Form.Control
@@ -272,7 +282,7 @@ const NewItemDialog = ({mode, showDialog, setShowDialog}) => {
             </Form.Group>
 
             <Form.Group as={Col} controlId='saleRate'>
-              <Form.Label>할인율</Form.Label>
+              <Form.Label>할인율 (%)</Form.Label>
               <Form.Control
                 value={formData.saleRate}
                 onChange={handleChange}
@@ -296,24 +306,28 @@ const NewItemDialog = ({mode, showDialog, setShowDialog}) => {
           <Row className='mb-3'>
             <Form.Group as={Col} controlId='category'>
               <Form.Label>카테고리</Form.Label>
-              <Form.Control as='select' multiple onChange={onHandleCategory} value={formData.category} required>
-                {Object.keys(formData.category).map((item, idx) => (
-                  <option key={idx} value={item.toLowerCase()}>
-                    {item}
-                  </option>
-                ))}
-              </Form.Control>
+              <Button variant='primary' onClick={handleShowCategoryDialog} size='sm'>
+                추가 +
+              </Button>
+              <Form.Control
+                type='string'
+                placeholder='카테고리를 추가해주세요...'
+                rows={3}
+                value={formData.category.map((cat) => getCategoryName(cat) + '(' + cat + ')').join(' > ')}
+                required
+                disabled
+              />
             </Form.Group>
 
             <Form.Group as={Col} controlId='status'>
-              <Form.Label>Status</Form.Label>
-              <Form.Select value={formData.status} onChange={handleChange} required>
-                {Object.keys(formData.status).map((item, idx) => (
-                  <option key={idx} value={item.toLowerCase()}>
-                    {item}
-                  </option>
-                ))}
-              </Form.Select>
+              <Form.Label>상품 상태</Form.Label>
+              <Form.Control
+                value={formData.status ? formData.status : 'active'}
+                required
+                type='text'
+                disabled
+                placeholder='상품 상태'
+              />
             </Form.Group>
           </Row>
           <Row className='mb-3'>
@@ -329,6 +343,12 @@ const NewItemDialog = ({mode, showDialog, setShowDialog}) => {
           </Row>
         </Row>
       </Form>
+      <CategoryDialog
+        category={category}
+        setCategory={setCategory}
+        showCategoryDialog={showCategoryDialog}
+        setShowCategoryDialog={setShowCategoryDialog}
+      />
     </Modal>
   );
 };

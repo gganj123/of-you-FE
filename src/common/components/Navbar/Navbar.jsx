@@ -246,7 +246,7 @@ const Navbar = ({user}) => {
               )}
 
               <div className='navbar-icon-item' onClick={handleMy}>
-                <FiUser /> MY
+                <FiUser /> {user ? user.name : 'MY'}
               </div>
               <div className='navbar-icon-item' onClick={handleCart}>
                 <FiShoppingBag />

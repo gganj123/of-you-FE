@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {useParams, useNavigate, useSearchParams} from 'react-router-dom';
+import {useParams, useNavigate, useSearchParams, useLocation} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import ProductCard from '../../common/components/ProductCard/ProductCard';
 import {clearProducts, fetchProducts} from '../../features/product/productSlice';
@@ -9,6 +9,8 @@ import './CategoryPage.style.css';
 const CategoryPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+
   const {category, subcategory} = useParams();
   const [searchParams] = useSearchParams();
   const {products, loading, error} = useSelector((state) => state.products);
@@ -35,10 +37,6 @@ const CategoryPage = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(clearProducts());
-    setHasMoreProducts(true);
-    pageRef.current = 1;
-
     const fetchParams = {
       mainCate: getCategoryName(category),
       subCate: subcategory ? getSubcategoryName(subcategory) : null,
@@ -48,13 +46,21 @@ const CategoryPage = () => {
       name: searchTerm
     };
 
-    dispatch(fetchProducts(fetchParams));
-  }, [categoryName, subcategory, searchParams, dispatch]); // searchParams 추가
+    console.log('Dispatching fetchProducts from useEffect with params:', fetchParams);
+    dispatch(fetchProducts(fetchParams))
+      .unwrap()
+      .then((result) => {
+        console.log('Fetch successful with result:', result);
+      })
+      .catch((err) => {
+        console.error('Fetch failed with error:', err);
+      });
+  }, [location.pathname, searchParams, dispatch]);
 
-  const handleSubcategoryClick = (subcat) => {
-    navigate(`/products/category/${category.toLowerCase()}/${subcat.toLowerCase()}`);
+  const handleSubcategoryClick = (category, subcat) => {
+    console.log('Navigating to:', `/products/category/${category}/${subcat}`);
+    navigate(`/products/category/${category}/${subcat}`);
   };
-
   const loadMoreProducts = () => {
     if (!hasMoreProducts || loading || searchTerm) return;
 
@@ -188,7 +194,7 @@ const CategoryPage = () => {
             <button
               key={subcat}
               className={`category-page__subcategory-btn ${subcategory?.toUpperCase() === subcat ? 'active' : ''}`}
-              onClick={() => handleSubcategoryClick(subcat)}>
+              onClick={() => handleSubcategoryClick(category, subcat)}>
               {subcat}
             </button>
           ))}

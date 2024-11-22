@@ -1,7 +1,7 @@
+// AddressPage.jsx
 import React, { useState } from "react";
 import DaumPostcode from 'react-daum-postcode';
 import "./AddressPage.style.css";
-
 
 const AddressPage = () => {
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
@@ -11,24 +11,25 @@ const AddressPage = () => {
   // 초기 formData 상태
   const initialFormData = {
     id: null,
-    name: '',
+    firstName: '',
+    lastName: '',
     zipCode: '',
     address: '',
     detailAddress: '',
-    phone: '',
+    contact: {
+      prefix: '',
+      middle: '',
+      last: ''
+    },
     isDefault: false
   };
 
-  // 폼 데이터 상태
   const [formData, setFormData] = useState(initialFormData);
-
-  // 임시로 localStorage 사용 (나중에 백엔드 연동 시 대체될 부분)
   const [addresses, setAddresses] = useState(() => {
     const savedAddresses = localStorage.getItem('addresses');
     return savedAddresses ? JSON.parse(savedAddresses) : [];
   });
 
-  // 상태 초기화 함수
   const resetAllStates = () => {
     setFormData(initialFormData);
     setSelectedAddress(null);
@@ -36,7 +37,6 @@ const AddressPage = () => {
     setIsPostcodeOpen(false);
   };
 
-  // 주소 선택 핸들러 (우편번호 서비스)
   const handlePostcodeComplete = (data) => {
     setFormData(prev => ({
       ...prev,
@@ -46,36 +46,69 @@ const AddressPage = () => {
     setIsPostcodeOpen(false);
   };
 
-  // 주소 수정 버튼 핸들러
   const handleEditClick = (address) => {
-    resetAllStates(); // 먼저 모든 상태 초기화
+    resetAllStates();
     setSelectedAddress(address);
     setFormData({
       id: address.id,
-      name: address.name,
+      firstName: address.firstName,
+      lastName: address.lastName,
       zipCode: address.zipCode,
       address: address.address,
       detailAddress: address.detailAddress,
-      phone: address.phone,
+      contact: {
+        prefix: address.contact.prefix,
+        middle: address.contact.middle,
+        last: address.contact.last
+      },
       isDefault: address.isDefault
     });
     setIsAddressModalOpen(true);
   };
 
-  // 새 배송지 등록 버튼 핸들러
   const handleAddClick = () => {
-    resetAllStates(); // 모든 상태 초기화
+    resetAllStates();
     setIsAddressModalOpen(true);
   };
 
-  // 모달 닫기 핸들러
   const handleCloseModal = () => {
     resetAllStates();
   };
 
-  // 주소 저장 핸들러
+  const handleContactChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      contact: {
+        ...prev.contact,
+        [name]: value
+      }
+    }));
+  };
+
+  const handleDeleteAddress = (addressId) => {
+    if (window.confirm('해당 배송지를 삭제하시겠습니까?')) {
+      const updatedAddresses = addresses.filter(addr => addr.id !== addressId);
+      setAddresses(updatedAddresses);
+      localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
+    }
+  };
+
   const handleSaveAddress = (e) => {
     e.preventDefault();
+
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.zipCode ||
+      !formData.address ||
+      !formData.contact.prefix ||
+      !formData.contact.middle ||
+      !formData.contact.last
+    ) {
+      alert('모든 필수 정보를 입력해주세요.');
+      return;
+    }
 
     const updatedAddresses = [...addresses];
 
@@ -86,27 +119,24 @@ const AddressPage = () => {
       });
     }
 
+    const addressData = {
+      ...formData,
+      id: formData.id || Date.now()
+    };
+
     if (formData.id) {
       // 수정
       const index = updatedAddresses.findIndex(addr => addr.id === formData.id);
       if (index !== -1) {
-        updatedAddresses[index] = formData;
+        updatedAddresses[index] = addressData;
       }
     } else {
       // 새로 추가
-      updatedAddresses.push({
-        ...formData,
-        id: Date.now()
-      });
+      updatedAddresses.push(addressData);
     }
 
-    // 상태 업데이트
     setAddresses(updatedAddresses);
-
-    // localStorage 업데이트
     localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
-
-    // 모달 닫기 및 상태 초기화
     resetAllStates();
   };
 
@@ -119,15 +149,19 @@ const AddressPage = () => {
         <div key={address.id} className="address-page-item">
           <div className="address-page-item-info">
             <div className="address-page-item-header">
-              <span className="address-page-item-name">{address.name}</span>
+              <span className="address-page-item-name">
+                {address.lastName}{address.firstName}
+              </span>
               {address.isDefault && (
                 <span className="address-page-item-badge">기본배송지</span>
               )}
             </div>
             <p className="address-page-item-address">
-              [{address.zipCode}] {address.address}, {address.detailAddress}
+              [{address.zipCode}] {address.address} {address.detailAddress}
             </p>
-            <p className="address-page-item-phone">{address.phone}</p>
+            <p className="address-page-item-phone">
+              {address.contact.prefix}-{address.contact.middle}-{address.contact.last}
+            </p>
           </div>
           <div className="address-page-item-actions">
             <button
@@ -138,7 +172,7 @@ const AddressPage = () => {
             </button>
             <button
               className="address-page-delete-btn"
-              onClick={() => {/* 삭제 로직 */ }}
+              onClick={() => handleDeleteAddress(address.id)}
             >
               삭제
             </button>
@@ -160,23 +194,81 @@ const AddressPage = () => {
       {isAddressModalOpen && (
         <div className="address-page-modal-overlay">
           <div className="address-page-modal">
-            <h3 className="address-page-modal-title">
-              {selectedAddress ? '배송지 수정' : '배송지 등록'}
-            </h3>
+            <div className="address-page-modal-header">
+              <h3 className="address-page-modal-title">
+                {selectedAddress ? '배송지 수정' : '배송지 등록'}
+              </h3>
+              <button
+                className="address-page-modal-close"
+                onClick={handleCloseModal}
+              >
+                ✕
+              </button>
+            </div>
             <form onSubmit={handleSaveAddress} className="address-page-form">
+              {/* 성명 입력 */}
               <div className="address-page-form-row">
                 <label className="address-page-form-label">
-                  배송지명<span className="address-page-required">*</span>
+                  받으시는 분<span className="address-page-required">*</span>
                 </label>
-                <input
-                  type="text"
-                  className="address-page-input"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="배송지명을 입력해주세요"
-                />
+                <div className="address-page-name-group">
+                  <input
+                    type="text"
+                    className="address-page-input name-input"
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                    placeholder="성"
+                  />
+                  <input
+                    type="text"
+                    className="address-page-input name-input"
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                    placeholder="이름"
+                  />
+                </div>
               </div>
 
+              {/* 연락처 입력 */}
+              <div className="address-page-form-row">
+                <label className="address-page-form-label">
+                  연락처<span className="address-page-required">*</span>
+                </label>
+                <div className="address-page-phone-group">
+                  <select
+                    className="address-page-select"
+                    name="prefix"
+                    value={formData.contact.prefix}
+                    onChange={handleContactChange}
+                  >
+                    <option value="" disabled>선택</option>
+                    <option value="010">010</option>
+                    <option value="011">011</option>
+                    <option value="016">016</option>
+                    <option value="017">017</option>
+                    <option value="018">018</option>
+                    <option value="019">019</option>
+                  </select>
+                  <input
+                    type="text"
+                    className="address-page-input phone-input"
+                    name="middle"
+                    value={formData.contact.middle}
+                    onChange={handleContactChange}
+                    maxLength={4}
+                  />
+                  <input
+                    type="text"
+                    className="address-page-input phone-input"
+                    name="last"
+                    value={formData.contact.last}
+                    onChange={handleContactChange}
+                    maxLength={4}
+                  />
+                </div>
+              </div>
+
+              {/* 주소 입력 */}
               <div className="address-page-form-row">
                 <label className="address-page-form-label">
                   주소<span className="address-page-required">*</span>
@@ -215,30 +307,20 @@ const AddressPage = () => {
                 </div>
               </div>
 
-              <div className="address-page-form-row">
-                <label className="address-page-form-label">
-                  연락처<span className="address-page-required">*</span>
-                </label>
-                <input
-                  type="text"
-                  className="address-page-input"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="연락처를 입력해주세요"
-                />
-              </div>
-
+              {/* 기본 배송지 설정 */}
               <div className="address-page-form-row">
                 <label className="address-page-checkbox">
                   <input
                     type="checkbox"
+                    className="address-checkbox-input"
                     checked={formData.isDefault}
                     onChange={(e) => setFormData({ ...formData, isDefault: e.target.checked })}
                   />
-                  <span>기본 배송지로 설정</span>
+                  <span className="address-checkbox-text">기본 배송지로 설정</span>
                 </label>
               </div>
 
+              {/* 버튼 영역 */}
               <div className="address-page-modal-actions">
                 <button
                   type="button"

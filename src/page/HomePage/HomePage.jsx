@@ -26,42 +26,6 @@ const HomePage = () => {
     id: index + 1
   }));
 
-  const categories = [
-    {
-      name: 'WOMEN',
-      products: Array.from({length: 10}, (_, index) => ({
-        id: index + 1,
-        image: '/images/banner2.jpg',
-        title: 'MIND BRIDGE Women',
-        salePrice: 199000,
-        originalPrice: 399000,
-        discountRate: 50
-      }))
-    },
-    {
-      name: 'BEAUTY',
-      products: Array.from({length: 10}, (_, index) => ({
-        id: index + 21,
-        image: '/images/banner5.jpg',
-        title: 'JAVIN DE SEOUL',
-        salePrice: 18827,
-        originalPrice: 28000,
-        discountRate: 32
-      }))
-    },
-    {
-      name: 'LIFE',
-      products: Array.from({length: 10}, (_, index) => ({
-        id: index + 31,
-        image: '/images/banner6.jpg',
-        title: 'Life Product',
-        salePrice: 32000,
-        originalPrice: null,
-        discountRate: null
-      }))
-    }
-  ];
-
   // 브랜드배너 데이터
   const brandBanners = [
     {
@@ -114,10 +78,9 @@ const HomePage = () => {
       {/* 브랜드배너 */}
       <BrandBanner banners={brandBanners} />
 
-      {/* 카테고리별 추천 상품 */}
-      {categories.map((category, index) => (
-        <CategorySection key={index} categoryName={category.name} products={category.products} />
-      ))}
+      <CategorySection categoryName={'여성'} />
+      <CategorySection categoryName={'뷰티'} />
+      <CategorySection categoryName={'라이프'} />
     </div>
   );
 };

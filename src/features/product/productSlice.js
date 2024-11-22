@@ -4,11 +4,28 @@ import api from '../../utils/api';
 // 상품 목록 가져오기 비동기 Thunk
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async (params, {rejectWithValue}) => {
   try {
-    const response = await api.get('/product', {params});
-    console.log(response.data);
-    return response.data; // API에서 받은 상품 데이터
+    // mainCate와 subCate 추출
+    const {mainCate, subCate, ...queryParams} = params;
+
+    if (!mainCate) {
+      throw new Error('mainCate is required but not provided.');
+    }
+
+    // 동적으로 엔드포인트 생성
+    let endpoint = `/product/category/${mainCate}`;
+    if (subCate) {
+      endpoint += `/${subCate}`;
+    }
+
+    console.log('Fetching products from endpoint:', endpoint, 'with params:', queryParams);
+
+    // API 호출
+    const response = await api.get(endpoint, {params: queryParams});
+    console.log('API Response:', response.data);
+    return response.data;
   } catch (error) {
-    return rejectWithValue(error);
+    console.error('API Fetch Error:', error);
+    return rejectWithValue(error.response?.data?.message || error.message);
   }
 });
 
@@ -22,9 +39,11 @@ export const fetchProductDetail = createAsyncThunk(`product/fetchProductDetail`,
   }
 });
 
-export const updateProduct = createAsyncThunk(`product/updateProduct`, async (product, {rejectWithValue}) => {
+export const updateProduct = createAsyncThunk(`product/updateProduct`, async (product, {rejectWithValue, dispatch}) => {
   try {
     const response = await api.put(`/product/${product.id}`, product);
+
+    dispatch(getProductList({page: 1, limit: 5}));
     return response.data.product;
   } catch (error) {
     return rejectWithValue(error.response?.data?.message || error.message);
@@ -34,10 +53,34 @@ export const updateProduct = createAsyncThunk(`product/updateProduct`, async (pr
 export const deleteProduct = createAsyncThunk(`product/deleteProduct`, async (id, {rejectWithValue, dispatch}) => {
   try {
     const response = await api.delete(`/product/${id}`);
-    dispatch(fetchProducts({page: 1, limit: 5}));
+    dispatch(getProductList({page: 1, limit: 5}));
     return response.data;
   } catch (error) {
     return rejectWithValue(error.response?.data?.message || error.message);
+  }
+});
+
+export const createProduct = createAsyncThunk(
+  'products/createProduct',
+  async (formData, {dispatch, rejectWithValue}) => {
+    try {
+      const response = await api.post('/product', formData);
+
+      dispatch(getProductList({page: 1, limit: 5}));
+      return response.data.data;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const getProductList = createAsyncThunk('products/getProductList', async (query, {rejectWithValue}) => {
+  try {
+    const response = await api.get('/product', {params: {...query}});
+
+    return response.data;
+  } catch (err) {
+    return rejectWithValue(err.error);
   }
 });
 
@@ -49,7 +92,7 @@ const productSlice = createSlice({
     loading: false,
     error: null,
     totalPageNum: 1,
-    totalCount: 0,
+    totalCount: 0
   },
   reducers: {
     clearProducts: (state) => {
@@ -57,6 +100,13 @@ const productSlice = createSlice({
     },
     clearProductDetail: (state) => {
       state.productDetail = null; // 상세 정보 초기화
+    },
+    clearError: (state) => {
+      state.error = '';
+      state.success = false;
+    },
+    setSelectedProduct: (state, action) => {
+      state.selectedProduct = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -101,10 +151,53 @@ const productSlice = createSlice({
       .addCase(deleteProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ? action.payload.message : 'Something went wrong.';
+      })
+      .addCase(getProductList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getProductList.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products = action.payload.products;
+        state.totalPageNum = action.payload.totalPageNum;
+        state.totalCount = action.payload.totalCount;
+        state.error = '';
+      })
+      .addCase(getProductList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ? action.payload.message : 'Something went wrong.';
+      })
+      .addCase(updateProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.error = '';
+      })
+      .addCase(updateProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ? action.payload.message : 'Something went wrong.';
+        state.success = false;
+      })
+      .addCase(createProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.error = '';
+      })
+      .addCase(createProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ? action.payload.message : 'Something went wrong.';
+        state.success = false;
       });
   }
 });
 
-export const {clearProducts, clearProductDetail} = productSlice.actions;
+export const {clearProducts, clearProductDetail, clearError, setSelectedProduct} = productSlice.actions;
 
 export default productSlice.reducer;

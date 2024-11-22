@@ -3,23 +3,28 @@ import {useNavigate} from 'react-router-dom';
 import {IoHeartOutline, IoHeart} from 'react-icons/io5';
 import './ProductCard.style.css';
 import {useDispatch, useSelector} from 'react-redux';
-import {toggleLike} from '../../../features/like/likeSlice';
+import {toggleLike, toggleLikeOptimistic} from '../../../features/like/likeSlice';
 
-const ProductCard = ({id, image, title, salePrice, originalPrice, discountRate}) => {
+const ProductCard = ({id, image, title, realPrice, originalPrice, discountRate}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  // `like`와 `products` 상태를 가져옴
   const {likes} = useSelector((state) => state.like);
 
-  const isLiked = likes.some((like) => like.productId && like.productId._id === id);
-
+  const isLiked = likes.some((like) => like.productId === id || like.productId?._id === id);
   const handleLikeClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    dispatch(toggleLike(id)); // 좋아요/취소 액션 호출
-  };
 
+    // 프론트엔드 상태를 즉시 반영
+    dispatch(toggleLikeOptimistic(id));
+
+    // 서버 요청
+    dispatch(toggleLike(id)).catch((error) => {
+      console.error('좋아요 토글 실패:', error);
+      // 실패 시 상태를 복구하기 위해 다시 토글
+      dispatch(toggleLikeOptimistic(id));
+    });
+  };
   const handleCardClick = () => {
     if (id) {
       navigate(`/product/${id}`);
@@ -45,7 +50,7 @@ const ProductCard = ({id, image, title, salePrice, originalPrice, discountRate})
       <div className='homepage-product-info'>
         <h3 className='homepage-product-title'>{title}</h3>
         <div className='homepage-product-price'>
-          <span className='homepage-current-price'>{salePrice ? salePrice.toLocaleString() : '0'}원</span>
+          <span className='homepage-current-price'>{realPrice ? realPrice.toLocaleString() : '0'}원</span>
           {originalPrice && (
             <div className='homepage-price-discount'>
               <span className='homepage-original-price'>{originalPrice.toLocaleString()}원</span>

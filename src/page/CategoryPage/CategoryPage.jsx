@@ -1,20 +1,16 @@
 import {useEffect, useState} from 'react';
-import {useParams, useNavigate, useSearchParams} from 'react-router-dom';
+import {useParams, useNavigate, useSearchParams, useLocation} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import ProductCard from '../../common/components/ProductCard/ProductCard';
 import {clearProducts, fetchProducts} from '../../features/product/productSlice';
+import {categories, getCategoryName, getSubcategoryName} from '../../utils/categories';
 import './CategoryPage.style.css';
-
-const categories = {
-  WOMEN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'DRESS', 'ACCESSORIES'],
-  MEN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'ACCESSORIES'],
-  BEAUTY: ['SKINCARE', 'MAKEUP', 'HAIR & BODY', 'DEVICES'],
-  LIFE: ['HOME', 'TRAVEL', 'DIGITAL', 'CULTURE', 'FOOD']
-};
 
 const CategoryPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+
   const {category, subcategory} = useParams();
   const [searchParams] = useSearchParams();
   const {products, loading, error} = useSelector((state) => state.products);
@@ -41,42 +37,40 @@ const CategoryPage = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(clearProducts());
-    pageRef.current = 1;
-    setHasMoreProducts(true);
-
     const fetchParams = {
-      category: categoryName,
-      subcategory,
+      mainCate: getCategoryName(category),
+      subCate: subcategory ? getSubcategoryName(subcategory) : null,
       page: 1,
       limit: productsPerPage,
-      sort: searchParams.get('sort') || sortType,
+      sort: sortType,
       name: searchTerm
     };
 
-    dispatch(fetchProducts(fetchParams));
-  }, [categoryName, subcategory, searchParams, dispatch]); // searchParams 추가
+    console.log('Dispatching fetchProducts from useEffect with params:', fetchParams);
+    dispatch(fetchProducts(fetchParams))
+      .unwrap()
+      .then((result) => {
+        console.log('Fetch successful with result:', result);
+      })
+      .catch((err) => {
+        console.error('Fetch failed with error:', err);
+      });
+  }, [location.pathname, searchParams, dispatch]);
 
-  const handleCategoryClick = (newCategory) => {
-    navigate(`/products/category/${newCategory.toLowerCase()}`);
-  };
-
-  const handleSubcategoryClick = (subcat) => {
-    const params = new URLSearchParams(searchParams);
-    params.delete('subcategory');
-    params.set('subcategory', subcat.toLowerCase());
-    navigate(`/products/category/${category.toLowerCase()}?${params.toString()}`);
+  const handleSubcategoryClick = (category, subcat) => {
+    console.log('Navigating to:', `/products/category/${category}/${subcat}`);
+    navigate(`/products/category/${category}/${subcat}`);
   };
   const loadMoreProducts = () => {
-    if (!hasMoreProducts || loading || products.length === 0 || searchTerm) return;
+    if (!hasMoreProducts || loading || searchTerm) return;
 
-    const nextPage = pageRef.current + 1;
-    pageRef.current = nextPage;
+    const nextPage = page + 1;
+    setPage(nextPage);
 
     dispatch(
       fetchProducts({
-        category: categoryName,
-        subcategory,
+        mainCate: getCategoryName(category),
+        subCate: subcategory ? getSubcategoryName(subcategory) : null,
         page: nextPage,
         limit: productsPerPage,
         sort: sortType,
@@ -84,7 +78,7 @@ const CategoryPage = () => {
       })
     ).then((result) => {
       if (!result.payload || result.payload.length < productsPerPage) {
-        setHasMoreProducts(false); // 더 이상 상품이 없으면 로드 중단
+        setHasMoreProducts(false);
       }
     });
   };
@@ -200,7 +194,7 @@ const CategoryPage = () => {
             <button
               key={subcat}
               className={`category-page__subcategory-btn ${subcategory?.toUpperCase() === subcat ? 'active' : ''}`}
-              onClick={() => handleSubcategoryClick(subcat)}>
+              onClick={() => handleSubcategoryClick(category, subcat)}>
               {subcat}
             </button>
           ))}

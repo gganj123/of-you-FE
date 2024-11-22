@@ -5,7 +5,7 @@ import './ProductCard.style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {toggleLike, toggleLikeOptimistic} from '../../../features/like/likeSlice';
 
-const ProductCard = ({id, image, title, salePrice, originalPrice, discountRate}) => {
+const ProductCard = ({id, image, title, realPrice, originalPrice, discountRate}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {likes} = useSelector((state) => state.like);
@@ -50,7 +50,7 @@ const ProductCard = ({id, image, title, salePrice, originalPrice, discountRate})
       <div className='homepage-product-info'>
         <h3 className='homepage-product-title'>{title}</h3>
         <div className='homepage-product-price'>
-          <span className='homepage-current-price'>{salePrice ? salePrice.toLocaleString() : '0'}원</span>
+          <span className='homepage-current-price'>{realPrice ? realPrice.toLocaleString() : '0'}원</span>
           {originalPrice && (
             <div className='homepage-price-discount'>
               <span className='homepage-original-price'>{originalPrice.toLocaleString()}원</span>

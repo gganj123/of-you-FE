@@ -1,4 +1,4 @@
-import { Route, Routes, Navigate } from 'react-router-dom';
+import {Route, Routes, Navigate} from 'react-router-dom';
 import HomePage from './../page/HomePage/HomePage';
 import LoginPage from '../page/LoginPage/LoginPage';
 import SignupPage from '../page/SignupPage/SignupPage';
@@ -19,7 +19,6 @@ import Mypage from '../page/MyPage/MyPage';
 import AddressPage from '../page/AddressPage/AddressPage';
 import ProfilePage from '../page/ProfilePage/ProfilePage';
 
-
 function AppRouter() {
   return (
     <Routes>
@@ -29,6 +28,7 @@ function AppRouter() {
       <Route path='/products/category/:category' element={<CategoryPage />} />
       <Route path='/product/:id' element={<ProductDetail />} />
       <Route path='/signup/success' element={<SignupCompletePage />} />
+      <Route path='/products/category/:category/:subcategory' element={<CategoryPage />} />
 
       <Route element={<PrivateRoute permissionLevel='customer' />}>
         <Route path='/cart' element={<CartPage />} />
@@ -36,12 +36,11 @@ function AppRouter() {
         <Route path='/payment/success' element={<OrderCompletePage />} />
 
         <Route path='/mypage' element={<Mypage />}>
-          <Route index element={<Navigate to="/mypage/order" replace />} />
+          <Route index element={<Navigate to='/mypage/order' replace />} />
           <Route path='order' element={<OrderPage />} />
           <Route path='like' element={<LikePage />} />
-          <Route path="addresslist" element={<AddressPage />} />
+          <Route path='addresslist' element={<AddressPage />} />
           <Route path='profile' element={<ProfilePage />} />
-
         </Route>
       </Route>
 

@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {useState, useEffect} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
 import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import './PaymentPage.style.css';
-import { cc_expires_format } from '../../utils/number';
-import { useDispatch } from 'react-redux';
-import { createOrder } from '../../features/order/orderSlice';
+import {cc_expires_format} from '../../utils/number';
+import {useDispatch} from 'react-redux';
+import {createOrder} from '../../features/order/orderSlice';
 import DaumPostcode from 'react-daum-postcode';
 
 const PaymentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { items, totalPrice } = location.state || { items: [], totalPrice: 0 }; // items와 totalPrice를 전달받음
+  const {items, totalPrice} = location.state || {items: [], totalPrice: 0}; // items와 totalPrice를 전달받음
 
   const [isMobileView, setIsMobileView] = useState(false);
   const [shipInfo, setShipInfo] = useState({
@@ -41,18 +41,19 @@ const PaymentPage = () => {
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
 
   const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    setShipInfo({ ...shipInfo, [name]: value });
+    const {name, value} = e.target;
+    setShipInfo({...shipInfo, [name]: value});
   };
 
   const handleContactChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     const updatedContactParts = {
       ...contactParts,
       [name]: value
     };
-    const updatedContact = `${updatedContactParts.prefix || ''}-${updatedContactParts.middle || ''}-${updatedContactParts.last || ''
-      }`;
+    const updatedContact = `${updatedContactParts.prefix || ''}-${updatedContactParts.middle || ''}-${
+      updatedContactParts.last || ''
+    }`;
 
     setContactParts(updatedContactParts);
     setShipInfo((prev) => ({
@@ -62,7 +63,7 @@ const PaymentPage = () => {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
 
     if (name === 'number' && value.length > 16) {
       return; // 16자 초과 시 무시
@@ -77,7 +78,7 @@ const PaymentPage = () => {
   };
 
   const handleInputFocus = (e) => {
-    setCardData((prev) => ({ ...prev, focus: e.target.name }));
+    setCardData((prev) => ({...prev, focus: e.target.name}));
   };
 
   const handleCompletePostcode = (data) => {
@@ -86,9 +87,9 @@ const PaymentPage = () => {
 
     setShipInfo((prev) => ({
       ...prev,
-      city: fullAddress,    // 도로명 주소
-      zip: zonecode,        // 우편번호
-      address: ''          // 상세 주소는 비워둠
+      city: fullAddress, // 도로명 주소
+      zip: zonecode, // 우편번호
+      address: '' // 상세 주소는 비워둠
     }));
 
     setIsPostcodeOpen(false); // 모달 닫기
@@ -249,11 +250,7 @@ const PaymentPage = () => {
                       value={shipInfo.zip}
                       readOnly
                     />
-                    <button
-                      className='payment_form_button'
-                      type='button'
-                      onClick={() => setIsPostcodeOpen(true)}
-                    >
+                    <button className='payment_form_button' type='button' onClick={() => setIsPostcodeOpen(true)}>
                       우편번호 찾기
                     </button>
                   </div>
@@ -269,31 +266,27 @@ const PaymentPage = () => {
                     className='payment_form_input'
                     placeholder='상세 주소'
                     value={shipInfo.address}
-                    onChange={(e) => setShipInfo((prev) => ({ ...prev, address: e.target.value }))}
+                    onChange={(e) => setShipInfo((prev) => ({...prev, address: e.target.value}))}
                   />
                 </div>
               </div>
 
               {/* 우편번호 모달 */}
               {isPostcodeOpen && (
-                <div className="postcode_overlay">
-                  <div className="postcode_modal">
-                    <div className="postcode_modal_header">
-                      <h3 className="postcode_modal_title">우편번호 찾기</h3>
-                      <button
-                        className="close_button"
-                        onClick={() => setIsPostcodeOpen(false)}
-                      >
+                <div className='postcode_overlay'>
+                  <div className='postcode_modal'>
+                    <div className='postcode_modal_header'>
+                      <h3 className='postcode_modal_title'>우편번호 찾기</h3>
+                      <button className='close_button' onClick={() => setIsPostcodeOpen(false)}>
                         ✕
                       </button>
                     </div>
-                    <div className="postcode_content">
+                    <div className='postcode_content'>
                       <DaumPostcode onComplete={handleCompletePostcode} />
                     </div>
                   </div>
                 </div>
               )}
-
             </div>
           </div>
 
@@ -309,7 +302,7 @@ const PaymentPage = () => {
               {items.map((item, index) => {
                 // 안전하게 데이터를 처리
                 const product = item.productId || {};
-                const price = product.salePrice || product.price || 0; // salePrice가 없으면 price 사용, 둘 다 없으면 0
+                const price = product.realPrice || product.price || 0; // salePrice가 없으면 price 사용, 둘 다 없으면 0
                 const totalPrice = price * (item.qty || 1); // qty가 없으면 기본값 1
 
                 return (
@@ -329,10 +322,10 @@ const PaymentPage = () => {
                     </div>
                     <div className='payment_item_quantity'>{item.qty || 1}</div>
                     <div className='payment_price'>
-                      {product.salePrice ? (
+                      {product.realPrice ? (
                         <>
                           <span className='payment_price_original'>{product.price?.toLocaleString() || 0}원</span>
-                          <span className='payment_price_sale'>{product.salePrice?.toLocaleString() || 0}원</span>
+                          <span className='payment_price_sale'>{product.realPrice?.toLocaleString() || 0}원</span>
                         </>
                       ) : (
                         <span className='payment_price_sale'>{product.price?.toLocaleString() || 0}원</span>
@@ -437,8 +430,8 @@ const PaymentPage = () => {
               <span>
                 -{' '}
                 {items
-                  .filter((item) => item.productId.salePrice)
-                  .reduce((sum, item) => sum + (item.productId.price - item.productId.salePrice) * item.qty, 0)
+                  .filter((item) => item.productId.realPrice)
+                  .reduce((sum, item) => sum + (item.productId.price - item.productId.realPrice) * item.qty, 0)
                   .toLocaleString()}
                 원
               </span>
@@ -449,8 +442,8 @@ const PaymentPage = () => {
                 {(
                   items.reduce((sum, item) => sum + (item.productId.price || 0) * (item.qty || 1), 0) -
                   items
-                    .filter((item) => item.productId.salePrice)
-                    .reduce((sum, item) => sum + (item.productId.price - item.productId.salePrice) * item.qty, 0) +
+                    .filter((item) => item.productId.realPrice)
+                    .reduce((sum, item) => sum + (item.productId.price - item.productId.realPrice) * item.qty, 0) +
                   4000
                 ).toLocaleString()}
                 원
@@ -463,9 +456,8 @@ const PaymentPage = () => {
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 
 export default PaymentPage;
-

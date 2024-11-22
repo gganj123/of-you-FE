@@ -4,11 +4,28 @@ import api from '../../utils/api';
 // 상품 목록 가져오기 비동기 Thunk
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async (params, {rejectWithValue}) => {
   try {
-    const response = await api.get('/product', {params});
-    console.log(response.data);
-    return response.data; // API에서 받은 상품 데이터
+    // mainCate와 subCate 추출
+    const {mainCate, subCate, ...queryParams} = params;
+
+    if (!mainCate) {
+      throw new Error('mainCate is required but not provided.');
+    }
+
+    // 동적으로 엔드포인트 생성
+    let endpoint = `/product/category/${mainCate}`;
+    if (subCate) {
+      endpoint += `/${subCate}`;
+    }
+
+    console.log('Fetching products from endpoint:', endpoint, 'with params:', queryParams);
+
+    // API 호출
+    const response = await api.get(endpoint, {params: queryParams});
+    console.log('API Response:', response.data);
+    return response.data;
   } catch (error) {
-    return rejectWithValue(error);
+    console.error('API Fetch Error:', error);
+    return rejectWithValue(error.response?.data?.message || error.message);
   }
 });
 

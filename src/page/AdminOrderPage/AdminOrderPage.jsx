@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {getOrderList, updateOrderStatus} from '../../features/order/orderSlice';
-import OrderDetailDialog from './component/OrderDetailDialog'; // 다이얼로그 컴포넌트 추가
-import './adminOrder.style.css'; // CSS 파일 추가
+import OrderDetailDialog from './component/OrderDetailDialog';
+import './adminOrder.style.css';
 import ReactPaginate from 'react-paginate';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -51,8 +51,15 @@ const AdminOrderPage = () => {
     setSelectedOrder(null);
   };
 
-  const handleStatusChange = (orderId, newStatus) => {
-    dispatch(updateOrderStatus({orderId, newStatus}));
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      await dispatch(updateOrderStatus({orderId, newStatus}));
+
+      // 상태 변경 후 주문 목록을 새로 고침
+      await dispatch(getOrderList(searchQuery));
+    } catch (error) {
+      console.error('주문 상태 업데이트 중 오류 발생:', error);
+    }
   };
   console.log(orders);
 
@@ -86,8 +93,8 @@ const AdminOrderPage = () => {
           </thead>
           <tbody>
             {orders.map((order) => (
-              <tr key={order._id}>
-                <td onClick={() => openDetailDialog(order)}>{order.orderNum}</td>
+              <tr key={order._id} onClick={() => openDetailDialog(order)}>
+                <td>{order.orderNum}</td>
                 <td>{`${order.contact.lastName} ${order.contact.firstName}`}</td>
                 <td>{new Date(order.createdAt).toLocaleDateString()}</td>
                 <td>{order.status}</td>

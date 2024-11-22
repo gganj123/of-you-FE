@@ -18,6 +18,7 @@ const OrderDetailDialog = ({open, handleClose, order, handleStatusChange}) => {
     console.log('주문 ID:', order._id);
     console.log('새로운 상태:', status);
     await dispatch(updateOrderStatus({orderId: order._id, newStatus: status}));
+    await handleStatusChange(order._id, status);
     handleClose();
   };
 

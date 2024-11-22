@@ -41,6 +41,20 @@ export const deleteProduct = createAsyncThunk(`product/deleteProduct`, async (id
   }
 });
 
+export const createProduct = createAsyncThunk(
+  'products/createProduct',
+  async (formData, {dispatch, rejectWithValue}) => {
+    try {
+      const response = await api.post('/product', formData);
+
+      dispatch(fetchProducts({page: 1}));
+      return response.data.data;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 const productSlice = createSlice({
   name: 'products',
   initialState: {

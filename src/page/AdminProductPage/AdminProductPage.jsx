@@ -24,7 +24,7 @@ const AdminProductPage = () => {
     limit: query.get('limit') || 5
   });
 
-  const tableHeader = ['#', 'Sku', 'Name', 'Price', 'Stock', 'Image', 'Status', ''];
+  const tableHeader = ['#', 'Sku', '상품이름', '기존금액', '할인금액', '사이즈 종류', '사진', ''];
 
   const handlePageClick = ({selected}) => {
     //  쿼리에 페이지값 바꿔주기
@@ -97,7 +97,8 @@ const AdminProductPage = () => {
               <button className='add-new-item-btn' onClick={handleClickNewItem}>
                 Add New Item +
               </button>
-              <select id='items-per-page' onChange={handleLimitChange}>
+              <select id='items-per-page' value={searchQuery.limit} onChange={handleLimitChange}>
+                <option value='5'>5</option>
                 <option value='10'>10</option>
                 <option value='20'>20</option>
                 <option value='30'>30</option>
@@ -106,7 +107,11 @@ const AdminProductPage = () => {
           </div>
         </div>
         {loading ? (
-          <div>Loading...</div>
+          <div className='text-center my-5'>
+            <div className='spinner-border text-primary' role='status'>
+              <span className='visually-hidden'>Loading...</span>
+            </div>
+          </div>
         ) : (
           <table className='product-table'>
             <thead>
@@ -123,6 +128,7 @@ const AdminProductPage = () => {
                   <td>{product.sku}</td>
                   <td>{product.name}</td>
                   <td>{product.price.toLocaleString()}</td>
+                  <td>{product.salePrice.toLocaleString()}</td>
                   <td>
                     {Object.keys(product.stock).map((size, index) => (
                       <div key={index}>
@@ -133,7 +139,6 @@ const AdminProductPage = () => {
                   <td>
                     <img src={product.image} alt={product.name} />
                   </td>
-                  <td>{product.status}</td>
                   <td>
                     <button onClick={() => openEditForm(product)}>Edit</button>
                     <button onClick={() => handleDelete(product._id)}>Delete</button>

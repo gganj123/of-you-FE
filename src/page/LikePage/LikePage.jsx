@@ -59,7 +59,7 @@ const LikePage = () => {
               id={like.productId._id}
               image={like.productId.image}
               title={like.productId.name}
-              salePrice={like.productId.salePrice}
+              realPrice={like.productId.realPrice}
               originalPrice={like.productId.price}
               discountRate={like.productId.saleRate}
             />

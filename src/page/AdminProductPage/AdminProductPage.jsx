@@ -128,7 +128,7 @@ const AdminProductPage = () => {
                   <td>{product.sku}</td>
                   <td>{product.name}</td>
                   <td>{product.price.toLocaleString()}</td>
-                  <td>{product.salePrice.toLocaleString()}</td>
+                  <td>{product.realPrice.toLocaleString()}</td>
                   <td>
                     {Object.keys(product.stock).map((size, index) => (
                       <div key={index}>

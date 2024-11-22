@@ -1,14 +1,24 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { FiHeart, FiLogIn, FiUser, FiShoppingBag, FiSearch, FiChevronDown, FiMenu, FiArrowLeft, FiSettings } from 'react-icons/fi';
+import React, {useState, useRef, useEffect} from 'react';
+import {
+  FiHeart,
+  FiLogIn,
+  FiUser,
+  FiShoppingBag,
+  FiSearch,
+  FiChevronDown,
+  FiMenu,
+  FiArrowLeft,
+  FiSettings
+} from 'react-icons/fi';
 import './Navbar.style.css';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../../features/user/userSlice';
-import { persistor } from '../../../features/store';
-import { resetLikes } from '../../../features/like/likeSlice';
-import { getCartList, getCartQty } from '../../../features/cart/cartSlice';
+import {useNavigate, useLocation, useSearchParams} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {logout} from '../../../features/user/userSlice';
+import {persistor} from '../../../features/store';
+import {resetLikes} from '../../../features/like/likeSlice';
+import {getCartList, getCartQty} from '../../../features/cart/cartSlice';
 
-const Navbar = ({ user }) => {
+const Navbar = ({user}) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('WOMEN');
   const [selectedAdminCategory, setSelectedAdminCategory] = useState('PRODUCT');
@@ -16,6 +26,9 @@ const Navbar = ({ user }) => {
   const [isPopularSearchVisible, setIsPopularSearchVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const cartItemCount = useSelector((state) => state.cart.cartItemCount);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
 
   const popularSearchRef = useRef(null);
   const categoryMenuRef = useRef(null);
@@ -27,9 +40,6 @@ const Navbar = ({ user }) => {
     BEAUTY: ['SKINCARE', 'MAKEUP', 'HAIR & BODY', 'DEVICES'],
     LIFE: ['HOME', 'TRAVEL', 'DIGITAL', 'CULTURE', 'FOOD']
   };
-
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   // 페이지 이동 시 카테고리 메뉴 닫기
   useEffect(() => {
@@ -46,27 +56,20 @@ const Navbar = ({ user }) => {
   const handleCategoryToggle = () => {
     setIsCategoryOpen(!isCategoryOpen);
   };
-
   // 토글박스의 중분류 카테고리 선택을 위한 함수
   const handleSubCategorySelect = (category) => {
     setSelectedCategory(category);
   };
 
-  // 중분류 카테고리 클릭 시의 함수
-  const handleSubCategoryClick = (subcategory) => {
-    if (selectedCategory && categories[selectedCategory]) {
-      navigate(`/products/category/${selectedCategory.toLowerCase()}/${subcategory.toLowerCase()}`);
-      setIsCategoryOpen(false);
-    }
+  const handleSubCategoryClick = (category, subcategory) => {
+    const categoryName = category.toLowerCase();
+    const subCategoryName = subcategory.toLowerCase();
+    navigate(`/products/category/${categoryName}/${subCategoryName}`);
+    setIsCategoryOpen(false); // 메뉴 닫기
   };
 
   // 메뉴의 대분류 카테고리 페이지 이동을 위한 함수
   const handleCategoryPageNavigate = (category) => {
-    navigate(`/products/category/${category.toLowerCase()}`);
-  };
-
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
     navigate(`/products/category/${category.toLowerCase()}`);
   };
 
@@ -98,16 +101,10 @@ const Navbar = ({ user }) => {
   // 카테고리 메뉴 외부 클릭 시 닫기
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        categoryMenuRef.current &&
-        !categoryMenuRef.current.contains(event.target) &&
-        !event.target.closest('.navbar-category-button') &&
-        !event.target.closest('.navbar-hamburger button')
-      ) {
+      if (categoryMenuRef.current && !categoryMenuRef.current.contains(event.target)) {
         setIsCategoryOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
@@ -218,7 +215,7 @@ const Navbar = ({ user }) => {
                 <div className='navbar-popular-search-list' ref={popularSearchRef}>
                   <h4>급상승 검색어</h4>
                   <ul>
-                    {Array.from({ length: 10 }, (_, i) => (
+                    {Array.from({length: 10}, (_, i) => (
                       <li key={`popular-${i}`}>{i + 1}. 검색어</li>
                     ))}
                   </ul>
@@ -229,7 +226,6 @@ const Navbar = ({ user }) => {
               {user && user.level === 'admin' && (
                 <div className='navbar-icon-item' onClick={handleAdmin}>
                   <FiSettings /> ADMIN
-
                 </div>
               )}
               <div className='search-mobile-view' onClick={handleSearchIconClick}>
@@ -273,7 +269,7 @@ const Navbar = ({ user }) => {
                 <div className='navbar-popular-searches'>
                   <h4>급상승 검색어</h4>
                   <ul>
-                    {Array.from({ length: 10 }, (_, i) => (
+                    {Array.from({length: 10}, (_, i) => (
                       <li key={`popular-${i}`}> {i + 1}. 검색어</li>
                     ))}
                   </ul>
@@ -318,21 +314,21 @@ const Navbar = ({ user }) => {
           <div className='navbar-menu'>
             {location.pathname.startsWith('/admin')
               ? ['PRODUCT', 'ORDER'].map((menuItem, index, array) => (
-                <React.Fragment key={menuItem}>
-                  <div className='navbar-menu-item' onClick={() => handleAdminCategorySelect(menuItem)}>
-                    {menuItem}
-                  </div>
-                  {index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
-                </React.Fragment>
-              ))
+                  <React.Fragment key={menuItem}>
+                    <div className='navbar-menu-item' onClick={() => handleAdminCategorySelect(menuItem)}>
+                      {menuItem}
+                    </div>
+                    {index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
+                  </React.Fragment>
+                ))
               : ['WOMEN', 'MEN', 'BEAUTY', 'LIFE', 'BEST', 'SALE', 'NEW'].map((menuItem, index, array) => (
-                <React.Fragment key={menuItem}>
-                  <div className='navbar-menu-item' onClick={() => handleCategoryPageNavigate(menuItem)}>
-                    {menuItem}
-                  </div>
-                  {menuItem === 'LIFE' && index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
-                </React.Fragment>
-              ))}
+                  <React.Fragment key={menuItem}>
+                    <div className='navbar-menu-item' onClick={() => handleCategoryPageNavigate(menuItem)}>
+                      {menuItem}
+                    </div>
+                    {menuItem === 'LIFE' && index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
+                  </React.Fragment>
+                ))}
           </div>
         </div>
       </div>

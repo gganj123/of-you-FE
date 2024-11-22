@@ -1,17 +1,19 @@
-import {useState, useEffect} from 'react';
-import {Navigate, useNavigate, useParams} from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { AiOutlineClose } from 'react-icons/ai';
+
 import './ProductDetailPage.style.css';
-import {useDispatch, useSelector} from 'react-redux';
-import {clearProductDetail, fetchProductDetail} from '../../features/product/productSlice';
-import {addToCart, getCartList} from '../../features/cart/cartSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearProductDetail, fetchProductDetail } from '../../features/product/productSlice';
+import { addToCart, getCartList } from '../../features/cart/cartSlice';
 
 const ProductDetailPage = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {productDetail, loading, error} = useSelector((state) => state.products);
+  const { productDetail, loading, error } = useSelector((state) => state.products);
   const cartList = useSelector((state) => state.cart.cartList) || [];
-  const {user} = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [size, setSize] = useState('');
@@ -50,13 +52,13 @@ const ProductDetailPage = () => {
       return;
     }
     setSizeError(false);
-    setSelectedOptions((prev) => [...prev, {option, quantity: 1}]);
+    setSelectedOptions((prev) => [...prev, { option, quantity: 1 }]);
     console.log(selectedOptions);
     setIsOptionOpen(false);
   };
 
   const handleQuantityChange = (index, value) => {
-    setSelectedOptions((prev) => prev.map((item, i) => (i === index ? {...item, quantity: Math.max(1, value)} : item)));
+    setSelectedOptions((prev) => prev.map((item, i) => (i === index ? { ...item, quantity: Math.max(1, value) } : item)));
   };
 
   const handleRemoveOption = (index) => {
@@ -77,7 +79,7 @@ const ProductDetailPage = () => {
 
     const totalPrice = orderItems.reduce((sum, item) => sum + item.qty * item.price, 0);
 
-    navigate('/payment', {state: {items: orderItems, totalPrice}});
+    navigate('/payment', { state: { items: orderItems, totalPrice } });
   };
 
   const addItemToCart = async () => {
@@ -112,7 +114,7 @@ const ProductDetailPage = () => {
       }
 
       // Redux Thunk 호출: cartItems 배열 전송
-      const response = await dispatch(addToCart({cartItems})).unwrap();
+      const response = await dispatch(addToCart({ cartItems })).unwrap();
 
       if (response.status === 'fail') {
         alert(`중복된 항목: ${response.falseItems.join(', ')}`);
@@ -183,7 +185,8 @@ const ProductDetailPage = () => {
                     key={option}
                     className='product-detail-page__option-choice'
                     onClick={() => handleOptionSelect(option)}>
-                    {option.trim()} (재고: {quantity})
+                    <span>{option.trim()}</span>
+                    <span className='stock-info'>재고: {quantity}</span>
                   </div>
                 ))}
               </div>
@@ -192,20 +195,29 @@ const ProductDetailPage = () => {
         </div>
         {selectedOptions.map((selected, index) => (
           <div key={index} className='product-detail-page__selected-option'>
-            <span>
+            <div className='product-detail-page__option-name'>
               {productDetail.name} / {selected.option}
-            </span>
-            <div className='product-detail-page__quantity'>
-              <input
-                type='number'
-                value={selected.quantity}
-                min='1'
-                onChange={(e) => handleQuantityChange(index, parseInt(e.target.value))}
-              />
-              <span>{(productDetail.realPrice || productDetail.price) * selected.quantity}원</span>
-              <button className='product-detail-page__remove-option' onClick={() => handleRemoveOption(index)}>
-                ✖
-              </button>
+            </div>
+            <div className='product-detail-page__option-details'>
+              <div className='product-detail-page__quantity'>
+                <input
+                  type='number'
+                  value={selected.quantity}
+                  min='1'
+                  onChange={(e) => handleQuantityChange(index, parseInt(e.target.value))}
+                />
+              </div>
+              <div className='product-detail-page__price-remove'>
+                <div className='product-detail-page__option-price'>
+                  {(productDetail.realPrice || productDetail.price) * selected.quantity}원
+                </div>
+                <button
+                  className='product-detail-page__remove-option'
+                  onClick={() => handleRemoveOption(index)}
+                >
+                  <AiOutlineClose />
+                </button>
+              </div>
             </div>
           </div>
         ))}

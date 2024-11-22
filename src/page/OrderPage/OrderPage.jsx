@@ -17,6 +17,35 @@ const OrderPage = () => {
     updateDateRange(period);
   };
 
+  const filterOrders = () => {
+    if (!startDate || !endDate) {
+      console.log('No date filters applied. Returning all orders.');
+      setFilteredOrders(orderList); // 날짜 선택 안 된 경우 전체 데이터 표시
+      return;
+    }
+
+    // End Date를 하루의 끝으로 설정
+    const adjustedEndDate = new Date(endDate);
+    adjustedEndDate.setHours(23, 59, 59, 999);
+
+    console.log('Start Date:', startDate);
+    console.log('Adjusted End Date:', adjustedEndDate);
+
+    // 주문 날짜 필터링
+    const filtered = orderList.filter((order) => {
+      const orderDate = new Date(order.createdAt);
+      console.log('Order Date:', orderDate);
+
+      const isWithinRange = orderDate >= startDate && orderDate <= adjustedEndDate;
+      console.log(`Order Date ${orderDate} is within range:`, isWithinRange);
+
+      return isWithinRange; // 날짜 범위에 포함되는지 확인
+    });
+
+    console.log('Filtered Orders:', filtered);
+    setFilteredOrders(filtered);
+  };
+
   const updateDateRange = (period) => {
     const today = new Date();
     let startDate, endDate;
@@ -42,32 +71,21 @@ const OrderPage = () => {
         startDate = null;
         endDate = null;
     }
-    const filterOrders = () => {
-      if (!startDate || !endDate) {
-        setFilteredOrders(orderList); // 날짜 선택 안 된 경우 전체 데이터 표시
-        return;
-      }
 
-      const filtered = orderList.filter((order) => {
-        const orderDate = new Date(order.createdAt);
-        return orderDate >= startDate && orderDate <= endDate;
-      });
-
-      setFilteredOrders(filtered);
-    };
     setStartDate(startDate);
     setEndDate(endDate);
+    filterOrders();
   };
 
   useEffect(() => {
     dispatch(fetchOrder()); // 주문 데이터 가져오기
   }, [dispatch]);
 
-  //   useEffect(() => {
-  //     if (orderList.length > 0) {
-  //       filterOrders(); // 데이터가 변경될 때 필터링
-  //     }
-  //   }, [orderList, startDate, endDate]);
+  useEffect(() => {
+    if (orderList.length > 0) {
+      filterOrders(); // 데이터가 변경될 때 필터링
+    }
+  }, [orderList, startDate, endDate]);
 
   if (loading) return <p>로딩 중...</p>;
   if (error) return <p>에러 발생: {error}</p>;
@@ -110,11 +128,7 @@ const OrderPage = () => {
           value={endDate ? endDate.toISOString().slice(0, 10) : ''}
           onChange={(e) => setEndDate(new Date(e.target.value))}
         />
-        <button
-          className='order-history-search-button'
-          // onClick={filterOrders}
-          //날짜조회 잠시 보류
-        >
+        <button className='order-history-search-button' onClick={filterOrders}>
           조회
         </button>
       </div>
@@ -129,67 +143,73 @@ const OrderPage = () => {
           <span>진행상황</span>
         </div>
 
-        {orderList.map((order) => {
-          const totalAmount = order.items.reduce((sum, item) => sum + item.price * item.qty, 4000); // 총 상품금액 계산
-          const itemDisplayName =
-            order.items.length > 1
-              ? `${order.items[0].product.name} 외 ${order.items.length - 1}개`
-              : order.items[0].product.name; // 상품 이름 처리
+        {filteredOrders.length > 0 ? (
+          filteredOrders.map((order) => {
+            const totalAmount = order.items.reduce((sum, item) => sum + item.price * item.qty, 4000); // 총 상품금액 계산
+            const itemDisplayName =
+              order.items.length > 1
+                ? `${order.items[0].product.name} 외 ${order.items.length - 1}개`
+                : order.items[0].product.name;
 
-          return (
-            <div key={order.orderNum} className='order-history-table-row'>
-              {/* PC 뷰 */}
-              <div className='pc-view'>
-                <div className='order-history-order-date'>{new Date(order.createdAt).toLocaleDateString('ko-KR')}</div>
-                <div className='order-history-order-number'>{order.orderNum}</div>
-                <div className='order-history-product-info'>
-                  <img
-                    src={order.items[0].product.image || '/images/default-product.jpg'}
-                    alt='Product'
-                    className='order-history-product-image'
-                  />
-                  <div className='order-history-product-details'>
-                    <p className='order-history-product-name'>{itemDisplayName}</p>
-                  </div>
-                </div>
-                <div className='order-history-quantity'>{order.items.reduce((sum, item) => sum + item.qty, 0)}</div>
-                <div className='order-history-price'>{totalAmount.toLocaleString()}원</div>
-                <div className='order-history-order-status'>{order.status}</div>
-              </div>
-
-              {/* 모바일 뷰 */}
-              <div className='mobile-view'>
-                <div className='order-history-order-header'>
+            return (
+              <div key={order.orderNum} className='order-history-table-row'>
+                {/* PC 뷰 */}
+                <div className='pc-view'>
                   <div className='order-history-order-date'>
                     {new Date(order.createdAt).toLocaleDateString('ko-KR')}
                   </div>
                   <div className='order-history-order-number'>{order.orderNum}</div>
-                </div>
-
-                <div className='order-history-product-container'>
-                  <img
-                    src={order.items[0].product.image || '/images/default-product.jpg'}
-                    alt='Product'
-                    className='order-history-product-image'
-                  />
-                  <div className='order-history-product-details'>
-                    <p className='order-history-product-name'>{itemDisplayName}</p>
-                    <div className='order-history-price-quantity'>
-                      <span className='order-history-quantity'>
-                        총 수량: {order.items.reduce((sum, item) => sum + item.qty, 0)}개
-                      </span>
-                      <span className='order-history-price'>{totalAmount.toLocaleString()}원</span>
+                  <div className='order-history-product-info'>
+                    <img
+                      src={order.items[0].product.image || '/images/default-product.jpg'}
+                      alt='Product'
+                      className='order-history-product-image'
+                    />
+                    <div className='order-history-product-details'>
+                      <p className='order-history-product-name'>{itemDisplayName}</p>
                     </div>
                   </div>
-                </div>
-
-                <div className='order-history-status-review'>
+                  <div className='order-history-quantity'>{order.items.reduce((sum, item) => sum + item.qty, 0)}</div>
+                  <div className='order-history-price'>{totalAmount.toLocaleString()}원</div>
                   <div className='order-history-order-status'>{order.status}</div>
                 </div>
+
+                {/* 모바일 뷰 */}
+                <div className='mobile-view'>
+                  <div className='order-history-order-header'>
+                    <div className='order-history-order-date'>
+                      {new Date(order.createdAt).toLocaleDateString('ko-KR')}
+                    </div>
+                    <div className='order-history-order-number'>{order.orderNum}</div>
+                  </div>
+
+                  <div className='order-history-product-container'>
+                    <img
+                      src={order.items[0].product.image || '/images/default-product.jpg'}
+                      alt='Product'
+                      className='order-history-product-image'
+                    />
+                    <div className='order-history-product-details'>
+                      <p className='order-history-product-name'>{itemDisplayName}</p>
+                      <div className='order-history-price-quantity'>
+                        <span className='order-history-quantity'>
+                          총 수량: {order.items.reduce((sum, item) => sum + item.qty, 0)}개
+                        </span>
+                        <span className='order-history-price'>{totalAmount.toLocaleString()}원</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className='order-history-status-review'>
+                    <div className='order-history-order-status'>{order.status}</div>
+                  </div>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })
+        ) : (
+          <p>선택한 기간에 해당하는 주문이 없습니다.</p>
+        )}
       </div>
     </div>
   );

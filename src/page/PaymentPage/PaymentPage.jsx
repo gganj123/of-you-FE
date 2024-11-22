@@ -87,8 +87,9 @@ const PaymentPage = () => {
 
     setShipInfo((prev) => ({
       ...prev,
-      address: fullAddress,
-      zip: zonecode
+      city: fullAddress, // 도로명 주소
+      zip: zonecode, // 우편번호
+      address: '' // 상세 주소는 비워둠
     }));
 
     setIsPostcodeOpen(false); // 모달 닫기
@@ -164,19 +165,38 @@ const PaymentPage = () => {
         <h1 className='payment_main_title'>주문/결제</h1>
       </div>
       <div className='payment_container'>
-        {/* 왼쪽 영역 */}
         <div className='payment_content'>
           <div className='payment_delivery_section'>
             <h2 className='payment_section_title'>배송지 정보</h2>
             <div className='payment_delivery_form'>
-              <div className='payment_form_row'>
+              {/* 성명 입력 */}
+              <div className='payment_form_row name_row'>
                 <label className='payment_form_label'>
                   받으시는 분<span className='required'>*</span>
                 </label>
-                성
-                <input type='text' className='payment_form_input' onChange={handleFormChange} name='lastName' /> 이름
-                <input type='text' className='payment_form_input' onChange={handleFormChange} name='firstName' />
+                <div className='name_input_group'>
+                  <div className='name_input_box'>
+                    <input
+                      type='text'
+                      className='payment_form_input'
+                      onChange={handleFormChange}
+                      name='lastName'
+                      placeholder='성'
+                    />
+                  </div>
+                  <div className='name_input_box'>
+                    <input
+                      type='text'
+                      className='payment_form_input'
+                      onChange={handleFormChange}
+                      name='firstName'
+                      placeholder='이름'
+                    />
+                  </div>
+                </div>
               </div>
+
+              {/* 연락처 입력 */}
               <div className='payment_form_row'>
                 <label className='payment_form_label'>
                   휴대폰번호<span className='required'>*</span>
@@ -204,7 +224,6 @@ const PaymentPage = () => {
                     value={contactParts.middle}
                     onChange={handleContactChange}
                     maxLength='4'
-                    placeholder='중간 번호'
                   />
                   <input
                     type='text'
@@ -213,27 +232,28 @@ const PaymentPage = () => {
                     value={contactParts.last}
                     onChange={handleContactChange}
                     maxLength='4'
-                    placeholder='마지막 번호'
                   />
                 </div>
               </div>
-              <div className='payment_form_row'>
+
+              {/* 주소 입력 */}
+              <div className='payment_form_row address_row'>
                 <label className='payment_form_label'>
                   배송지<span className='required'>*</span>
                 </label>
-                <div>
-                  <input
-                    type='text'
-                    className='payment_form_input'
-                    placeholder='우편번호'
-                    value={shipInfo.zip}
-                    readOnly
-                  />
-                  <button className='payment_form_button' type='button' onClick={() => setIsPostcodeOpen(true)}>
-                    우편번호 찾기
-                  </button>
-                </div>
-                <div>
+                <div className='address_input_group'>
+                  <div className='zipcode_row'>
+                    <input
+                      type='text'
+                      className='payment_form_input zipcode_input'
+                      placeholder='우편번호'
+                      value={shipInfo.zip}
+                      readOnly
+                    />
+                    <button className='payment_form_button' type='button' onClick={() => setIsPostcodeOpen(true)}>
+                      우편번호 찾기
+                    </button>
+                  </div>
                   <input
                     type='text'
                     className='payment_form_input'
@@ -251,21 +271,20 @@ const PaymentPage = () => {
                 </div>
               </div>
 
+              {/* 우편번호 모달 */}
               {isPostcodeOpen && (
-                <div className='postcode_modal'>
-                  <DaumPostcode
-                    onComplete={(data) => {
-                      const fullAddress = data.address; // 도로명 주소
-                      const zonecode = data.zonecode; // 우편번호
-                      setShipInfo((prev) => ({
-                        ...prev,
-                        city: fullAddress,
-                        zip: zonecode
-                      }));
-                      setIsPostcodeOpen(false); // 모달 닫기
-                    }}
-                  />
-                  <button onClick={() => setIsPostcodeOpen(false)}>닫기</button>
+                <div className='postcode_overlay'>
+                  <div className='postcode_modal'>
+                    <div className='postcode_modal_header'>
+                      <h3 className='postcode_modal_title'>우편번호 찾기</h3>
+                      <button className='close_button' onClick={() => setIsPostcodeOpen(false)}>
+                        ✕
+                      </button>
+                    </div>
+                    <div className='postcode_content'>
+                      <DaumPostcode onComplete={handleCompletePostcode} />
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -283,7 +302,7 @@ const PaymentPage = () => {
               {items.map((item, index) => {
                 // 안전하게 데이터를 처리
                 const product = item.productId || {};
-                const price = product.realPrice || product.price || 0; // realPrice가 없으면 price 사용, 둘 다 없으면 0
+                const price = product.realPrice || product.price || 0; // salePrice가 없으면 price 사용, 둘 다 없으면 0
                 const totalPrice = price * (item.qty || 1); // qty가 없으면 기본값 1
 
                 return (

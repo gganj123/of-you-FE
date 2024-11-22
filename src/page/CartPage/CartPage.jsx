@@ -243,7 +243,9 @@ const CartPage = () => {
                 <div className='cart-item-info'>
                   <div className='cart-item-brand'>{item.productId.brand}</div>
                   <div className='cart-item-name'>{item.productId.name}</div>
-                  <div className='cart-item-option'>옵션 : {item.size}</div>
+                  <div className='cart-item-option'>
+                    옵션 : {item.size} {isMobile ? ` 수량: ${item.qty}개` : ''}
+                  </div>
                   {isMobile ? (
                     <div className='cart-item-mobile-bottom'>
                       <div className='cart-item-mobile-price'>

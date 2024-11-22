@@ -181,7 +181,7 @@ const Navbar = ({user}) => {
                         <div
                           key={subcategory}
                           className='navbar-subcategory-item'
-                          onClick={() => handleSubCategoryClick(subcategory)}>
+                          onClick={() => handleSubCategoryClick(selectedCategory, subcategory)}>
                           {subcategory}
                         </div>
                       ))}
@@ -302,7 +302,7 @@ const Navbar = ({user}) => {
                       <div
                         key={subcategory}
                         className='navbar-subcategory-item'
-                        onClick={() => handleSubCategoryClick(subcategory)}>
+                        onClick={() => handleSubCategoryClick(selectedCategory, subcategory)}>
                         {subcategory}
                       </div>
                     ))}

@@ -8,6 +8,7 @@ import cartSlice from './cart/cartSlice';
 import likeSlice from './like/likeSlice';
 import orderSlice from './order/orderSlice';
 import addressSlice from './address/addressSlice';
+import querySlice from './query/querySlice';
 
 // persist 설정
 const persistConfig = {
@@ -23,7 +24,8 @@ const rootReducer = combineReducers({
   cart: cartSlice,
   like: likeSlice,
   order: orderSlice,
-  address: addressSlice
+  address: addressSlice,
+  query: querySlice
 });
 
 // persistReducer 생성

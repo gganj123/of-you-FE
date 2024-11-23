@@ -14,6 +14,15 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+export const deleteUser = createAsyncThunk('user/deleteUser', async (_, {rejectWithValue}) => {
+  try {
+    const response = await api.delete('/user/delete');
+    return '탈퇴완료';
+  } catch (error) {
+    return rejectWithValue(error.response?.data?.message || '탈퇴를 실패하였습니다.');
+  }
+});
+
 export const loginWithEmail = createAsyncThunk(
   'user/loginWithEmail',
 
@@ -123,6 +132,12 @@ const userSlice = createSlice({
       .addCase(loginWithToken.fulfilled, (state, action) => {
         state.user = action.payload.user;
       })
+      .addCase(loginWithToken.rejected, (state, action) => {
+        state.loading = false;
+        state.user = null;
+        sessionStorage.removeItem('token');
+        state.error = action.payload;
+      })
       .addCase(loginWithGoogle.pending, (state, action) => {
         state.loading = true;
       })
@@ -146,6 +161,18 @@ const userSlice = createSlice({
       .addCase(fetchKakaoToken.rejected, (state, action) => {
         state.status = 'failed';
         state.loginError = action.payload; // 에러 메시지 저장
+      })
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteUser.fulfilled, (state) => {
+        state.loading = false;
+        state.user = null; // 유저 정보 초기화
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   }
 });

@@ -96,7 +96,6 @@ const AdminProductPage = () => {
       dispatch(deleteProduct(id));
     } catch (error) {
       console.error('Error deleting product:', error);
-      alert('상품 삭제에 실패했습니다.');
     }
 
     alert('상품이 삭제되었습니다.');

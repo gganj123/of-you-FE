@@ -168,7 +168,8 @@ const PaymentPage = () => {
         productId: item.productId._id,
         size: item.size,
         qty: item.qty,
-        price: item.productId.price
+        price: item.productId.price,
+        cartId: item._id
       })),
       totalPrice: totalPrice
     };
@@ -362,7 +363,7 @@ const PaymentPage = () => {
                 const totalPrice = price * (item.qty || 1); // qty가 없으면 기본값 1
 
                 return (
-                  <div className='payment_order_item' key={product._id || index}>
+                  <div className='payment_order_item' key={item._id}>
                     <div className='payment_item_info'>
                       <div className='payment_item_image'>
                         <img src={product.image || '/images/default-image.jpg'} alt={product.name || '상품 이미지'} />

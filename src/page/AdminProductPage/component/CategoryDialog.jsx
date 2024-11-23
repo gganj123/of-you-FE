@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Form, Modal, Button, Row, Col, Alert} from 'react-bootstrap';
 import {useDispatch, useSelector} from 'react-redux';
-import '../AdminProductPage.style.css';
+import './NewItemDialog.style.css';
 import './AdminCategoryDialog.style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PropTypes from 'prop-types';
@@ -25,6 +25,7 @@ const CategoryDialog = ({category, setCategory, showCategoryDialog, setShowCateg
   };
 
   const handleSubCategoryClick = (subcategory) => {
+    console.log(selectedCategory, subcategory);
     setCategory([selectedCategory, subcategory]);
   };
 

@@ -44,6 +44,7 @@ const Navbar = ({user}) => {
   // 페이지 이동 시 카테고리 메뉴 닫기
   useEffect(() => {
     setIsCategoryOpen(false);
+    setSearchTerm('');
   }, [location]);
 
   useEffect(() => {
@@ -77,6 +78,7 @@ const Navbar = ({user}) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       navigate(`/products/category/all?name=${encodeURIComponent(searchTerm)}`);
+      setSearchTerm('');
     }
   };
 

@@ -21,9 +21,10 @@ const OrderDetailDialog = ({open, handleClose, order, handleStatusChange}) => {
     await handleStatusChange(order._id, status);
     handleClose();
   };
+  console.log(order);
 
   return (
-    <Modal show={open} onHide={handleClose} centered>
+    <Modal show={open} onHide={handleClose} centered className='large-modal'>
       <Modal.Header closeButton>
         <Modal.Title>주문 상세 정보</Modal.Title>
       </Modal.Header>
@@ -32,7 +33,7 @@ const OrderDetailDialog = ({open, handleClose, order, handleStatusChange}) => {
         <p>주문 날짜: {new Date(order.createdAt).toLocaleString()}</p>
         <p>고객 이름: {`${order.contact.lastName} ${order.contact.firstName}`}</p>
         <p>연락처: {order.contact.contact}</p>
-        <p>주소: {`${order.shipto.address}, ${order.shipto.city}, ${order.shipto.zip}`}</p>
+        <p>주소: {`(${order.shipto.zip}) ${order.shipto.address} ${order.shipto.city} `}</p>
 
         {/* 상태 변경 드롭다운 추가 */}
         <Form.Group controlId='orderStatus'>
@@ -45,6 +46,7 @@ const OrderDetailDialog = ({open, handleClose, order, handleStatusChange}) => {
           </Form.Control>
         </Form.Group>
 
+        <br />
         <p>주문내역</p>
         <div className='overflow-x'>
           <Table>
@@ -63,9 +65,9 @@ const OrderDetailDialog = ({open, handleClose, order, handleStatusChange}) => {
                   <tr key={item._id}>
                     <td>{item._id}</td>
                     <td>{item.productId.name}</td>
-                    <td>{item.price}</td>
+                    <td>{item.productId.realPrice.toLocaleString()}</td>
                     <td>{item.qty}</td>
-                    <td>{item.price * item.qty}</td>
+                    <td>{(item.productId.realPrice * item.qty).toLocaleString()}</td>
                   </tr>
                 ))}
               <tr>

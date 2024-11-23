@@ -218,7 +218,7 @@ const PaymentPage = () => {
               {addresses.map((address) => (
                 <option key={address._id} value={address._id}>
                   {address.contact.lastName}
-                  {address.contact.firstName} -{address.isDefault ? '(기본배송지) ' : ''}
+                  {address.contact.firstName} - {address.isDefault ? '(기본배송지) ' : ''}
                   {address.shipto.address}
                 </option>
               ))}
@@ -314,14 +314,14 @@ const PaymentPage = () => {
                     type='text'
                     className='payment_form_input'
                     placeholder='도로명 주소'
-                    value={shipInfo.city}
+                    value={shipInfo.address}
                     readOnly
                   />
                   <input
                     type='text'
                     className='payment_form_input'
                     placeholder='상세 주소'
-                    value={shipInfo.address}
+                    value={shipInfo.city}
                     onChange={(e) => setShipInfo((prev) => ({...prev, address: e.target.value}))}
                   />
                 </div>

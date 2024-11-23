@@ -149,10 +149,18 @@ const Navbar = ({user}) => {
     navigate('/admin/product');
   };
 
+  // 로딩시 인기검색어 불러오기
   useEffect(() => {
-    console.log('getQuery 요청');
     dispatch(getQuery());
   }, []);
+
+  const handlePopularSearchSubmit = (e, query) => {
+    e.preventDefault();
+    if (query.trim()) {
+      setSearchTerm(query);
+      navigate(`/products/category/all?name=${encodeURIComponent(query)}`);
+    }
+  };
 
   return (
     <>
@@ -224,7 +232,7 @@ const Navbar = ({user}) => {
                   <h4>급상승 검색어</h4>
                   <ul>
                     {(queries || []).map((queryItem, index) => (
-                      <li key={`popular-${index}`}>
+                      <li key={`popular-${index}`} onClick={(e) => handlePopularSearchSubmit(e, queryItem.query)}>
                         {index + 1}. {queryItem.query}
                       </li>
                     ))}
@@ -279,8 +287,10 @@ const Navbar = ({user}) => {
                 <div className='navbar-popular-searches'>
                   <h4>급상승 검색어</h4>
                   <ul>
-                    {Array.from({length: 10}, (_, i) => (
-                      <li key={`popular-${i}`}> {i + 1}. 검색어</li>
+                    {(queries || []).map((queryItem, index) => (
+                      <li key={`popular-${index}`} onClick={(e) => handlePopularSearchSubmit(e, queryItem.query)}>
+                        {index + 1}. {queryItem.query}
+                      </li>
                     ))}
                   </ul>
                 </div>

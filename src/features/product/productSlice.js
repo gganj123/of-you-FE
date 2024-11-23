@@ -38,8 +38,6 @@ export const searchProduct = createAsyncThunk('/product/searchProduct', async (p
       dispatch(putQuery({query: name}));
     }
 
-    console.log('searchProduct 요청 : ', params);
-
     const response = await api.get('/product', {params: {limit, name, page, sort}});
     return response.data;
   } catch (error) {

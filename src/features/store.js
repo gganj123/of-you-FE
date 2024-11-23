@@ -7,13 +7,14 @@ import productSlice from './product/productSlice';
 import cartSlice from './cart/cartSlice';
 import likeSlice from './like/likeSlice';
 import orderSlice from './order/orderSlice';
+import addressSlice from './address/addressSlice';
 import querySlice from './query/querySlice';
 
 // persist 설정
 const persistConfig = {
   key: 'root',
   storage, // 로컬 스토리지에 상태 저장
-  whitelist: ['user', 'like', 'cart'] // 유지할 슬라이스 지정
+  whitelist: ['user', 'like', 'cart', 'address'] // 유지할 슬라이스 지정
 };
 
 // 모든 리듀서를 결합
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   cart: cartSlice,
   like: likeSlice,
   order: orderSlice,
+  address: addressSlice,
   query: querySlice
 });
 

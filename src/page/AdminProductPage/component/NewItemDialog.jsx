@@ -218,7 +218,6 @@ const NewItemDialog = ({mode, showDialog, setShowDialog}) => {
               onChange={handleChange}
               rows={3}
               value={formData.description}
-              required
             />
           </Form.Group>
 
@@ -286,6 +285,7 @@ const NewItemDialog = ({mode, showDialog, setShowDialog}) => {
                 placeholder='0'
                 min='0'
                 max='100'
+                step='0.1'
               />
             </Form.Group>
 

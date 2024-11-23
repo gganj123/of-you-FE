@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Form, Modal, Button, Row, Col, Alert} from 'react-bootstrap';
 import {useDispatch, useSelector} from 'react-redux';
-import '../AdminProductPage.style.css';
+import './NewItemDialog.style.css';
 import {getCategoryName} from '../../../utils/categories';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -56,7 +56,6 @@ const NewItemDialog = ({mode, showDialog, setShowDialog}) => {
     if (showDialog) {
       if (mode === 'edit') {
         setFormData(selectedProduct);
-        console.log(selectedProduct);
         // 객체형태로 온 stock을  다시 배열로 세팅해주기
         const sizeArray = Object.keys(selectedProduct.stock).map((size) => [size, selectedProduct.stock[size]]);
         setStock(sizeArray);
@@ -113,12 +112,9 @@ const NewItemDialog = ({mode, showDialog, setShowDialog}) => {
     if (id === 'saleRate' || id === 'price') {
       const price = Number(newFormData.price);
       const saleRate = Number(newFormData.saleRate) ? Number(newFormData.saleRate) : 0;
-      console.log('price ', price);
-      console.log('saleRate ', saleRate);
+
       newFormData.realPrice = price * (1 - saleRate / 100);
       newFormData.salePrice = price - newFormData.realPrice;
-      console.log('newFormData.realPrice ', newFormData.realPrice);
-      console.log('newFormData.salePrice ', newFormData.salePrice);
     }
 
     setFormData(newFormData);
@@ -271,7 +267,7 @@ const NewItemDialog = ({mode, showDialog, setShowDialog}) => {
               src={formData.image || ''}
               className='upload-image mt-2'
               alt='uploadedimage'
-              style={{display: formData.image ? 'block' : 'none', width: '200px'}}></img>
+              style={{display: formData.image ? 'block' : 'none'}}></img>
           </Form.Group>
         </Row>
         <Row className='mb-0'>

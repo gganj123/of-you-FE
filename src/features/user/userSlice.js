@@ -4,10 +4,9 @@ import {initialCart} from '../cart/cartSlice';
 
 export const registerUser = createAsyncThunk(
   'user/registerUser',
-  async ({email, name, password, navigate}, {rejectWithValue}) => {
+  async ({email, name, password}, {rejectWithValue}) => {
     try {
       const response = await api.post('/user', {email, name, password});
-      navigate('/login');
       return response.data;
     } catch (error) {
       return rejectWithValue(error.error);

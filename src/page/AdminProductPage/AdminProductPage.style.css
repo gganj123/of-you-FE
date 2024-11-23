@@ -23,13 +23,6 @@
   margin-bottom: 20px;
 }
 
-.admin-product-page input[type='text'] {
-  padding: 10px;
-  font-size: 14px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
 .admin-product-page button[type='submit'] {
   padding: 10px;
   background-color: #007bff;
@@ -63,17 +56,17 @@
 
 .add-new-item-btn {
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #767676;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-right: 20px;
+  margin-right: 60px;
   font-size: 14px;
 }
 
 .add-new-item-btn:hover {
-  background-color: #0056b3;
+  background-color: #121212;
 }
 
 .item-count-dropdown select {
@@ -86,7 +79,7 @@
 .product-table {
   width: 90%;
   border-collapse: collapse;
-  margin: 40px auto 40px auto;
+  margin: 10px auto 40px auto;
 }
 
 .product-table th,
@@ -192,37 +185,282 @@
   z-index: 999;
 }
 
-.modal {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-dialog {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  min-height: calc(100% - 1rem);
-
-  @media (min-width: 1400px) {
-    margin-right: auto;
-    margin-left: auto;
-    max-width: 1400px;
-  }
-}
-
 .form {
-  margin: 10px 20px;
-  display: flex;
-
   @media (max-width: 768px) {
+    width: 95%;
+    margin: 10px auto;
+    padding: 0;
   }
 }
 
-.form-label {
-  margin-right: 10px;
+.admin-search-bar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
 }
 
-.submit-btn {
-  height: 50px;
+.admin-search-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  border-bottom: 1px solid black;
+  position: relative;
+  margin-right: 20px;
+}
+
+.admin-search-bar input {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+}
+
+.admin-add-new-item-btn-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.count-text {
+  margin-left: 60px;
+}
+
+.td-btn {
+  padding: 0;
+  width: 190px;
+}
+
+.edit-btn {
+  margin-right: 10px;
+  background-color: #339a22;
+}
+
+.edit-btn:hover {
+  background-color: #062500;
+}
+
+.delete-btn {
+  margin: 0;
+  background-color: #a70000;
+}
+
+.delete-btn:hover {
+  background-color: #1b0000;
+}
+
+@media (max-width: 768px) {
+  .product-table {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .product-table th,
+  .product-table td {
+    padding: 8px 4px;
+  }
+
+  .td-index,
+  .td-price,
+  .td-stock {
+    display: none;
+  }
+
+  .td-stock {
+    font-size: 12px;
+  }
+
+  .td-image img {
+    width: 40px;
+  }
+
+  .td-btn {
+    width: auto;
+  }
+
+  .add-new-item-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    margin-right: 10px;
+  }
+
+  .delete-btn {
+    margin: 0;
+  }
+
+  .admin-search-bar-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .admin-add-new-item-btn-container {
+    align-items: center;
+    gap: 10px;
+  }
+
+  .count-text {
+    margin-left: 0;
+  }
+
+  .admin-product-section {
+    padding-top: 180px;
+  }
+
+  .pagination .page-link {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .pagination {
+    gap: 5px;
+  }
+
+  .pagination .page-item {
+    display: none; /* 기본적으로 모든 페이지 숫자 숨김 */
+  }
+
+  /* 이전, 다음 버튼과 현재 활성화된 페이지만 보여줌 */
+  .pagination .page-item:first-child,
+  .pagination .page-item:last-child,
+  .pagination .page-item.active {
+    display: block;
+  }
+
+  .pagination .page-item.break {
+    display: none;
+  }
+
+  .page-link {
+    min-width: 35px;
+    text-align: center;
+  }
+
+  .modal-dialog {
+    width: 95%;
+    margin: 10px auto;
+    padding: 0;
+    align-items: flex-start;
+    max-height: 95vh;
+  }
+
+  .modal-content {
+    max-height: 95vh;
+    overflow-y: auto;
+    margin: 10px 0;
+  }
+
+  .modal-content::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .modal-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .modal-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+  }
+
+  .form {
+    margin: 10px;
+    padding: 0;
+  }
+
+  .form .row {
+    margin: 0;
+    width: 100%;
+  }
+
+  .form .col {
+    padding: 5px;
+  }
+
+  .form-control {
+    font-size: 14px;
+    padding: 6px;
+  }
+
+  .form-label {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .submit-btn {
+    height: 40px;
+    font-size: 14px;
+  }
+
+  /* 재고 입력 영역 */
+  .form-group[controlId='stock'] .row {
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .form {
+    display: block;
+  }
+  .product-table th,
+  .product-table td {
+    padding: 6px 2px;
+    font-size: 12px;
+  }
+
+  .td-real-price {
+    display: none;
+  }
+
+  .pagination .page-link {
+    padding: 4px 8px;
+    font-size: 12px;
+    min-width: 30px;
+  }
+
+  .td-image,
+  #items-per-page {
+    display: none;
+  }
+
+  .td-name {
+    width: 200px;
+  }
+
+  .modal-dialog {
+    width: 98%;
+    margin: 5px auto;
+  }
+
+  .form {
+    margin: 5px;
+  }
+
+  .form-control {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  .form-label {
+    font-size: 12px;
+  }
+
+  .submit-btn {
+    height: 36px;
+    font-size: 12px;
+  }
+
+  /* 재고 입력 영역 더 컴팩트하게 */
+  .form-group[controlId='stock'] .col-sm-4 {
+    width: 35%;
+  }
+
+  .form-group[controlId='stock'] .col-sm-6 {
+    width: 55%;
+  }
+
+  .form-group[controlId='stock'] .col-sm-2 {
+    width: 10%;
+  }
 }

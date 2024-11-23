@@ -6,6 +6,7 @@ import NewItemDialog from './component/NewItemDialog';
 import './AdminProductPage.style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {getProductList, deleteProduct, setSelectedProduct} from '../../features/product/productSlice';
+import {FiSearch} from 'react-icons/fi';
 
 const AdminProductPage = () => {
   const navigate = useNavigate();
@@ -24,7 +25,16 @@ const AdminProductPage = () => {
     limit: query.get('limit') || 5
   });
 
-  const tableHeader = ['#', 'Sku', '상품이름', '기존금액', '할인금액', '사이즈 종류', '사진', ''];
+  const tableHeader = {
+    '#': 'td-index',
+    Sku: 'td-sku',
+    상품이름: 'td-name',
+    기존금액: 'td-price',
+    할인금액: 'td-real-price',
+    '사이즈 종류': 'td-stock',
+    사진: 'td-image',
+    '': 'td-btn'
+  };
 
   const handlePageClick = ({selected}) => {
     //  쿼리에 페이지값 바꿔주기
@@ -32,7 +42,6 @@ const AdminProductPage = () => {
   };
 
   useEffect(() => {
-    console.log('searchQuery', searchQuery);
     //검색어나 페이지가 바뀌면 url바꿔주기 (검색어또는 페이지가 바뀜 => url 바꿔줌=> url쿼리 읽어옴=> 이 쿼리값 맞춰서  상품리스트 가져오기)
     if (searchQuery.name === '') {
       delete searchQuery.name;
@@ -93,35 +102,66 @@ const AdminProductPage = () => {
     alert('상품이 삭제되었습니다.');
   };
 
+  // 페이지네이션 반응형 조절
+  const [pageRangeDisplayed, setPageRangeDisplayed] = useState(5);
+  const [nextLabel, setNextLabel] = useState('next >');
+  const [previousLabel, setPreviousLabel] = useState('< previous');
+  const [breakLabel, setBreakLabel] = useState('...');
+  const [marginPagesDisplayed, setMarginPagesDisplayed] = useState(2); // 추가
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setPageRangeDisplayed(3);
+        setNextLabel('>');
+        setPreviousLabel('<');
+        setBreakLabel('');
+        setMarginPagesDisplayed(1);
+      } else {
+        setPageRangeDisplayed(5);
+        setNextLabel('next >');
+        setPreviousLabel('< previous');
+        setBreakLabel('...');
+        setMarginPagesDisplayed(3);
+      }
+    };
+
+    handleResize(); // 초기 실행
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className='admin-product-page admin-product-section'>
       <div className='product-content'>
         <div className='admin-order-header'>
           <h1>제품 관리</h1>
-          <div>
-            <div className='search-box'>
+          <div className='admin-search-bar-container'>
+            <div className='admin-search-bar'>
               <input
                 type='text'
                 id='search-query'
                 placeholder='제품 이름으로 검색'
-                className='search-input'
                 value={keyword}
-                onKeyPress={onCheckEnter}
+                onKeyDown={onCheckEnter}
                 onChange={(e) => setKeyword(e.target.value)}
+                autoComplete='off'
               />
-              <button className='search-btn' onClick={handleSearchSubmit}>
-                검색
-              </button>
-              <button className='add-new-item-btn' onClick={handleClickNewItem}>
-                Add New Item +
-              </button>
-              <select id='items-per-page' value={searchQuery.limit} onChange={handleLimitChange}>
-                <option value='5'>5</option>
-                <option value='10'>10</option>
-                <option value='20'>20</option>
-                <option value='30'>30</option>
-              </select>
+              <FiSearch onClick={handleSearchSubmit} />
             </div>
+
+            <select id='items-per-page' value={searchQuery.limit} onChange={handleLimitChange}>
+              <option value='5'>5</option>
+              <option value='10'>10</option>
+              <option value='20'>20</option>
+              <option value='30'>30</option>
+            </select>
+          </div>
+          <div className='admin-add-new-item-btn-container'>
+            <div className='count-text'>{totalCount} 개의 상품이 있습니다.</div>
+            <button className='add-new-item-btn' onClick={handleClickNewItem}>
+              Add New Item +
+            </button>
           </div>
         </div>
         {loading ? (
@@ -134,32 +174,38 @@ const AdminProductPage = () => {
           <table className='product-table'>
             <thead>
               <tr>
-                {tableHeader.map((header, index) => (
-                  <th key={index}>{header}</th>
+                {Object.keys(tableHeader).map((header, index) => (
+                  <th key={index} className={tableHeader[header]}>
+                    {header}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {products.map((product, index) => (
                 <tr key={product._id}>
-                  <td>{index + 1}</td>
-                  <td>{product.sku}</td>
-                  <td>{product.name}</td>
-                  <td>{product.price.toLocaleString()}</td>
-                  <td>{product.realPrice.toLocaleString()}</td>
-                  <td>
+                  <td className='td-index'>{index + 1}</td>
+                  <td className='td-sku'>{product.sku}</td>
+                  <td className='td-name'>{product.name}</td>
+                  <td className='td-price'>{product.price.toLocaleString()}</td>
+                  <td className='td-real-price'>{product.realPrice.toLocaleString()}</td>
+                  <td className='td-stock'>
                     {Object.keys(product.stock).map((size, index) => (
                       <div key={index}>
                         {size}:{product.stock[size]}
                       </div>
                     ))}
                   </td>
-                  <td>
+                  <td className='td-image'>
                     <img src={product.image} alt={product.name} />
                   </td>
-                  <td>
-                    <button onClick={() => openEditForm(product)}>Edit</button>
-                    <button onClick={() => handleDelete(product._id)}>Delete</button>
+                  <td className='td-btn'>
+                    <button className='add-new-item-btn edit-btn' onClick={() => openEditForm(product)}>
+                      Edit
+                    </button>
+                    <button className='add-new-item-btn delete-btn' onClick={() => handleDelete(product._id)}>
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -168,12 +214,13 @@ const AdminProductPage = () => {
         )}
 
         <ReactPaginate
-          nextLabel='next >'
+          nextLabel={nextLabel}
           onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
+          pageRangeDisplayed={pageRangeDisplayed}
+          marginPagesDisplayed={marginPagesDisplayed}
           pageCount={totalPageNum}
           forcePage={searchQuery.page - 1}
-          previousLabel='< previous'
+          previousLabel={previousLabel}
           renderOnZeroPageCount={null}
           pageClassName='page-item'
           pageLinkClassName='page-link'

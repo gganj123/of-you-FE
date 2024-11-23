@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {useParams, useNavigate, useSearchParams, useLocation} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import ProductCard from '../../common/components/ProductCard/ProductCard';
-import {clearProducts, fetchProducts} from '../../features/product/productSlice';
+import {clearProducts, fetchProducts, searchProduct} from '../../features/product/productSlice';
 import {categories, getCategoryName, getSubcategoryName} from '../../utils/categories';
 import './CategoryPage.style.css';
 
@@ -28,6 +28,10 @@ const CategoryPage = () => {
   const subcategories = categories[categoryName] || [];
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
@@ -35,6 +39,12 @@ const CategoryPage = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    if (!['new', 'best', 'sale'].includes(category)) {
+      setSortType('latest');
+    }
+  }, [category]);
 
   useEffect(() => {
     const fetchParams = {
@@ -46,47 +56,108 @@ const CategoryPage = () => {
       name: searchTerm
     };
 
-    console.log('Dispatching fetchProducts from useEffect with params:', fetchParams);
-    dispatch(fetchProducts(fetchParams))
-      .unwrap()
-      .then((result) => {
-        console.log('Fetch successful with result:', result);
-      })
-      .catch((err) => {
-        console.error('Fetch failed with error:', err);
-      });
-  }, [location.pathname, searchParams, sortType, dispatch]);
+    // 특정 메인 카테고리 처리
+    if (['new', 'best', 'sale'].includes(category)) {
+      const sortMapping = {
+        new: 'latest',
+        best: 'highPrice',
+        sale: 'highSale'
+      };
+      const updatedSortType = sortMapping[category];
+      setSortType(updatedSortType);
+
+      // 검색 디스패치
+      dispatch(
+        searchProduct({
+          ...fetchParams,
+          mainCate: 'all', // 모든 상품 검색
+          sort: updatedSortType
+        })
+      )
+        .unwrap()
+        .then((result) => {
+          console.log('Search successful with result:', result);
+        })
+        .catch((err) => {
+          console.error('Search failed with error:', err);
+        });
+
+      return; // `new`, `best`, `sale` 처리 후 나머지는 실행하지 않음
+    }
+
+    // 일반 카테고리 처리
+    if (searchTerm) {
+      console.log('Dispatching searchProduct with params:', fetchParams);
+      dispatch(searchProduct(fetchParams))
+        .unwrap()
+        .then((result) => {
+          console.log('Search successful with result:', result);
+        })
+        .catch((err) => {
+          console.error('Search failed with error:', err);
+        });
+    } else {
+      console.log('Dispatching fetchProducts with params:', fetchParams);
+      dispatch(fetchProducts(fetchParams))
+        .unwrap()
+        .then((result) => {
+          console.log('Fetch successful with result:', result);
+        })
+        .catch((err) => {
+          console.error('Fetch failed with error:', err);
+        });
+    }
+  }, [category, subcategory, searchParams, sortType, dispatch]);
+
+  const handleSortChange = (newSortType) => {
+    setSortType(newSortType);
+  };
 
   const handleSubcategoryClick = (category, subcat) => {
     console.log('Navigating to:', `/products/category/${category}/${subcat}`);
     navigate(`/products/category/${category}/${subcat}`);
   };
   const loadMoreProducts = () => {
-    if (!hasMoreProducts || loading || searchTerm) return;
+    if (!hasMoreProducts || loading) return;
 
     const nextPage = page + 1;
-    setPage(nextPage);
 
-    dispatch(
-      fetchProducts({
-        mainCate: getCategoryName(category),
-        subCate: subcategory ? getSubcategoryName(subcategory) : null,
-        page: nextPage,
-        limit: productsPerPage,
-        sort: sortType,
-        name: searchTerm
+    // 검색어 여부에 따라 API 호출
+    const fetchAction = searchTerm
+      ? searchProduct({
+          mainCate: getCategoryName(category),
+          subCate: subcategory ? getSubcategoryName(subcategory) : null,
+          page: nextPage,
+          limit: productsPerPage,
+          sort: sortType,
+          name: searchTerm
+        })
+      : fetchProducts({
+          mainCate: getCategoryName(category),
+          subCate: subcategory ? getSubcategoryName(subcategory) : null,
+          page: nextPage,
+          limit: productsPerPage,
+          sort: sortType
+        });
+
+    dispatch(fetchAction)
+      .unwrap()
+      .then((result) => {
+        if (result.products?.length < productsPerPage) {
+          setHasMoreProducts(false);
+        }
+        setPage(nextPage);
+
+        // 상태에 데이터 추가
+        dispatch({
+          type: 'products/addMoreProducts',
+          payload: {products: result.products} // API 응답 구조에 따라 적절히 수정
+        });
       })
-    ).then((result) => {
-      if (!result.payload || result.payload.length < productsPerPage) {
-        setHasMoreProducts(false);
-      }
-    });
+      .catch((err) => {
+        console.error('Load more products failed:', err);
+      });
   };
-
-  const handleSortChange = (newSortType) => {
-    setSortType(newSortType);
-  };
-
   const handleScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
     const scrollTop = document.documentElement.scrollTop;
@@ -203,7 +274,7 @@ const CategoryPage = () => {
 
       <div className='category-page__product-grid'>
         {products.map((product) => (
-          <div className='category-page__product-item' key={product._id}>
+          <div className='category-page__product-item' key={`${product._id}-${Math.random()}`}>
             <ProductCard
               id={product._id}
               image={product.image}

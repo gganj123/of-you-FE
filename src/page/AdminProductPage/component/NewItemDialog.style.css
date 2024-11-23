@@ -1,0 +1,158 @@
+.modal {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-dialog {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100% - 1rem);
+  width: 95%;
+  margin: 0 auto;
+  max-height: 90vh;
+}
+
+.modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+  padding-left: 20px;
+}
+
+.form {
+  margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.form-label {
+  margin-right: 10px;
+}
+
+.submit-btn {
+  height: 50px;
+}
+
+#uploadedimage {
+  width: 200px;
+}
+
+@media (max-width: 768px) {
+  .modal-dialog {
+    width: 95%;
+    margin: 10px auto;
+    padding: 0;
+    align-items: flex-start;
+    max-height: 95vh;
+  }
+
+  .modal-content {
+    max-height: 95vh;
+    overflow-y: auto;
+    margin: 10px 0;
+  }
+
+  .modal-content::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .modal-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .modal-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+  }
+
+  .form {
+    margin: 10px;
+    padding: 0;
+  }
+
+  .form .row {
+    margin: 0;
+    width: 100%;
+  }
+
+  .form .col {
+    padding: 5px;
+  }
+
+  .form-control {
+    font-size: 14px;
+    padding: 6px;
+  }
+
+  .form-label {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .submit-btn {
+    height: 40px;
+    font-size: 14px;
+  }
+
+  #uploadedimage {
+    width: 150px;
+    height: auto;
+  }
+
+  /* 재고 입력 영역 */
+  .form-group[controlId='stock'] .row {
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+
+  /* 버튼 크기 조정 */
+  .form button {
+    padding: 3px 8px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-dialog {
+    width: 98%;
+    margin: 5px auto;
+  }
+
+  .form {
+    margin: 5px;
+    display: block;
+  }
+
+  .form-control {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  .form-label {
+    font-size: 12px;
+  }
+
+  .submit-btn {
+    height: 36px;
+    font-size: 12px;
+  }
+
+  #uploadedimage {
+    width: 100px;
+  }
+
+  /* 재고 입력 영역 더 컴팩트하게 */
+  .form .col-sm-4 {
+    width: 35%;
+  }
+
+  .form .col-sm-6 {
+    width: 55%;
+  }
+
+  .form .col-sm-2 {
+    width: 10%;
+  }
+}

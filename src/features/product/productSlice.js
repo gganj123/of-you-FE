@@ -1,11 +1,19 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import api from '../../utils/api';
+import {putQuery} from '../query/querySlice';
 
 // 상품 목록 가져오기 비동기 Thunk
-export const fetchProducts = createAsyncThunk('products/fetchProducts', async (params, {rejectWithValue}) => {
+export const fetchProducts = createAsyncThunk('products/fetchProducts', async (params, {rejectWithValue, dispatch}) => {
   try {
     // mainCate와 subCate 추출
     const {mainCate, subCate, ...queryParams} = params;
+
+    const name = queryParams.name;
+
+    // 검색어 있으면 저장
+    if (name) {
+      await dispatch(putQuery({query: name}));
+    }
 
     if (!mainCate) {
       throw new Error('mainCate is required but not provided.');

@@ -17,6 +17,7 @@ import {logout} from '../../../features/user/userSlice';
 import {persistor} from '../../../features/store';
 import {resetLikes} from '../../../features/like/likeSlice';
 import {getCartList, getCartQty} from '../../../features/cart/cartSlice';
+import {categories} from '../../../utils/categories';
 
 const Navbar = ({user}) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
@@ -33,13 +34,6 @@ const Navbar = ({user}) => {
   const popularSearchRef = useRef(null);
   const categoryMenuRef = useRef(null);
   const location = useLocation();
-
-  const categories = {
-    WOMEN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'DRESS', 'ACCESSORIES'],
-    MEN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'ACCESSORIES'],
-    BEAUTY: ['SKINCARE', 'MAKEUP', 'HAIR & BODY', 'DEVICES'],
-    LIFE: ['HOME', 'TRAVEL', 'DIGITAL', 'CULTURE', 'FOOD']
-  };
 
   useEffect(() => {
     setIsCategoryOpen(false);

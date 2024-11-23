@@ -45,6 +45,7 @@ const Navbar = ({user}) => {
   useEffect(() => {
     setIsCategoryOpen(false);
     setSearchTerm('');
+    setIsPopularSearchVisible(false);
   }, [location]);
 
   useEffect(() => {

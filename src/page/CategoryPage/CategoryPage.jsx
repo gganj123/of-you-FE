@@ -28,6 +28,10 @@ const CategoryPage = () => {
   const subcategories = categories[categoryName] || [];
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
@@ -37,7 +41,6 @@ const CategoryPage = () => {
   }, []);
 
   useEffect(() => {
-    // 검색어가 있을 때 `searchProduct` 호출, 없으면 `fetchProducts` 호출
     const fetchParams = {
       mainCate: getCategoryName(category),
       subCate: subcategory ? getSubcategoryName(subcategory) : null,
@@ -231,7 +234,7 @@ const CategoryPage = () => {
 
       <div className='category-page__product-grid'>
         {products.map((product) => (
-          <div className='category-page__product-item' key={product._id}>
+          <div className='category-page__product-item' key={`${product._id}-${Math.random()}`}>
             <ProductCard
               id={product._id}
               image={product.image}

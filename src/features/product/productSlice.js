@@ -6,7 +6,6 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async (p
   try {
     // mainCate와 subCate 추출
     const {mainCate, subCate, ...queryParams} = params;
-
     if (!mainCate) {
       throw new Error('mainCate is required but not provided.');
     }
@@ -21,7 +20,8 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async (p
 
     // API 호출
     const response = await api.get(endpoint, {params: queryParams});
-    console.log('API Response:', response.data);
+    console.log('상품목록:', params);
+
     return response.data;
   } catch (error) {
     console.error('API Fetch Error:', error);

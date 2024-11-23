@@ -75,31 +75,46 @@ const CategoryPage = () => {
     navigate(`/products/category/${category}/${subcat}`);
   };
   const loadMoreProducts = () => {
-    if (!hasMoreProducts || loading || searchTerm) return;
+    if (!hasMoreProducts || loading) return;
 
     const nextPage = page + 1;
-    setPage(nextPage);
 
-    dispatch(
-      fetchProducts({
-        mainCate: getCategoryName(category),
-        subCate: subcategory ? getSubcategoryName(subcategory) : null,
-        page: nextPage,
-        limit: productsPerPage,
-        sort: sortType,
-        name: searchTerm
+    // 검색어 여부에 따라 API 호출
+    const fetchAction = searchTerm
+      ? searchProduct({
+          mainCate: getCategoryName(category),
+          subCate: subcategory ? getSubcategoryName(subcategory) : null,
+          page: nextPage,
+          limit: productsPerPage,
+          sort: sortType,
+          name: searchTerm
+        })
+      : fetchProducts({
+          mainCate: getCategoryName(category),
+          subCate: subcategory ? getSubcategoryName(subcategory) : null,
+          page: nextPage,
+          limit: productsPerPage,
+          sort: sortType
+        });
+
+    dispatch(fetchAction)
+      .unwrap()
+      .then((result) => {
+        if (result.products?.length < productsPerPage) {
+          setHasMoreProducts(false);
+        }
+        setPage(nextPage);
+
+        // 상태에 데이터 추가
+        dispatch({
+          type: 'products/addMoreProducts',
+          payload: {products: result.products} // API 응답 구조에 따라 적절히 수정
+        });
       })
-    ).then((result) => {
-      if (!result.payload || result.payload.length < productsPerPage) {
-        setHasMoreProducts(false);
-      }
-    });
+      .catch((err) => {
+        console.error('Load more products failed:', err);
+      });
   };
-
-  const handleSortChange = (newSortType) => {
-    setSortType(newSortType);
-  };
-
   const handleScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
     const scrollTop = document.documentElement.scrollTop;

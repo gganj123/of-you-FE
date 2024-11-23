@@ -102,7 +102,9 @@ const productSlice = createSlice({
     loading: false,
     error: null,
     totalPageNum: 1,
-    totalCount: 0
+    totalCount: 0,
+    currentPage: 1,
+    hasMoreProducts: true
   },
   reducers: {
     clearProducts: (state) => {
@@ -114,6 +116,12 @@ const productSlice = createSlice({
     clearError: (state) => {
       state.error = '';
       state.success = false;
+    },
+    addMoreProducts: (state, action) => {
+      const newProducts = Array.isArray(action.payload?.products) ? action.payload.products : [];
+      state.products = [...state.products, ...newProducts];
+      state.currentPage += 1;
+      state.hasMoreProducts = action.payload.products.length > 0;
     },
     setSelectedProduct: (state, action) => {
       state.selectedProduct = action.payload;
@@ -130,6 +138,8 @@ const productSlice = createSlice({
         state.products = action.payload.products;
         state.totalPageNum = action.payload.totalPageNum;
         state.totalCount = action.payload.totalCount;
+        state.currentPage = 1;
+        state.hasMoreProducts = action.payload.products.length > 0;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
@@ -145,6 +155,8 @@ const productSlice = createSlice({
         state.products = action.payload.products;
         state.totalPageNum = action.payload.totalPageNum;
         state.totalCount = action.payload.totalCount;
+        state.currentPage = 1;
+        state.hasMoreProducts = action.payload.products.length > 0;
       })
       .addCase(searchProduct.rejected, (state, action) => {
         state.loading = false;

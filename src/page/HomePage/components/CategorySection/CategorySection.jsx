@@ -52,7 +52,8 @@ const CategorySection = ({categoryName}) => {
         const response = await api.get(endpoint, {
           params: {
             page: 1,
-            limit: 10
+            limit: 10,
+            sort: 'latest'
           }
         });
 
@@ -89,7 +90,7 @@ const CategorySection = ({categoryName}) => {
       <div className='homepage-section-content'>
         <div className='homepage-category-header'>
           <h2 className='homepage-category-title'>{categoryName}</h2>
-          <a href='#' className='homepage-more-link'>
+          <a href={`/products/category/${categoryName.toLowerCase()}`} className='homepage-more-link'>
             more ▶
           </a>
         </div>

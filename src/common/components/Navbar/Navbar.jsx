@@ -17,6 +17,7 @@ import {logout} from '../../../features/user/userSlice';
 import {persistor} from '../../../features/store';
 import {resetLikes} from '../../../features/like/likeSlice';
 import {getCartList, getCartQty} from '../../../features/cart/cartSlice';
+import {categories} from '../../../utils/categories';
 
 const Navbar = ({user}) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
@@ -34,16 +35,14 @@ const Navbar = ({user}) => {
   const categoryMenuRef = useRef(null);
   const location = useLocation();
 
-  const categories = {
-    WOMEN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'DRESS', 'ACCESSORIES'],
-    MEN: ['OUTERWEAR', 'TOP', 'BOTTOM', 'ACCESSORIES'],
-    BEAUTY: ['SKINCARE', 'MAKEUP', 'HAIR & BODY', 'DEVICES'],
-    LIFE: ['HOME', 'TRAVEL', 'DIGITAL', 'CULTURE', 'FOOD']
-  };
-
-  // 페이지 이동 시 카테고리 메뉴 닫기
   useEffect(() => {
     setIsCategoryOpen(false);
+    setSearchTerm('');
+    setIsPopularSearchVisible(false);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }, [location]);
 
   useEffect(() => {
@@ -77,6 +76,7 @@ const Navbar = ({user}) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       navigate(`/products/category/all?name=${encodeURIComponent(searchTerm)}`);
+      setSearchTerm('');
     }
   };
 
@@ -246,7 +246,7 @@ const Navbar = ({user}) => {
               )}
 
               <div className='navbar-icon-item' onClick={handleMy}>
-                <FiUser /> MY
+                <FiUser /> {user ? user.name : 'MY'}
               </div>
               <div className='navbar-icon-item' onClick={handleCart}>
                 <FiShoppingBag />

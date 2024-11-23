@@ -56,14 +56,14 @@ const HomePage = () => {
 
       {/* 배너 스트립 */}
       <div className='banner-strip-container'>
-        <a href='/shopping-reward' className='banner-half'>
+        <a className='banner-half'>
           <div className='banner-text'>
             <h3 className='banner-title'>SHOPPING REWARD</h3>
             <p className='banner-subtitle'>구매할수록 커지는 혜택</p>
           </div>
           <img src='/images/banner-strip1.jpg' alt='쇼핑 리워드' className='banner-image' />
         </a>
-        <a href='/welcome' className='banner-half'>
+        <a className='banner-half'>
           <div className='banner-text'>
             <h3 className='banner-title'>WELCOME OF YOU</h3>
             <p className='banner-subtitle'>신규회원 스페셜 혜택 가이드</p>

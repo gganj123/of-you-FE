@@ -1,24 +1,15 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import api from '../../utils/api';
-import {putQuery} from '../query/querySlice';
 
 // 상품 목록 가져오기 비동기 Thunk
-export const fetchProducts = createAsyncThunk('products/fetchProducts', async (params, {rejectWithValue, dispatch}) => {
+export const fetchProducts = createAsyncThunk('products/fetchProducts', async (params, {rejectWithValue}) => {
   try {
     // mainCate와 subCate 추출
     const {mainCate, subCate, ...queryParams} = params;
 
-    const name = queryParams.name;
-
-    // 검색어 있으면 저장
-    if (name) {
-      await dispatch(putQuery({query: name}));
-    }
-
     if (!mainCate) {
       throw new Error('mainCate is required but not provided.');
     }
-
     // 동적으로 엔드포인트 생성
     let endpoint = `/product/category/${mainCate}`;
     if (subCate) {
@@ -29,10 +20,22 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async (p
 
     // API 호출
     const response = await api.get(endpoint, {params: queryParams});
-    console.log('API Response:', response.data);
+    console.log('상품목록:', params);
+
     return response.data;
   } catch (error) {
     console.error('API Fetch Error:', error);
+    return rejectWithValue(error.response?.data?.message || error.message);
+  }
+});
+
+export const searchProduct = createAsyncThunk('/product/searchProduct', async (params, {rejectWithValue}) => {
+  try {
+    const {limit, name, page, sort} = params;
+
+    const response = await api.get('/product', {params: {limit, name, page, sort}});
+    return response.data;
+  } catch (error) {
     return rejectWithValue(error.response?.data?.message || error.message);
   }
 });
@@ -100,7 +103,9 @@ const productSlice = createSlice({
     loading: false,
     error: null,
     totalPageNum: 1,
-    totalCount: 0
+    totalCount: 0,
+    currentPage: 1,
+    hasMoreProducts: true
   },
   reducers: {
     clearProducts: (state) => {
@@ -112,6 +117,12 @@ const productSlice = createSlice({
     clearError: (state) => {
       state.error = '';
       state.success = false;
+    },
+    addMoreProducts: (state, action) => {
+      const newProducts = Array.isArray(action.payload?.products) ? action.payload.products : [];
+      state.products = [...state.products, ...newProducts];
+      state.currentPage += 1;
+      state.hasMoreProducts = action.payload.products.length > 0;
     },
     setSelectedProduct: (state, action) => {
       state.selectedProduct = action.payload;
@@ -128,8 +139,27 @@ const productSlice = createSlice({
         state.products = action.payload.products;
         state.totalPageNum = action.payload.totalPageNum;
         state.totalCount = action.payload.totalCount;
+        state.currentPage = 1;
+        state.hasMoreProducts = action.payload.products.length > 0;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+    builder
+      .addCase(searchProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products = action.payload.products;
+        state.totalPageNum = action.payload.totalPageNum;
+        state.totalCount = action.payload.totalCount;
+        state.currentPage = 1;
+        state.hasMoreProducts = action.payload.products.length > 0;
+      })
+      .addCase(searchProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

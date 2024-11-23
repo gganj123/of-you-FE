@@ -54,9 +54,15 @@ const LoginPage = () => {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleLoginWithEmail(e);
+    }
+  };
+
   const handleLoginWithEmail = async (e) => {
     e.preventDefault();
-    setError(''); // 기존 에러 메시지 초기화
+    setError('');
 
     // 유효성 검사
     if (!email) {
@@ -98,7 +104,7 @@ const LoginPage = () => {
         <div className='member-join'>
           <div className='join-content'>
             <div className='form-container'>
-              <div className='login-wrab'>
+              <div className='login-wrab' onSubmit={handleLoginWithEmail} onKeyDown={handleKeyPress}>
                 <p className='input-line'>
                   <label>이메일 아이디</label>
                   <input
@@ -156,27 +162,23 @@ const LoginPage = () => {
             <div className='sns-content'>SNS계정으로 OF YOU를 이용해보세요</div>
 
             <div className='sns-buttons'>
-              <KakaoLoginButton />
-
-              <div className='sosial-flex'>
-                <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-                  <div className='google-login-container'>
-                    <GoogleLogin
-                      onSuccess={handleGoogleLogin}
-                      onError={() => console.log('Login Failed')}
-                      render={(renderProps) => (
-                        <button
-                          className='custom-google-button'
-                          onClick={renderProps.onClick}
-                          disabled={renderProps.disabled}>
-                          <img src='/images/g-logo.png' alt='Google Logo' className='google-icon' />
-                          <span>구글로 시작하기</span>
-                        </button>
-                      )}
-                    />
-                  </div>
-                </GoogleOAuthProvider>
-              </div>
+              <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+                <div className='google-login-container'>
+                  <GoogleLogin
+                    onSuccess={handleGoogleLogin}
+                    onError={() => console.log('Login Failed')}
+                    render={(renderProps) => (
+                      <button
+                        className='custom-google-button'
+                        onClick={renderProps.onClick}
+                        disabled={renderProps.disabled}>
+                        <img src='/images/g-logo.png' alt='Google Logo' className='google-icon' />
+                        <span>구글로 시작하기</span>
+                      </button>
+                    )}
+                  />
+                </div>
+              </GoogleOAuthProvider>
             </div>
           </div>
         </div>

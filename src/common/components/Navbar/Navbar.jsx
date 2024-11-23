@@ -18,6 +18,7 @@ import {persistor} from '../../../features/store';
 import {resetLikes} from '../../../features/like/likeSlice';
 import {getCartList, getCartQty} from '../../../features/cart/cartSlice';
 import {categories} from '../../../utils/categories';
+import {getQuery} from '../../../features/query/querySlice';
 
 const Navbar = ({user}) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
@@ -30,6 +31,8 @@ const Navbar = ({user}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
+
+  const {queries, queryLoading} = useSelector((state) => state.query);
 
   const popularSearchRef = useRef(null);
   const categoryMenuRef = useRef(null);
@@ -146,6 +149,11 @@ const Navbar = ({user}) => {
     navigate('/admin/product');
   };
 
+  useEffect(() => {
+    console.log('getQuery 요청');
+    dispatch(getQuery());
+  }, []);
+
   return (
     <>
       <div className='navbar-container'>
@@ -215,8 +223,10 @@ const Navbar = ({user}) => {
                 <div className='navbar-popular-search-list' ref={popularSearchRef}>
                   <h4>급상승 검색어</h4>
                   <ul>
-                    {Array.from({length: 10}, (_, i) => (
-                      <li key={`popular-${i}`}>{i + 1}. 검색어</li>
+                    {(queries || []).map((queryItem, index) => (
+                      <li key={`popular-${index}`}>
+                        {index + 1}. {queryItem.query}
+                      </li>
                     ))}
                   </ul>
                 </div>

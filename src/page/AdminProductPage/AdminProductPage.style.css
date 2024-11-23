@@ -23,13 +23,6 @@
   margin-bottom: 20px;
 }
 
-.admin-product-page input[type='text'] {
-  padding: 10px;
-  font-size: 14px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
 .admin-product-page button[type='submit'] {
   padding: 10px;
   background-color: #007bff;
@@ -63,17 +56,17 @@
 
 .add-new-item-btn {
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #767676;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-right: 20px;
+  margin-right: 60px;
   font-size: 14px;
 }
 
 .add-new-item-btn:hover {
-  background-color: #0056b3;
+  background-color: #121212;
 }
 
 .item-count-dropdown select {
@@ -86,7 +79,7 @@
 .product-table {
   width: 90%;
   border-collapse: collapse;
-  margin: 40px auto 40px auto;
+  margin: 10px auto 40px auto;
 }
 
 .product-table th,
@@ -225,4 +218,61 @@
 
 .submit-btn {
   height: 50px;
+}
+
+.admin-search-bar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.admin-search-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  border-bottom: 1px solid black;
+  position: relative;
+  margin-right: 20px;
+}
+
+.admin-search-bar input {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+}
+
+.admin-add-new-item-btn-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.count-text {
+  margin-left: 60px;
+}
+
+.td-btn {
+  padding: 0;
+  width: 190px;
+}
+
+.edit-btn {
+  margin-right: 10px;
+  background-color: #339a22;
+}
+
+.edit-btn:hover {
+  background-color: #062500;
+}
+
+.delete-btn {
+  margin: 0;
+  background-color: #a70000;
+}
+
+.delete-btn:hover {
+  background-color: #1b0000;
 }

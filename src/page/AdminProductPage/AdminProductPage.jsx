@@ -6,6 +6,7 @@ import NewItemDialog from './component/NewItemDialog';
 import './AdminProductPage.style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {getProductList, deleteProduct, setSelectedProduct} from '../../features/product/productSlice';
+import {FiSearch} from 'react-icons/fi';
 
 const AdminProductPage = () => {
   const navigate = useNavigate();
@@ -98,30 +99,32 @@ const AdminProductPage = () => {
       <div className='product-content'>
         <div className='admin-order-header'>
           <h1>제품 관리</h1>
-          <div>
-            <div className='search-box'>
+          <div className='admin-search-bar-container'>
+            <div className='admin-search-bar'>
               <input
                 type='text'
                 id='search-query'
                 placeholder='제품 이름으로 검색'
-                className='search-input'
                 value={keyword}
-                onKeyPress={onCheckEnter}
+                onKeyDown={onCheckEnter}
                 onChange={(e) => setKeyword(e.target.value)}
+                autoComplete='off'
               />
-              <button className='search-btn' onClick={handleSearchSubmit}>
-                검색
-              </button>
-              <button className='add-new-item-btn' onClick={handleClickNewItem}>
-                Add New Item +
-              </button>
-              <select id='items-per-page' value={searchQuery.limit} onChange={handleLimitChange}>
-                <option value='5'>5</option>
-                <option value='10'>10</option>
-                <option value='20'>20</option>
-                <option value='30'>30</option>
-              </select>
+              <FiSearch onClick={handleSearchSubmit} />
             </div>
+
+            <select id='items-per-page' value={searchQuery.limit} onChange={handleLimitChange}>
+              <option value='5'>5</option>
+              <option value='10'>10</option>
+              <option value='20'>20</option>
+              <option value='30'>30</option>
+            </select>
+          </div>
+          <div className='admin-add-new-item-btn-container'>
+            <div className='count-text'>{totalCount} 개의 상품이 있습니다.</div>
+            <button className='add-new-item-btn' onClick={handleClickNewItem}>
+              Add New Item +
+            </button>
           </div>
         </div>
         {loading ? (
@@ -157,9 +160,13 @@ const AdminProductPage = () => {
                   <td>
                     <img src={product.image} alt={product.name} />
                   </td>
-                  <td>
-                    <button onClick={() => openEditForm(product)}>Edit</button>
-                    <button onClick={() => handleDelete(product._id)}>Delete</button>
+                  <td className='td-btn'>
+                    <button className='add-new-item-btn edit-btn' onClick={() => openEditForm(product)}>
+                      Edit
+                    </button>
+                    <button className='add-new-item-btn delete-btn' onClick={() => handleDelete(product._id)}>
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}

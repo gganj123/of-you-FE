@@ -4,8 +4,9 @@ import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import './PaymentPage.style.css';
 import {cc_expires_format} from '../../utils/number';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {createOrder} from '../../features/order/orderSlice';
+import {getAddressList} from '../../features/address/addressSlice';
 import DaumPostcode from 'react-daum-postcode';
 
 const PaymentPage = () => {
@@ -40,10 +41,50 @@ const PaymentPage = () => {
 
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
 
+  const addresses = useSelector((state) => state.address.addresses);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+
   const handleFormChange = (e) => {
     const {name, value} = e.target;
     setShipInfo({...shipInfo, [name]: value});
   };
+
+  useEffect(() => {
+    dispatch(getAddressList()); // 컴포넌트 마운트 시 주소 목록 가져오기
+  }, [dispatch]);
+
+  useEffect(() => {
+    // 기본 배송지를 초기 선택 주소로 설정
+    const defaultAddress = addresses.find((address) => address.isDefault);
+    if (defaultAddress) {
+      setSelectedAddress(defaultAddress);
+      updateFormWithAddress(defaultAddress);
+    }
+  }, [addresses]);
+
+  const updateFormWithAddress = (address) => {
+    setShipInfo({
+      ...shipInfo,
+      address: address.shipto.address,
+      city: address.shipto.city,
+      zip: address.shipto.zip,
+      firstName: address.contact.firstName,
+      lastName: address.contact.lastName,
+      contact: `${address.contact.prefix}-${address.contact.middle}-${address.contact.last}`
+    });
+    setContactParts({
+      prefix: address.contact.prefix,
+      middle: address.contact.middle,
+      last: address.contact.last
+    });
+  };
+
+  const handleAddressSelect = (address) => {
+    setSelectedAddress(address);
+    updateFormWithAddress(address);
+  };
+
+  // ==================
 
   const handleContactChange = (e) => {
     const {name, value} = e.target;
@@ -168,6 +209,21 @@ const PaymentPage = () => {
         <div className='payment_content'>
           <div className='payment_delivery_section'>
             <h2 className='payment_section_title'>배송지 정보</h2>
+
+            <select
+              className='payment-address-select'
+              value={selectedAddress ? selectedAddress._id : ''}
+              onChange={(e) => handleAddressSelect(addresses.find((addr) => addr._id === e.target.value))}>
+              <option value=''>배송지 선택</option>
+              {addresses.map((address) => (
+                <option key={address._id} value={address._id}>
+                  {address.contact.lastName}
+                  {address.contact.firstName} -{address.isDefault ? '(기본배송지) ' : ''}
+                  {address.shipto.address}
+                </option>
+              ))}
+            </select>
+
             <div className='payment_delivery_form'>
               {/* 성명 입력 */}
               <div className='payment_form_row name_row'>
@@ -182,17 +238,17 @@ const PaymentPage = () => {
                       onChange={handleFormChange}
                       name='lastName'
                       placeholder='성'
+                      value={shipInfo.lastName}
                     />
                   </div>
-                  <div className='name_input_box'>
-                    <input
-                      type='text'
-                      className='payment_form_input'
-                      onChange={handleFormChange}
-                      name='firstName'
-                      placeholder='이름'
-                    />
-                  </div>
+                  <input
+                    type='text'
+                    className='payment_form_input'
+                    onChange={handleFormChange}
+                    name='firstName'
+                    placeholder='이름'
+                    value={shipInfo.firstName}
+                  />
                 </div>
               </div>
 

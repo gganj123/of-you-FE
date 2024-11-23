@@ -63,22 +63,19 @@ const AddressPage = () => {
   };
 
   const handleEditClick = (address) => {
-    resetAllStates();
     setSelectedAddress(address);
     setFormData({
       id: address._id,
-      shipto: {
-        zipCode: address.shipto.zip,
-        address: address.shipto.address,
-        city: address.shipto.city
-      },
       contact: {
-        firstName: address.contact.firstName,
         lastName: address.contact.lastName,
+        firstName: address.contact.firstName,
         prefix: address.contact.prefix,
         middle: address.contact.middle,
         last: address.contact.last
       },
+      zipCode: address.shipto.zip,
+      address: address.shipto.address,
+      city: address.shipto.city,
       isDefault: address.isDefault
     });
     setIsAddressModalOpen(true);
@@ -167,13 +164,6 @@ const AddressPage = () => {
   const handleSetDefault = (addressId) => {
     if (addressId) {
       dispatch(setDefaultAddress(addressId));
-      // 로컬 상태 업데이트
-      setAddresses((prevAddresses) =>
-        prevAddresses.map((addr) => ({
-          ...addr,
-          isDefault: addr._id === addressId
-        }))
-      );
     }
   };
 

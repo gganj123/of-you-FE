@@ -41,6 +41,12 @@ const CategoryPage = () => {
   }, []);
 
   useEffect(() => {
+    if (!['new', 'best', 'sale'].includes(category)) {
+      setSortType('latest');
+    }
+  }, [category]);
+
+  useEffect(() => {
     const fetchParams = {
       mainCate: getCategoryName(category),
       subCate: subcategory ? getSubcategoryName(subcategory) : null,
@@ -50,6 +56,36 @@ const CategoryPage = () => {
       name: searchTerm
     };
 
+    // 특정 메인 카테고리 처리
+    if (['new', 'best', 'sale'].includes(category)) {
+      const sortMapping = {
+        new: 'latest',
+        best: 'highPrice',
+        sale: 'highSale'
+      };
+      const updatedSortType = sortMapping[category];
+      setSortType(updatedSortType);
+
+      // 검색 디스패치
+      dispatch(
+        searchProduct({
+          ...fetchParams,
+          mainCate: 'all', // 모든 상품 검색
+          sort: updatedSortType
+        })
+      )
+        .unwrap()
+        .then((result) => {
+          console.log('Search successful with result:', result);
+        })
+        .catch((err) => {
+          console.error('Search failed with error:', err);
+        });
+
+      return; // `new`, `best`, `sale` 처리 후 나머지는 실행하지 않음
+    }
+
+    // 일반 카테고리 처리
     if (searchTerm) {
       console.log('Dispatching searchProduct with params:', fetchParams);
       dispatch(searchProduct(fetchParams))
@@ -72,6 +108,10 @@ const CategoryPage = () => {
         });
     }
   }, [category, subcategory, searchParams, sortType, dispatch]);
+
+  const handleSortChange = (newSortType) => {
+    setSortType(newSortType);
+  };
 
   const handleSubcategoryClick = (category, subcat) => {
     console.log('Navigating to:', `/products/category/${category}/${subcat}`);

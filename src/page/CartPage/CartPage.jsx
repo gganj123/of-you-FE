@@ -111,7 +111,6 @@ const CartPage = () => {
       // Redux Thunk 호출
       dispatch(deleteCartItem(itemId)).catch((err) => {
         console.error('삭제 실패:', err);
-        alert('상품 삭제에 실패했습니다.');
       });
     }
   };

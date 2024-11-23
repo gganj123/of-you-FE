@@ -13,7 +13,7 @@ import {
 import './Navbar.style.css';
 import {useNavigate, useLocation, useSearchParams} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {logout} from '../../../features/user/userSlice';
+import {loginWithToken, logout} from '../../../features/user/userSlice';
 import {persistor} from '../../../features/store';
 import {resetLikes} from '../../../features/like/likeSlice';
 import {getCartList, getCartQty} from '../../../features/cart/cartSlice';
@@ -120,6 +120,7 @@ const Navbar = ({user}) => {
     dispatch(resetLikes());
     dispatch(logout());
     dispatch(getCartList());
+    dispatch(loginWithToken());
   };
 
   const handleLogin = () => {

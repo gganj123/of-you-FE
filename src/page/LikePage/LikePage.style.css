@@ -1,243 +1,243 @@
 /* LikePage.style.css */
 :root {
-    --color-primary: #000;
-    --color-gray: #777;
-    --color-light-gray: #ccc;
-    --color-border: #ddd;
-    --color-hover-bg: #f8f8f8;
-    --color-white: #fff;
-    --page-padding: 40px;
+  --color-primary: #000;
+  --color-gray: #777;
+  --color-light-gray: #ccc;
+  --color-border: #ddd;
+  --color-hover-bg: #f8f8f8;
+  --color-white: #fff;
+  --page-padding: 40px;
 
-    --shadow-default: 0 2px 4px rgba(0, 0, 0, 0.1);
-    --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-default: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.1);
 
-    --transition-default: all 0.2s ease;
+  --transition-default: all 0.2s ease;
 
-    --font-size-title: 24px;
-    --font-size-subtitle: 16px;
-    --font-size-normal: 14px;
-    --font-size-small: 12px;
+  --font-size-title: 24px;
+  --font-size-subtitle: 16px;
+  --font-size-normal: 14px;
+  --font-size-small: 12px;
 }
 
 .like-page {
-    max-width: 1280px;
-    margin: 0 auto;
-    overflow: hidden;
+  max-width: 1280px;
+  margin: 0 auto;
+  overflow: hidden;
 }
 
 .like-page-header {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .like-page-title {
-    font-size: var(--font-size-title);
-    font-weight: 500;
-    margin-bottom: 24px;
-    padding: 0 8px;
+  font-size: var(--font-size-title);
+  font-weight: 500;
+  margin-bottom: 24px;
+  padding: 0 8px;
 }
 
 .like-page-tabs {
-    display: flex;
-    border: 1px solid var(--color-border);
-    margin-bottom: 20px;
+  display: flex;
+  border: 1px solid var(--color-border);
+  margin-bottom: 20px;
 }
 
 .tab-button {
-    flex: 1;
-    padding: 15px 0;
-    text-align: center;
-    font-size: var(--font-size-normal);
-    cursor: pointer;
-    border-right: 1px solid var(--color-border);
-    color: var(--color-gray);
-    background: var(--color-white);
-    transition: var(--transition-default);
+  flex: 1;
+  padding: 15px 0;
+  text-align: center;
+  font-size: var(--font-size-normal);
+  cursor: pointer;
+  border-right: 1px solid var(--color-border);
+  color: var(--color-gray);
+  background: var(--color-white);
+  transition: var(--transition-default);
 }
 
 .tab-button:last-child {
-    border-right: none;
+  border-right: none;
 }
 
 .tab-button:hover {
-    color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .tab-button.active {
-    color: var(--color-primary);
-    font-weight: 500;
-    background: var(--color-white);
+  color: var(--color-primary);
+  font-weight: 500;
+  background: var(--color-white);
 }
 
 .like-page-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 0 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 8px;
 }
 
 .view-options {
-    display: flex;
-    gap: 4px;
+  display: flex;
+  gap: 4px;
 }
 
 .view-button {
-    padding: 6px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    opacity: 0.5;
-    transition: var(--transition-default);
+  padding: 6px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: var(--transition-default);
 }
 
 .view-button.active {
-    opacity: 1;
+  opacity: 1;
 }
 
 .filter-options {
-    display: flex;
-    gap: 6px;
+  display: flex;
+  gap: 6px;
 }
 
 .filter-button {
-    padding: 7px 12px;
-    border: 1px solid var(--color-border);
-    background: var(--color-white);
-    cursor: pointer;
-    font-size: var(--font-size-normal);
-    color: var(--color-gray);
-    transition: var(--transition-default);
+  padding: 7px 12px;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  cursor: pointer;
+  font-size: var(--font-size-normal);
+  color: var(--color-gray);
+  transition: var(--transition-default);
 }
 
 .filter-button:hover {
-    background: var(--color-hover-bg);
+  background: var(--color-hover-bg);
 }
 
 .products-container.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 24px;
-    padding: 0 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+  padding: 0 8px;
 }
 
 .products-container.list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0 8px;
 }
 
 .products-container.list .homepage-product-card {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    transition: var(--transition-default);
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  transition: var(--transition-default);
 }
 
 .products-container.list .homepage-product-card:hover {
-    box-shadow: var(--shadow-hover);
+  box-shadow: var(--shadow-hover);
 }
 
 .products-container.list .homepage-product-image-wrapper {
-    width: 180px;
-    min-width: 180px;
-    height: 180px;
+  width: 180px;
+  min-width: 180px;
+  height: 180px;
 }
 
 .products-container.list .homepage-product-info {
-    flex: 1;
-    padding: 10px 0;
+  flex: 1;
+  padding: 10px 0;
 }
 
 @media screen and (max-width: 1200px) {
-    :root {
-        --page-padding: 32px;
-    }
+  :root {
+    --page-padding: 32px;
+  }
 
-    .products-container.grid {
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    }
+  .products-container.grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
 
-    .like-page-title {
-        font-size: 22px;
-    }
+  .like-page-title {
+    font-size: 22px;
+  }
 
-    .tab-button {
-        font-size: var(--font-size-normal);
-    }
+  .tab-button {
+    font-size: var(--font-size-normal);
+  }
 }
 
 @media screen and (max-width: 768px) {
-    :root {
-        --page-padding: 24px;
-    }
+  :root {
+    --page-padding: 24px;
+  }
 
-    .products-container.grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 16px;
-    }
+  .products-container.grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
 
-    .like-page-title {
-        font-size: 20px;
-    }
+  .like-page-title {
+    font-size: 20px;
+  }
 
-    .like-page-tabs {
-        overflow-x: auto;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-        border: none;
-        border-bottom: 1px solid var(--color-border);
-    }
+  .like-page-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    border: none;
+    border-bottom: 1px solid var(--color-border);
+  }
 
-    .like-page-tabs::-webkit-scrollbar {
-        display: none;
-    }
+  .like-page-tabs::-webkit-scrollbar {
+    display: none;
+  }
 
-    .tab-button {
-        flex: none;
-        padding: 15px 24px;
-        font-size: 13px;
-        border-right: none;
-    }
+  .tab-button {
+    flex: none;
+    padding: 15px 24px;
+    font-size: 13px;
+    border-right: none;
+  }
 
-    .products-container.list .homepage-product-card {
-        flex-direction: column;
-        padding: 16px;
-    }
+  .products-container.list .homepage-product-card {
+    flex-direction: column;
+    padding: 16px;
+  }
 
-    .products-container.list .homepage-product-image-wrapper {
-        width: 100%;
-        height: auto;
-        min-width: unset;
-        padding-bottom: 100%;
-    }
+  .products-container.list .homepage-product-image-wrapper {
+    width: 100%;
+    height: auto;
+    min-width: unset;
+    padding-bottom: 100%;
+  }
 }
 
 @media screen and (max-width: 480px) {
-    :root {
-        --page-padding: 16px;
-    }
+  :root {
+    --page-padding: 16px;
+  }
 
-    .products-container.grid {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 12px;
-    }
+  .products-container.grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+  }
 
-    .like-page-title {
-        font-size: 18px;
-    }
+  .like-page-title {
+    font-size: 18px;
+  }
 
-    .tab-button {
-        font-size: 12px;
-        padding: 12px 15px;
-    }
+  .tab-button {
+    font-size: 12px;
+    padding: 12px 15px;
+  }
 
-    .filter-button {
-        font-size: 12px;
-        padding: 6px 10px;
-    }
+  .filter-button {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
 }

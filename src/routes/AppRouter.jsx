@@ -1,7 +1,8 @@
-import {Route, Routes, Navigate} from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import HomePage from './../page/HomePage/HomePage';
 import LoginPage from '../page/LoginPage/LoginPage';
 import SignupPage from '../page/SignupPage/SignupPage';
+import SignupCompletePage from '../page/SignupCompletePage/SignupCompletePage';
 import AdminUserPage from '../page/AdminUserPage/AdminUserPage';
 import AdminOrderPage from '../page/AdminOrderPage/AdminOrderPage';
 import AdminProduct from '../page/AdminProductPage/AdminProductPage';
@@ -13,7 +14,6 @@ import PrivateRoute from './PrivateRoute';
 import CategoryPage from '../page/CategoryPage/CategoryPage';
 import ProductDetail from '../page/ProductDetailPage/ProductDetailPage';
 import LikePage from '../page/LikePage/LikePage';
-import SignupCompletePage from '../page/SignupCompletePage/SignupCompletePage';
 import OrderPage from '../page/OrderPage/OrderPage';
 import Mypage from '../page/MyPage/MyPage';
 import AddressPage from '../page/AddressPage/AddressPage';
@@ -25,9 +25,9 @@ function AppRouter() {
       <Route path='/' element={<HomePage />} />
       <Route path='/login' element={<LoginPage />} />
       <Route path='/signup' element={<SignupPage />} />
+      <Route path="/signup/complete" element={<SignupCompletePage />} />
       <Route path='/products/category/:category' element={<CategoryPage />} />
       <Route path='/product/:id' element={<ProductDetail />} />
-      <Route path='/signup/success' element={<SignupCompletePage />} />
       <Route path='/products/category/:category/:subcategory' element={<CategoryPage />} />
 
       <Route element={<PrivateRoute permissionLevel='customer' />}>

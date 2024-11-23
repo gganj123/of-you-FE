@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {useParams, useNavigate, useSearchParams, useLocation} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import ProductCard from '../../common/components/ProductCard/ProductCard';
-import {clearProducts, fetchProducts} from '../../features/product/productSlice';
+import {clearProducts, fetchProducts, searchProduct} from '../../features/product/productSlice';
 import {categories, getCategoryName, getSubcategoryName} from '../../utils/categories';
 import './CategoryPage.style.css';
 
@@ -37,6 +37,7 @@ const CategoryPage = () => {
   }, []);
 
   useEffect(() => {
+    // 검색어가 있을 때 `searchProduct` 호출, 없으면 `fetchProducts` 호출
     const fetchParams = {
       mainCate: getCategoryName(category),
       subCate: subcategory ? getSubcategoryName(subcategory) : null,
@@ -46,16 +47,28 @@ const CategoryPage = () => {
       name: searchTerm
     };
 
-    console.log('Dispatching fetchProducts from useEffect with params:', fetchParams);
-    dispatch(fetchProducts(fetchParams))
-      .unwrap()
-      .then((result) => {
-        console.log('Fetch successful with result:', result);
-      })
-      .catch((err) => {
-        console.error('Fetch failed with error:', err);
-      });
-  }, [location.pathname, searchParams, sortType, dispatch]);
+    if (searchTerm) {
+      console.log('Dispatching searchProduct with params:', fetchParams);
+      dispatch(searchProduct(fetchParams))
+        .unwrap()
+        .then((result) => {
+          console.log('Search successful with result:', result);
+        })
+        .catch((err) => {
+          console.error('Search failed with error:', err);
+        });
+    } else {
+      console.log('Dispatching fetchProducts with params:', fetchParams);
+      dispatch(fetchProducts(fetchParams))
+        .unwrap()
+        .then((result) => {
+          console.log('Fetch successful with result:', result);
+        })
+        .catch((err) => {
+          console.error('Fetch failed with error:', err);
+        });
+    }
+  }, [category, subcategory, searchParams, sortType, dispatch]);
 
   const handleSubcategoryClick = (category, subcat) => {
     console.log('Navigating to:', `/products/category/${category}/${subcat}`);

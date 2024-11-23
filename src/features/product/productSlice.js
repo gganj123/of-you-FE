@@ -9,7 +9,6 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async (p
     if (!mainCate) {
       throw new Error('mainCate is required but not provided.');
     }
-
     // 동적으로 엔드포인트 생성
     let endpoint = `/product/category/${mainCate}`;
     if (subCate) {
@@ -25,6 +24,17 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async (p
     return response.data;
   } catch (error) {
     console.error('API Fetch Error:', error);
+    return rejectWithValue(error.response?.data?.message || error.message);
+  }
+});
+
+export const searchProduct = createAsyncThunk('/product/searchProduct', async (params, {rejectWithValue}) => {
+  try {
+    const {limit, name, page, sort} = params;
+
+    const response = await api.get('/product', {params: {limit, name, page, sort}});
+    return response.data;
+  } catch (error) {
     return rejectWithValue(error.response?.data?.message || error.message);
   }
 });
@@ -122,6 +132,21 @@ const productSlice = createSlice({
         state.totalCount = action.payload.totalCount;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+    builder
+      .addCase(searchProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products = action.payload.products;
+        state.totalPageNum = action.payload.totalPageNum;
+        state.totalCount = action.payload.totalCount;
+      })
+      .addCase(searchProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

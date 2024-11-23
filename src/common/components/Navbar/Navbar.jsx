@@ -41,11 +41,14 @@ const Navbar = ({user}) => {
     LIFE: ['HOME', 'TRAVEL', 'DIGITAL', 'CULTURE', 'FOOD']
   };
 
-  // 페이지 이동 시 카테고리 메뉴 닫기
   useEffect(() => {
     setIsCategoryOpen(false);
     setSearchTerm('');
     setIsPopularSearchVisible(false);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }, [location]);
 
   useEffect(() => {

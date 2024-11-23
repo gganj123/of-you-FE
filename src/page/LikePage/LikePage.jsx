@@ -3,7 +3,6 @@ import ProductCard from '../../common/components/ProductCard/ProductCard';
 import './LikePage.style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {getLikeList} from '../../features/like/likeSlice';
-import {getCategoryName} from '../../utils/categories';
 
 const LikePage = () => {
   const dispatch = useDispatch();
@@ -27,7 +26,7 @@ const LikePage = () => {
         if (activeTab === 'All') {
           return true;
         }
-        return like.productId.category?.some((category) => getCategoryName(category) === getCategoryName(activeTab));
+        return like.productId.category === getCategoryName(activeTab);
       });
   }, [likes, activeTab]);
 

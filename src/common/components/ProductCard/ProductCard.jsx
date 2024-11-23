@@ -54,7 +54,7 @@ const ProductCard = ({id, image, title, realPrice, originalPrice, discountRate})
           {originalPrice && (
             <div className='homepage-price-discount'>
               <span className='homepage-original-price'>{originalPrice.toLocaleString()}원</span>
-              <span className='homepage-discount'>-{discountRate ? discountRate : 0}%</span>
+              <span className='homepage-discount'>-{discountRate ? parseInt(discountRate.toFixed(0)) : 0}%</span>
             </div>
           )}
         </div>

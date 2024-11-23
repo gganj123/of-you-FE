@@ -1,22 +1,21 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import './ProfilePage.style.css';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {deleteUser} from '../../features/user/userSlice';
 
 const ProfilePage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {user} = useSelector((state) => state.user);
 
   // 임시 사용자 데이터 (나중에 백엔드에서 받아올 데이터)
 
   const handleDeleteAccount = async () => {
     try {
-      // TODO: 백엔드 연동 시 실제 회원탈퇴 API 호출
-      // const response = await axios.post('/api/user/delete');
-
-      // 백엔드 연동 전 임시 로그
+      await dispatch(deleteUser());
       console.log('회원탈퇴 처리');
 
       // 첫 번째 모달 닫기

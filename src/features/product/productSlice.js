@@ -1,8 +1,9 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import api from '../../utils/api';
+import {putQuery} from '../query/querySlice';
 
 // 상품 목록 가져오기 비동기 Thunk
-export const fetchProducts = createAsyncThunk('products/fetchProducts', async (params, {rejectWithValue}) => {
+export const fetchProducts = createAsyncThunk('products/fetchProducts', async (params, {rejectWithValue, dispatch}) => {
   try {
     // mainCate와 subCate 추출
     const {mainCate, subCate, ...queryParams} = params;
@@ -29,9 +30,15 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async (p
   }
 });
 
-export const searchProduct = createAsyncThunk('/product/searchProduct', async (params, {rejectWithValue}) => {
+export const searchProduct = createAsyncThunk('/product/searchProduct', async (params, {rejectWithValue, dispatch}) => {
   try {
     const {limit, name, page, sort} = params;
+
+    if (name) {
+      dispatch(putQuery({query: name}));
+    }
+
+    console.log('searchProduct 요청 : ', params);
 
     const response = await api.get('/product', {params: {limit, name, page, sort}});
     return response.data;

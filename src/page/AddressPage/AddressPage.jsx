@@ -1,6 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {getAddressList, addAddress, updateAddress, deleteAddress} from '../../features/address/addressSlice';
+import {
+  getAddressList,
+  addAddress,
+  updateAddress,
+  deleteAddress,
+  setDefaultAddress
+} from '../../features/address/addressSlice';
 import DaumPostcode from 'react-daum-postcode';
 import './AddressPage.style.css';
 
@@ -12,7 +18,9 @@ const AddressPage = () => {
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
-
+  useEffect(() => {
+    console.log('Addresses:', addresses);
+  }, [addresses]);
   const initialFormData = {
     id: '',
     shipto: {
@@ -142,7 +150,11 @@ const AddressPage = () => {
     if (formData.id) {
       dispatch(updateAddress({addressId: formData.id, updatedData: addressData}));
     } else {
-      dispatch(addAddress(addressData));
+      dispatch(addAddress(addressData)).then((result) => {
+        if (result.payload && result.payload._id && formData.isDefault) {
+          handleSetDefault(result.payload._id);
+        }
+      });
     }
 
     resetAllStates();
@@ -151,6 +163,19 @@ const AddressPage = () => {
   useEffect(() => {
     console.log('Updated formData:', formData);
   }, [formData]);
+
+  const handleSetDefault = (addressId) => {
+    if (addressId) {
+      dispatch(setDefaultAddress(addressId));
+      // 로컬 상태 업데이트
+      setAddresses((prevAddresses) =>
+        prevAddresses.map((addr) => ({
+          ...addr,
+          isDefault: addr._id === addressId
+        }))
+      );
+    }
+  };
 
   return (
     <div className='address-page-container'>
@@ -320,6 +345,9 @@ const AddressPage = () => {
                         ...prevFormData,
                         isDefault: e.target.checked
                       }));
+                      if (e.target.checked && formData.id) {
+                        handleSetDefault(formData.id);
+                      }
                     }}
                   />
                   <span className='address-checkbox-text'>기본 배송지로 설정</span>

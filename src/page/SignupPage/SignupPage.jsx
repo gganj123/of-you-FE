@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import './style/SignupPage.style.css';
 import '../../App.css';
-import {useDispatch, useSelector} from 'react-redux';
-import {registerUser} from '../../features/user/userSlice';
-import {useNavigate} from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUser } from '../../features/user/userSlice';
+import { useNavigate } from 'react-router';
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const SignupPage = () => {
     agreements: ''
   });
   const handleInputChange = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value
@@ -39,7 +39,7 @@ const SignupPage = () => {
 
   // 전체 동의와 개별 동의 체크박스 상태 관리
   const handleAgreementChange = (e) => {
-    const {name, checked} = e.target;
+    const { name, checked } = e.target;
 
     // 개별 항목의 체크 상태 업데이트
     setFormData((prevData) => {
@@ -62,7 +62,7 @@ const SignupPage = () => {
   };
 
   const handleAgreeAllChange = (e) => {
-    const {checked} = e.target;
+    const { checked } = e.target;
 
     setFormData((prevData) => ({
       ...prevData,
@@ -100,9 +100,10 @@ const SignupPage = () => {
           name: formData.name,
           email: `${formData.emailId}@${formData.emailDomain}`,
           password: formData.password,
-          navigate
         })
-      );
+      ).then(() => {
+        navigate('/signup/complete');
+      });
       // setFormData({
       //   emailId: '',
       //   emailDomain: '',
@@ -129,6 +130,7 @@ const SignupPage = () => {
   const handleCancel = () => {
     navigate('/login');
   };
+
 
   return (
     <section className='container'>

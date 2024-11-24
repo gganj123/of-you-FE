@@ -1,14 +1,14 @@
-import {Link, useLocation} from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './Mypagebar.style.css';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const Mypagebar = () => {
   const location = useLocation();
-  const {user} = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
 
   return (
     <div className='mypage-sidebar'>
-      <h2 className='mypage-username'>{user.name}</h2>
+      <h2 className='mypage-username'>{user.name}님</h2>
       <br />
       <div className='mypage-menu'>
         <div className='mypage-section'>

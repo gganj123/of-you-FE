@@ -4,14 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import './CartPage.style.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteCartItem, getCartList, updateQty } from '../../features/cart/cartSlice';
+import LoadingSpinner from '../../common/components/LoadingSpinner/LoadingSpinner';
 
 const CartPage = () => {
   const dispatch = useDispatch();
-  const { items, loading, error } = useSelector((state) => state.cart); // Redux state
+  const { items, cartList, loading, error, totalPrice } = useSelector((state) => state.cart);
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 486);
   const [temporaryQuantity, setTemporaryQuantity] = useState(1);
-  const { cartList, totalPrice } = useSelector((state) => state.cart);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [temporaryQuantities, setTemporaryQuantities] = useState({});
@@ -207,7 +207,7 @@ const CartPage = () => {
   };
   // 로딩 또는 에러 처리
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   if (error) {

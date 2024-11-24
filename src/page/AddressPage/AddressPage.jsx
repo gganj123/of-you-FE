@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   getAddressList,
   addAddress,
@@ -9,6 +9,7 @@ import {
 } from '../../features/address/addressSlice';
 import DaumPostcode from 'react-daum-postcode';
 import './AddressPage.style.css';
+import LoadingSpinner from "../../common/components/LoadingSpinner/LoadingSpinner"
 
 const AddressPage = () => {
   const dispatch = useDispatch();
@@ -91,7 +92,7 @@ const AddressPage = () => {
   };
 
   const handleContactChange = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       contact: {
@@ -145,7 +146,7 @@ const AddressPage = () => {
     };
 
     if (formData.id) {
-      dispatch(updateAddress({addressId: formData.id, updatedData: addressData}));
+      dispatch(updateAddress({ addressId: formData.id, updatedData: addressData }));
     } else {
       dispatch(addAddress(addressData)).then((result) => {
         if (result.payload && result.payload._id && formData.isDefault) {
@@ -171,44 +172,47 @@ const AddressPage = () => {
     <div className='address-page-container'>
       <h2 className='address-page-title'>배송지 관리</h2>
 
-      {/* 배송지 목록 */}
-      {loading && <p>로딩 중...</p>}
-      {error && <p>{error}</p>}
-
-      {addresses.map((address) => (
-        <div key={address._id} className='address-page-item'>
-          <div className='address-page-item-info'>
-            <div className='address-page-item-header'>
-              <span className='address-page-item-name'>
-                {address.contact.lastName}
-                {address.contact.firstName}
-              </span>
-              {address.isDefault && <span className='address-page-item-badge'>기본배송지</span>}
+      {loading ? (
+        <LoadingSpinner />
+      ) : error ? (
+        <p>{error}</p>
+      ) : (
+        <>
+          {addresses.map((address) => (
+            <div key={address._id} className='address-page-item'>
+              <div className='address-page-item-info'>
+                <div className='address-page-item-header'>
+                  <span className='address-page-item-name'>
+                    {address.contact.lastName}
+                    {address.contact.firstName}
+                  </span>
+                  {address.isDefault && <span className='address-page-item-badge'>기본배송지</span>}
+                </div>
+                <p className='address-page-item-address'>
+                  ({address.shipto.zip}) {address.shipto.address} {address.shipto.city}
+                </p>
+                <p className='address-page-item-phone'>
+                  {address.contact.prefix}-{address.contact.middle}-{address.contact.last}
+                </p>
+              </div>
+              <div className='address-page-item-actions'>
+                <button className='address-page-edit-btn' onClick={() => handleEditClick(address)}>
+                  수정
+                </button>
+                <button className='address-page-delete-btn' onClick={() => handleDeleteAddress(address._id)}>
+                  삭제
+                </button>
+              </div>
             </div>
-            <p className='address-page-item-address'>
-              ({address.shipto.zip}) {address.shipto.address} {address.shipto.city}
-            </p>
-            <p className='address-page-item-phone'>
-              {address.contact.prefix}-{address.contact.middle}-{address.contact.last}
-            </p>
-          </div>
-          <div className='address-page-item-actions'>
-            <button className='address-page-edit-btn' onClick={() => handleEditClick(address)}>
-              수정
-            </button>
-            <button className='address-page-delete-btn' onClick={() => handleDeleteAddress(address._id)}>
-              삭제
-            </button>
-          </div>
-        </div>
-      ))}
+          ))}
 
-      {/* 새 배송지 추가 버튼 */}
-      <div className='address-page-add-wrapper'>
-        <button className='address-page-add-btn' onClick={handleAddClick}>
-          배송지 등록
-        </button>
-      </div>
+          <div className='address-page-add-wrapper'>
+            <button className='address-page-add-btn' onClick={handleAddClick}>
+              배송지 등록
+            </button>
+          </div>
+        </>
+      )}
 
       {/* 배송지 등록/수정 모달 */}
       {isAddressModalOpen && (
@@ -232,7 +236,7 @@ const AddressPage = () => {
                     className='address-page-input name-input'
                     value={formData.contact.lastName}
                     onChange={(e) =>
-                      setFormData({...formData, contact: {...formData.contact, lastName: e.target.value}})
+                      setFormData({ ...formData, contact: { ...formData.contact, lastName: e.target.value } })
                     }
                     placeholder='성'
                   />
@@ -241,7 +245,7 @@ const AddressPage = () => {
                     className='address-page-input name-input'
                     value={formData.contact.firstName}
                     onChange={(e) =>
-                      setFormData({...formData, contact: {...formData.contact, firstName: e.target.value}})
+                      setFormData({ ...formData, contact: { ...formData.contact, firstName: e.target.value } })
                     }
                     placeholder='이름'
                   />
@@ -317,7 +321,7 @@ const AddressPage = () => {
                     type='text'
                     className='address-page-input'
                     value={formData.city}
-                    onChange={(e) => setFormData({...formData, city: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                     placeholder='상세 주소'
                   />
                 </div>

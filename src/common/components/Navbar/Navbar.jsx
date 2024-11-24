@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   FiHeart,
   FiLogIn,
@@ -11,16 +11,16 @@ import {
   FiSettings
 } from 'react-icons/fi';
 import './Navbar.style.css';
-import {useNavigate, useLocation, useSearchParams} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
-import {loginWithToken, logout} from '../../../features/user/userSlice';
-import {persistor} from '../../../features/store';
-import {resetLikes} from '../../../features/like/likeSlice';
-import {getCartList, getCartQty} from '../../../features/cart/cartSlice';
-import {categories} from '../../../utils/categories';
-import {getQuery} from '../../../features/query/querySlice';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginWithToken, logout } from '../../../features/user/userSlice';
+import { persistor } from '../../../features/store';
+import { resetLikes } from '../../../features/like/likeSlice';
+import { getCartList, getCartQty } from '../../../features/cart/cartSlice';
+import { categories } from '../../../utils/categories';
+import { getQuery } from '../../../features/query/querySlice';
 
-const Navbar = ({user}) => {
+const Navbar = ({ user }) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('WOMEN');
   const [selectedAdminCategory, setSelectedAdminCategory] = useState('PRODUCT');
@@ -32,7 +32,7 @@ const Navbar = ({user}) => {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
 
-  const {queries, queryLoading} = useSelector((state) => state.query);
+  const { queries, queryLoading } = useSelector((state) => state.query);
 
   const popularSearchRef = useRef(null);
   const categoryMenuRef = useRef(null);
@@ -335,21 +335,21 @@ const Navbar = ({user}) => {
           <div className='navbar-menu'>
             {location.pathname.startsWith('/admin')
               ? ['PRODUCT', 'ORDER'].map((menuItem, index, array) => (
-                  <React.Fragment key={menuItem}>
-                    <div className='navbar-menu-item' onClick={() => handleAdminCategorySelect(menuItem)}>
-                      {menuItem}
-                    </div>
-                    {index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
-                  </React.Fragment>
-                ))
+                <React.Fragment key={menuItem}>
+                  <div className='navbar-menu-item' onClick={() => handleAdminCategorySelect(menuItem)}>
+                    {menuItem}
+                  </div>
+                  {index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
+                </React.Fragment>
+              ))
               : ['WOMEN', 'MEN', 'BEAUTY', 'LIFE', 'BEST', 'SALE', 'NEW'].map((menuItem, index, array) => (
-                  <React.Fragment key={menuItem}>
-                    <div className='navbar-menu-item' onClick={() => handleCategoryPageNavigate(menuItem)}>
-                      {menuItem}
-                    </div>
-                    {menuItem === 'LIFE' && index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
-                  </React.Fragment>
-                ))}
+                <React.Fragment key={menuItem}>
+                  <div className='navbar-menu-item' onClick={() => handleCategoryPageNavigate(menuItem)}>
+                    {menuItem}
+                  </div>
+                  {menuItem === 'LIFE' && index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
+                </React.Fragment>
+              ))}
           </div>
         </div>
       </div>

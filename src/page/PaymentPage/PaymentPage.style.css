@@ -1,778 +1,801 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 :root {
-    --font-xs: 13px;
-    --font-sm: 15px;
-    --font-md: 17px;
-    --font-lg: 19px;
-    --font-xl: 26px;
+  --font-xs: 13px;
+  --font-sm: 15px;
+  --font-md: 17px;
+  --font-lg: 19px;
+  --font-xl: 26px;
 }
 
 .payment_wrapper {
-    width: 100%;
-    min-height: 100vh;
-    margin-top: 280px;
-    margin-bottom: 50px;
-    font-size: var(--font-sm);
+  width: 100%;
+  min-height: 100vh;
+  margin-top: 280px;
+  margin-bottom: 50px;
+  font-size: var(--font-sm);
 }
 
 .payment_container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  gap: 40px;
 }
 
 .payment_title_area {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .payment_main_title {
-    font-size: var(--font-xl);
-    font-weight: 600;
-    color: #000;
-    margin-bottom: 40px;
+  font-size: var(--font-xl);
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 40px;
 }
 
 .payment_content {
-    flex: 1;
+  flex: 1;
 }
 
 .payment_side {
-    width: 300px;
-    position: relative;
+  width: 300px;
+  position: relative;
 }
 
 .payment_summary_sticky {
-    position: fixed;
-    width: 280px;
+  position: fixed;
+  width: 280px;
 }
 
 .payment_delivery_section,
 .payment_order_section,
 .payment_content_card_section {
-    background: white;
-    border: 1px solid #e5e7eb;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 4px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 4px;
 }
 
 .payment_section_title {
-    font-size: var(--font-lg);
-    font-weight: 500;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #e5e7eb;
-    margin-bottom: 16px;
+  font-size: var(--font-lg);
+  font-weight: 500;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 16px;
 }
 
 .payment_delivery_form {
-    padding: 20px 0;
+  padding: 20px 0;
 }
 
 .payment_form_row {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
 }
 
 .payment_form_label {
-    width: 120px;
-    font-size: var(--font-sm);
-    padding-top: 10px;
+  width: 120px;
+  font-size: var(--font-sm);
+  padding-top: 10px;
 }
 
 .required {
-    color: #ff0000;
-    margin-left: 2px;
+  color: #ff0000;
+  margin-left: 2px;
 }
 
 .payment_form_input {
-    flex: 1;
-    height: 40px;
-    padding: 0 12px;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-    font-size: var(--font-sm);
+  flex: 1;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  font-size: var(--font-sm);
 }
 
 .payment_form_select {
-    width: 100px;
-    height: 40px;
-    padding: 0 12px;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-    font-size: var(--font-sm);
-    background: #f9fafb;
+  width: 100px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  font-size: var(--font-sm);
+  background: #f9fafb;
 }
 
 .payment_form_input,
 .payment_form_select {
-    height: 40px;
-    min-height: 40px;
+  height: 40px;
+  min-height: 40px;
 }
 
 .payment_phone_select {
-    display: flex;
-    gap: 8px;
-    flex: 1;
+  display: flex;
+  gap: 8px;
+  flex: 1;
 }
 
 .payment_phone_select .payment_form_select,
 .payment_phone_select .phone_input {
-    width: calc((100% - 16px) / 3);
-    min-width: 0;
+  width: calc((100% - 16px) / 3);
+  min-width: 0;
 }
 
 /* 성명 입력 스타일 */
 .name_row {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
 }
 
 .name_input_group {
-    display: flex;
-    gap: 16px;
-    flex: 1;
+  display: flex;
+  gap: 16px;
+  flex: 1;
 }
 
 .name_input_box {
-    flex: 1;
-    position: relative;
+  flex: 1;
+  position: relative;
 }
 
 .name_input_box .payment_form_input {
-    width: 100%;
-    padding-right: 40px;
+  width: 100%;
+  padding-right: 40px;
 }
 
 .name_input_box .input_label {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #666;
-    font-size: var(--font-sm);
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: var(--font-sm);
 }
 
 /* 주소 입력 스타일 */
 .address_row {
-    display: flex;
-    align-items: flex-start;
+  display: flex;
+  align-items: flex-start;
 }
 
 .address_input_group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
 }
 
 .zipcode_row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .zipcode_input {
-    width: 200px !important;
-    flex: none !important;
+  width: 200px !important;
+  flex: none !important;
 }
 
 .payment_form_button {
-    height: 40px;
-    padding: 0 16px;
-    background: #666;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: var(--font-sm);
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background-color 0.2s;
+  height: 40px;
+  padding: 0 16px;
+  background: #666;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: var(--font-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s;
 }
 
 .payment_form_button:hover {
-    background: #555;
+  background: #555;
 }
 
 /* PostcodeModal 스타일 수정 */
 .postcode_overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .postcode_modal {
-    background: white;
-    border-radius: 8px;
-    padding: 30px;
-    width: 90%;
-    max-width: 500px;
-    max-height: 600px;
-    overflow: hidden;
-    position: relative;
-    display: flex;
-    flex-direction: column;
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 600px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 모달 헤더 추가 */
 .postcode_modal_header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
-    flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;
 }
 
 .postcode_modal_title {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
 }
 
 .close_button {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #666;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* DaumPostcode 컨테이너 */
 .postcode_content {
-    flex: 1;
-    overflow: hidden;
+  flex: 1;
+  overflow: hidden;
 }
 
 .payment_order_table {
-    width: 100%;
-    border-top: 1px solid #000;
-    margin-top: 20px;
+  width: 100%;
+  border-top: 1px solid #000;
+  margin-top: 20px;
 }
 
 .payment_order_header {
-    display: grid;
-    grid-template-columns: 3fr 1fr 1fr 1fr;
-    border-bottom: 1px solid #e5e7eb;
-    padding: 12px 0;
-    text-align: center;
-    font-size: var(--font-sm);
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 12px 0;
+  text-align: center;
+  font-size: var(--font-sm);
 }
 
 .payment_order_item {
-    display: grid;
-    grid-template-columns: 3fr 1fr 1fr 1fr;
-    align-items: center;
-    padding: 20px 0;
-    border-bottom: 1px solid #e5e7eb;
-    text-align: center;
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
 }
 
 .payment_item_info {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .payment_item_image {
-    width: 80px;
-    height: 80px;
-    margin-right: 16px;
+  width: 80px;
+  height: 80px;
+  margin-right: 16px;
 }
 
 .payment_item_image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .payment_item_details {
-    text-align: left;
+  text-align: left;
 }
 
 .payment_brand {
-    font-weight: 500;
-    margin-bottom: 4px;
-    font-size: var(--font-sm);
+  font-weight: 500;
+  margin-bottom: 4px;
+  font-size: var(--font-sm);
 }
 
 .payment_item_name {
-    font-size: var(--font-sm);
-    margin-bottom: 4px;
-    line-height: 1.4;
+  font-size: var(--font-sm);
+  margin-bottom: 4px;
+  line-height: 1.4;
 }
 
 .payment_item_option {
-    font-size: var(--font-xs);
-    color: #6b7280;
+  font-size: var(--font-xs);
+  color: #6b7280;
 }
 
 .payment_price_original {
-    text-decoration: line-through;
-    color: #9ca3af;
-    font-size: var(--font-sm);
-    display: block;
-    margin-bottom: 4px;
+  text-decoration: line-through;
+  color: #9ca3af;
+  font-size: var(--font-sm);
+  display: block;
+  margin-bottom: 4px;
 }
 
 .payment_price_sale {
-    color: #000;
-    font-size: var(--font-sm);
+  color: #000;
+  font-size: var(--font-sm);
 }
 
 .payment_total_price {
-    font-weight: 500;
-    font-size: var(--font-sm);
+  font-weight: 500;
+  font-size: var(--font-sm);
 }
 
 .payment_delivery_notice {
-    font-size: var(--font-xs);
-    color: #6b7280;
-    margin-top: 10px;
-    padding: 0 10px;
+  font-size: var(--font-xs);
+  color: #6b7280;
+  margin-top: 10px;
+  padding: 0 10px;
 }
 
 .payment_summary_sticky {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-    padding: 20px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 20px;
 }
 
 .payment_button {
-    width: 100%;
-    height: 52px;
-    background: #000;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: var(--font-md);
-    font-weight: 500;
-    margin-top: 20px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+  width: 100%;
+  height: 52px;
+  background: #000;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: var(--font-md);
+  font-weight: 500;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .payment_button:hover {
-    background: #e74c3c;
+  background: #e74c3c;
 }
 
 .payment_summary_row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 12px;
-    font-size: var(--font-sm);
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: var(--font-sm);
 }
 
 .payment_total {
-    border-top: 1px solid #e5e7eb;
-    padding-top: 12px;
-    margin-top: 12px;
-    display: flex;
-    justify-content: space-between;
-    font-weight: 500;
-    color: #e74c3c;
-    font-size: var(--font-md);
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+  color: #e74c3c;
+  font-size: var(--font-md);
 }
 
 .payment_price_emphasis {
-    color: #e74c3c;
-    font-size: var(--font-lg);
-    font-weight: 600;
+  color: #e74c3c;
+  font-size: var(--font-lg);
+  font-weight: 600;
 }
 
 .payment_mobile_price {
-    display: none;
+  display: none;
 }
 
-
 @media screen and (max-width: 1200px) {
-    :root {
-        --font-xs: 13px;
-        --font-sm: 15px;
-        --font-md: 17px;
-        --font-lg: 19px;
-        --font-xl: 24px;
-    }
+  :root {
+    --font-xs: 13px;
+    --font-sm: 15px;
+    --font-md: 17px;
+    --font-lg: 19px;
+    --font-xl: 24px;
+  }
 
-    .payment_wrapper {
-        margin-top: 210px;
-    }
+  .payment_wrapper {
+    margin-top: 210px;
+  }
 
-    .payment_container {
-        gap: 20px;
-        max-width: 960px;
-    }
+  .payment_container {
+    gap: 20px;
+    max-width: 960px;
+  }
 
-    .payment_title_area {
-        max-width: 960px;
-    }
+  .payment_title_area {
+    max-width: 960px;
+  }
 
-    .payment_main_title {
-        margin-bottom: 30px;
-    }
+  .payment_main_title {
+    margin-bottom: 30px;
+  }
 
-    .payment_side {
-        width: 280px;
-    }
+  .payment_side {
+    width: 280px;
+  }
 }
 
 /* 1024px 이하 */
 @media screen and (max-width: 1024px) {
-    :root {
-        --font-xs: 13px;
-        --font-sm: 15px;
-        --font-md: 16px;
-        --font-lg: 18px;
-        --font-xl: 22px;
-    }
+  :root {
+    --font-xs: 13px;
+    --font-sm: 15px;
+    --font-md: 16px;
+    --font-lg: 18px;
+    --font-xl: 22px;
+  }
 
-    .payment_container {
-        flex-direction: column;
+  .payment_container {
+    flex-direction: column;
+  }
 
-    }
+  .payment_side {
+    width: 100%;
+    position: relative;
+    top: auto;
+  }
 
-    .payment_side {
-        width: 100%;
-        position: relative;
-        top: auto;
-    }
+  .payment_summary_sticky {
+    position: static;
+    max-width: 960px;
+    margin: 0 auto;
+    width: 100%;
+  }
 
-    .payment_summary_sticky {
-        position: static;
-        max-width: 960px;
-        margin: 0 auto;
-        width: 100%;
-    }
-
-    .payment_button {
-        width: 100%;
-        height: 52px;
-        margin-top: 20px;
-        position: relative;
-    }
+  .payment_button {
+    width: 100%;
+    height: 52px;
+    margin-top: 20px;
+    position: relative;
+  }
 }
 
 /* 768px 이하 (태블릿) */
 @media screen and (max-width: 768px) {
-    :root {
-        --font-xs: 12px;
-        --font-sm: 14px;
-        --font-md: 15px;
-        --font-lg: 17px;
-        --font-xl: 20px;
-    }
+  :root {
+    --font-xs: 12px;
+    --font-sm: 14px;
+    --font-md: 15px;
+    --font-lg: 17px;
+    --font-xl: 20px;
+  }
 
-    .payment_wrapper {
-        margin-top: 180px;
-    }
+  .payment_wrapper {
+    margin-top: 180px;
+  }
 
-    .payment_container {
-        padding: 0 16px;
-    }
+  .payment_container {
+    padding: 0 16px;
+  }
 
-    .payment_title_area {
-        padding: 0 16px;
-    }
+  .payment_title_area {
+    padding: 0 16px;
+  }
 
-    .payment_main_title {
-        margin-bottom: 24px;
-    }
+  .payment_main_title {
+    margin-bottom: 24px;
+  }
 
-    .payment_form_row {
-        flex-direction: column;
-        gap: 8px;
-    }
+  .payment_form_row {
+    flex-direction: column;
+    gap: 8px;
+  }
 
-    .postcode_modal {
-        width: 95%;
-        padding: 24px;
-        max-height: 90vh;
-    }
+  .postcode_modal {
+    width: 95%;
+    padding: 24px;
+    max-height: 90vh;
+  }
 
-    .postcode_modal_title {
-        font-size: 18px;
-    }
+  .postcode_modal_title {
+    font-size: 18px;
+  }
 
-    .close_button {
-        font-size: 20px;
-    }
+  .close_button {
+    font-size: 20px;
+  }
 
-    .payment_form_label {
-        width: 100%;
-        margin-bottom: 4px;
-        padding-top: 0;
-    }
+  .payment_form_label {
+    width: 100%;
+    margin-bottom: 4px;
+    padding-top: 0;
+  }
 
-    .payment_form_input {
-        width: 100%;
-        min-width: 100%;
-    }
+  .payment_form_input {
+    width: 100%;
+    min-width: 100%;
+  }
 
-    .payment_phone_select {
-        gap: 8px;
-        width: 100%;
-    }
+  .payment_phone_select {
+    gap: 8px;
+    width: 100%;
+  }
 
-    .payment_form_select {
-        width: 30%;
-        min-width: 80px;
-    }
+  .payment_form_select {
+    width: 30%;
+    min-width: 80px;
+  }
 
-    .phone_input {
-        width: 35%;
-        min-width: 80px;
-    }
+  .phone_input {
+    width: 35%;
+    min-width: 80px;
+  }
 
-    .payment_form_row:has(.payment_form_button) {
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
+  .payment_form_row:has(.payment_form_button) {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
 
-    .payment_form_row:has(.payment_form_button) .payment_form_label {
-        width: 100%;
-    }
+  .payment_form_row:has(.payment_form_button) .payment_form_label {
+    width: 100%;
+  }
 
-    .payment_form_row:has(.payment_form_button) .payment_form_input {
-        flex: 1;
-        min-width: 0;
-    }
+  .payment_form_row:has(.payment_form_button) .payment_form_input {
+    flex: 1;
+    min-width: 0;
+  }
 
-    .payment_form_row:has(.payment_form_button) .payment_form_button {
-        width: 120px;
-        margin-left: 8px;
-    }
+  .payment_form_row:has(.payment_form_button) .payment_form_button {
+    width: 120px;
+    margin-left: 8px;
+  }
 
-    .payment_order_header {
-        grid-template-columns: 2fr 0.5fr 1fr;
-    }
+  .payment_order_header {
+    grid-template-columns: 2fr 0.5fr 1fr;
+  }
 
-    .payment_order_header span:nth-child(3) {
-        display: none;
-    }
+  .payment_order_header span:nth-child(3) {
+    display: none;
+  }
 
-    .payment_order_item {
-        grid-template-columns: 2fr 0.5fr 1fr;
-    }
+  .payment_order_item {
+    grid-template-columns: 2fr 0.5fr 1fr;
+  }
 
-    .payment_order_item>div:nth-child(3) {
-        display: none;
-    }
+  .payment_order_item > div:nth-child(3) {
+    display: none;
+  }
 
-    .payment_item_image {
-        width: 60px;
-        height: 60px;
-    }
+  .payment_item_image {
+    width: 60px;
+    height: 60px;
+  }
+
+  .name_input_box {
+    flex: 1 1 100%;
+    margin-bottom: 10px;
+  }
+
+  .name_input_box .payment_form_input {
+    width: 100%;
+    padding-right: 30px;
+    font-size: var(--font-sm);
+  }
+
+  .name_input_box .input_label {
+    right: 8px;
+    font-size: var(--font-xs);
+  }
+
+  .name_input_group {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 /* 480px 이하 (모바일) */
 @media screen and (max-width: 480px) {
-    :root {
-        --font-xs: 12px;
-        --font-sm: 13px;
-        --font-md: 14px;
-        --font-lg: 16px;
-        --font-xl: 18px;
-    }
+  :root {
+    --font-xs: 12px;
+    --font-sm: 13px;
+    --font-md: 14px;
+    --font-lg: 16px;
+    --font-xl: 18px;
+  }
 
-    .payment_wrapper {
-        margin-top: 160px;
-        margin-bottom: 50px;
-    }
+  .payment_wrapper {
+    margin-top: 160px;
+    margin-bottom: 50px;
+  }
 
-    .payment_container,
-    .payment_title_area {
-        padding: 0 12px;
-    }
+  .payment_container,
+  .payment_title_area {
+    padding: 0 12px;
+  }
 
-    .payment_main_title {
-        margin-bottom: 20px;
-    }
+  .payment_main_title {
+    margin-bottom: 20px;
+  }
 
-    .payment_delivery_section,
-    .payment_order_section {
-        padding: 16px;
-    }
+  .payment_delivery_section,
+  .payment_order_section {
+    padding: 16px;
+  }
 
-    .payment_form_row {
-        margin-bottom: 16px;
-    }
+  .payment_form_row {
+    margin-bottom: 16px;
+  }
 
-    .payment_phone_select {
-        gap: 4px;
-    }
+  .payment_phone_select {
+    gap: 4px;
+  }
 
-    .payment_form_select,
-    .phone_input {
-        padding: 0 8px;
-    }
+  .payment_form_select,
+  .phone_input {
+    padding: 0 8px;
+  }
 
-    .payment_order_header {
-        display: none;
-    }
+  .payment_order_header {
+    display: none;
+  }
 
-    .payment_order_item {
-        display: block;
-        padding: 16px 0;
-        border-bottom: 1px solid #e5e7eb;
-    }
+  .payment_order_item {
+    display: block;
+    padding: 16px 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
 
-    .payment_item_info {
-        display: flex;
-        gap: 12px;
-    }
+  .payment_item_info {
+    display: flex;
+    gap: 12px;
+  }
 
-    .payment_item_image {
-        width: 100px;
-        height: 100px;
-        flex-shrink: 0;
-        margin: 0;
-    }
+  .payment_item_image {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+    margin: 0;
+  }
 
-    .payment_item_details {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-    }
+  .payment_item_details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
 
-    .payment_price,
-    .payment_total_price {
-        text-align: left;
-    }
+  .payment_price,
+  .payment_total_price {
+    text-align: left;
+  }
 
-    .payment_delivery_notice {
-        padding: 0;
-    }
+  .payment_delivery_notice {
+    padding: 0;
+  }
 
-    .payment_summary_sticky {
-        padding: 16px;
-    }
+  .payment_summary_sticky {
+    padding: 16px;
+  }
 
-    .payment_delivery_form {
-        padding: 5px 0;
-    }
+  .payment_delivery_form {
+    padding: 5px 0;
+  }
 
-    .payment_brand {
-        font-weight: 500;
-        margin-bottom: 4px;
-    }
+  .payment_brand {
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
 
-    .payment_item_name {
-        margin-bottom: 4px;
-        line-height: 1.4;
-    }
+  .payment_item_name {
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
 
-    .payment_item_option {
-        margin-bottom: 8px;
-    }
+  .payment_item_option {
+    margin-bottom: 8px;
+  }
 
-    .payment_mobile_price {
-        font-size: var(--font-sm);
-        color: #000;
-        font-weight: 500;
-        margin-top: 4px;
-    }
+  .payment_mobile_price {
+    font-size: var(--font-sm);
+    color: #000;
+    font-weight: 500;
+    margin-top: 4px;
+  }
 
-    .payment_item_quantity,
-    .payment_price,
-    .payment_total_price {
-        display: none;
-    }
+  .payment_item_quantity,
+  .payment_price,
+  .payment_total_price {
+    display: none;
+  }
 
-    .payment_mobile_price {
-        display: block;
-    }
+  .payment_mobile_price {
+    display: block;
+  }
 
-    .payment_button_fixed {
-        position: fixed;
-        bottom: 68px;
-        left: 0;
-        width: 100%;
-        height: 60px;
-        background-color: #000;
-        color: #fff;
-        font-size: var(--font-md);
-        font-weight: 500;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        z-index: 10;
-    }
+  .payment_button_fixed {
+    position: fixed;
+    bottom: 68px;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #000;
+    color: #fff;
+    font-size: var(--font-md);
+    font-weight: 500;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+  }
 
-    .name_input_group {
-        gap: 8px;
-    }
+  .name_input_group {
+    gap: 8px;
+  }
 
-    .zipcode_input {
-        width: 120px !important;
-    }
+  .zipcode_input {
+    width: 120px !important;
+  }
 
-    .postcode_modal {
-        width: 100%;
-        height: 100%;
-        max-height: 100%;
-        border-radius: 0;
-        padding: 20px;
-    }
+  .postcode_modal {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+    padding: 20px;
+  }
 
-    .postcode_overlay {
-        align-items: flex-end;
-    }
+  .postcode_overlay {
+    align-items: flex-end;
+  }
 
-    .postcode_modal_header {
-        position: sticky;
-        top: 0;
-        background: white;
-        z-index: 10;
-        padding-bottom: 12px;
-        margin-bottom: 16px;
-    }
+  .postcode_modal_header {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+  }
 
-    .close_button {
-        padding: 10px;
-    }
+  .close_button {
+    padding: 10px;
+  }
+  /* // */
+  .payment_delivery_form {
+    overflow: visible;
+  }
 }
 
 /* 카드 정보 영역 */
 .payment_content_card_section {
-    background: white;
-    border: 1px solid #e5e7eb;
-    padding: 20px;
-    margin-bottom: 0px;
-    border-radius: 4px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  padding: 20px;
+  margin-bottom: 0px;
+  border-radius: 4px;
 }
 
 .payment_card_form {
-    padding: 20px 0;
+  padding: 20px 0;
 }
 
 .payment_card_form .rccs {
-    margin: 0 auto 30px;
+  margin: 0 auto 30px;
 }
 
 @media screen and (max-width: 768px) {
-    .payment_card_form .rccs {
-        margin-bottom: 20px;
-    }
+  .payment_card_form .rccs {
+    margin-bottom: 20px;
+  }
 }

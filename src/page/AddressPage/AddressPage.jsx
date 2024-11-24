@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   getAddressList,
   addAddress,
@@ -9,7 +9,7 @@ import {
 } from '../../features/address/addressSlice';
 import DaumPostcode from 'react-daum-postcode';
 import './AddressPage.style.css';
-import LoadingSpinner from "../../common/components/LoadingSpinner/LoadingSpinner"
+import LoadingSpinner from '../../common/components/LoadingSpinner/LoadingSpinner';
 
 const AddressPage = () => {
   const dispatch = useDispatch();
@@ -19,9 +19,7 @@ const AddressPage = () => {
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
-  useEffect(() => {
-    console.log('Addresses:', addresses);
-  }, [addresses]);
+
   const initialFormData = {
     id: '',
     shipto: {
@@ -92,7 +90,7 @@ const AddressPage = () => {
   };
 
   const handleContactChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     setFormData((prev) => ({
       ...prev,
       contact: {
@@ -146,7 +144,7 @@ const AddressPage = () => {
     };
 
     if (formData.id) {
-      dispatch(updateAddress({ addressId: formData.id, updatedData: addressData }));
+      dispatch(updateAddress({addressId: formData.id, updatedData: addressData}));
     } else {
       dispatch(addAddress(addressData)).then((result) => {
         if (result.payload && result.payload._id && formData.isDefault) {
@@ -157,10 +155,6 @@ const AddressPage = () => {
 
     resetAllStates();
   };
-
-  useEffect(() => {
-    console.log('Updated formData:', formData);
-  }, [formData]);
 
   const handleSetDefault = (addressId) => {
     if (addressId) {
@@ -236,7 +230,7 @@ const AddressPage = () => {
                     className='address-page-input name-input'
                     value={formData.contact.lastName}
                     onChange={(e) =>
-                      setFormData({ ...formData, contact: { ...formData.contact, lastName: e.target.value } })
+                      setFormData({...formData, contact: {...formData.contact, lastName: e.target.value}})
                     }
                     placeholder='성'
                   />
@@ -245,7 +239,7 @@ const AddressPage = () => {
                     className='address-page-input name-input'
                     value={formData.contact.firstName}
                     onChange={(e) =>
-                      setFormData({ ...formData, contact: { ...formData.contact, firstName: e.target.value } })
+                      setFormData({...formData, contact: {...formData.contact, firstName: e.target.value}})
                     }
                     placeholder='이름'
                   />
@@ -321,7 +315,7 @@ const AddressPage = () => {
                     type='text'
                     className='address-page-input'
                     value={formData.city}
-                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                    onChange={(e) => setFormData({...formData, city: e.target.value})}
                     placeholder='상세 주소'
                   />
                 </div>

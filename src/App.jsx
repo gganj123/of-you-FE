@@ -5,6 +5,7 @@ import AppLayout from './Layout/AppLayout';
 import {useDispatch, useSelector} from 'react-redux';
 import {useEffect} from 'react';
 import {getLikeList} from './features/like/likeSlice';
+import ScrollToTop from './utils/ScrollToTop';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_APP_GOOGLE_CLIENT_ID;
 
@@ -22,6 +23,7 @@ function App() {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <BrowserRouter>
+        <ScrollToTop />
         <AppLayout>
           <AppRouter />
         </AppLayout>

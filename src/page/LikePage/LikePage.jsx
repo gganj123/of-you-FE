@@ -3,6 +3,7 @@ import ProductCard from '../../common/components/ProductCard/ProductCard';
 import './LikePage.style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {getLikeList} from '../../features/like/likeSlice';
+import {getCategoryName} from '../../utils/categories';
 
 const LikePage = () => {
   const dispatch = useDispatch();
@@ -11,7 +12,6 @@ const LikePage = () => {
   // 탭 상태 관리
   const [activeTab, setActiveTab] = useState('All');
   const [viewType, setViewType] = useState('grid');
-  const [groupedLikes, setGroupedLikes] = useState({});
 
   // 좋아요 리스트 가져오기
   useEffect(() => {
@@ -26,7 +26,7 @@ const LikePage = () => {
         if (activeTab === 'All') {
           return true;
         }
-        return like.productId.category === getCategoryName(activeTab);
+        return like.productId.category?.some((category) => getCategoryName(category) === getCategoryName(activeTab));
       });
   }, [likes, activeTab]);
 

@@ -1,7 +1,8 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import './OrderPage.style.css';
-import {useDispatch, useSelector} from 'react-redux';
-import {fetchOrder} from '../../features/order/orderSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchOrder } from '../../features/order/orderSlice';
+import LoadingSpinner from '../../common/components/LoadingSpinner/LoadingSpinner'
 
 const OrderPage = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('all');
@@ -10,7 +11,7 @@ const OrderPage = () => {
   const [filteredOrders, setFilteredOrders] = useState([]);
 
   const dispatch = useDispatch();
-  const {orderList, loading, error} = useSelector((state) => state.order);
+  const { orderList, loading, error } = useSelector((state) => state.order);
 
   const handlePeriodClick = (period) => {
     setSelectedPeriod(period);
@@ -87,7 +88,7 @@ const OrderPage = () => {
     }
   }, [orderList, startDate, endDate]);
 
-  if (loading) return <p>로딩 중...</p>;
+  if (loading) return <LoadingSpinner />;
   if (error) return <p>에러 발생: {error}</p>;
 
   return (

@@ -211,6 +211,7 @@ const productSlice = createSlice({
         state.error = action.payload ? action.payload.message : 'Something went wrong.';
       })
       .addCase(updateProduct.pending, (state) => {
+        state.success = false;
         state.loading = true;
         state.error = null;
       })
@@ -225,6 +226,7 @@ const productSlice = createSlice({
         state.success = false;
       })
       .addCase(createProduct.pending, (state) => {
+        state.success = false;
         state.loading = true;
         state.error = null;
       })

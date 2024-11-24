@@ -1,370 +1,321 @@
-.sub-title-wrab {
-  width: calc(100% -  35vw); 
-  margin: 0 auto; 
-  margin-top: 250px;
-}
-
-.sub-title-name {
+.login-page-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 55px;
-  padding-bottom: 55px;
-  font-size: 32px;
-}
-.member-join .join-content {
-  padding-top: 50px;
-  padding-bottom: 50px;
-
-  border-top: 1px #171717;
+  margin-top: 280px;
+  /* 작은 화면에서도 좌우 여백 추가 */
 }
 
-.form-container {
-  display: flex;
-  gap: 20px; 
-  margin: 0px 150px;
+.login-page-content {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 40px;
 }
 
-.login-wrab {
-  flex: 3;
+.login-form-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-}
-
-.login-wrab p {
-  display: flex;
   align-items: center;
-  width: calc(100% + 81px);
-  gap: 10px;
-  margin: 0px;
 }
 
-.login-wrab label {
-  width: 100px;
+.login-title {
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+
+.login-form {
+  width: 100%;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.input-label {
   font-size: 14px;
-  text-align: left;
+  font-weight: 500;
+  margin-bottom: 8px;
 }
 
-.form-control {
-  width: calc(100% - 200px);
-  max-width: 420px; 
+.input-field {
   height: 40px;
-  padding-left: 20px;
-  border: 1px solid #f2f2f2;
-  background-color: #f2f2f2;
+  padding: 0 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px !important;
   font-size: 14px;
   outline: none;
-  transition: border-color 0.3s, background-color 0.3s;
+  transition: border-color 0.3s;
 }
 
-.form-control:focus {
+.input-field:focus {
   border-color: #333;
-  background-color: #ffffff;
 }
-.login-option {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0px 160px;
+
+.error-message {
+  color: #ff6160;
+  font-size: 14px;
+  margin-top: 8px;
 }
+
 .login-button {
   width: 100%;
-  max-width: 190px;
-  min-width: 150px;
-  height: 95px;
+  height: 48px;
   background-color: #000;
   color: #fff;
   font-size: 16px;
+  font-weight: 600;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   transition: background-color 0.3s;
+  margin-top: 5px;
 }
+
 .login-button:hover {
   background-color: #333;
 }
 
-.custom-checkbox input[type='checkbox'] {
-  display: none;
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  width: 100%;
 }
-.custom-checkbox {
-  margin-top: 15px;
-  margin-left: 110px;
+
+.remember-email {
   display: flex;
   align-items: center;
+  margin-left: 0;
+  /* 왼쪽 정렬 */
+  justify-content: flex-start;
+  width: 800px;
+  margin-bottom: -20px;
 }
 
-.custom-checkbox .checkmark {
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.checkbox-custom {
   display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #ccc;
-  border-radius: 50%;
-  position: relative;
-  margin-top: 0px;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
   margin-right: 8px;
-  padding-bottom: 0;
+  position: relative;
   cursor: pointer;
-  transition: border-color 0.3s;
-}
-.input-line {
-  margin: 0px;
 }
 
-.custom-checkbox input[type='checkbox']:checked + .checkmark {
-  border-color: #666; 
-}
-
-
-.custom-checkbox input[type='checkbox']:checked + .checkmark::after {
+.checkbox-label input[type="checkbox"]:checked+.checkbox-custom::after {
   content: '';
   position: absolute;
-  left: 5px;
+  left: 4px;
+  top: 1px;
   width: 6px;
   height: 10px;
   border: solid #666;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
-.link {
+
+.find-account {
   display: flex;
-  justify-content: center; 
-  gap: 20px; 
-  margin-top: 10px; 
-  list-style-type: none; 
-  padding: 0;
+  gap: 20px;
 }
 
-.link li {
-  margin-top: 5px;
+.find-account-link {
   font-size: 14px;
-}
-
-.link li a {
   color: #333;
   text-decoration: none;
   transition: color 0.3s;
 }
 
-.link li a:hover {
+.find-account-link:hover {
   color: #666;
 }
-.right-line {
-  padding-right: 10px;
-  border: solid #999;
-  border-width: 0 1px 0 0;
-}
 
-.required {
-  color: #ff6160;
-}
-
-.join-email {
-  padding: 50px;
+.join-wrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 999;
-  border-width: 1px 0 0 0;
+  justify-content: space-between;
+  margin-top: 40px;
+
 }
 
-.email-content {
-  flex: 1;
-  display: flex;
-  max-width: 326px;
-  justify-content: center;
-  align-items: center;
-}
-
-.email-signup {
-  cursor: pointer;
-  flex: 1;
-  max-width: 326px;
-  height: 50px;
-  background-color: white;
-  border: solid 1px;
-}
-
+.join-email,
 .join-sns {
-  padding: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: start;
-}
-.sns-content {
+
   flex: 1;
-  display: flex;
-  max-width: 326px;
-  justify-content: center;
-  align-items: center;
-  margin-top: 24px;
-}
-
-.sns-buttons {
-  cursor: pointer;
-
-  flex:1;
-  max-width: 326px;
-  height: 98px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* 중앙 정렬 */
-  gap: 10px; /* 버튼 간 간격 */
-  margin-top: 10px; /* 상단 여백 */
+  align-items: center;
+  padding: 20px;
+  border-top: 1px solid #ddd;
 }
 
-.sns-signup {
-  flex: 1;
- width:100%;
-  height: 50px;
-  background-color: white;
-  border: solid 1px;
+.join-content {
+  font-size: 16px;
+  margin-bottom: 16px;
 }
 
-.sosial-flex{
-  display: flex;
+.join-button {
+  width: 100%;
+  max-width: 1000px;
+  height: 48px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
 }
-.custom-google-button {
+
+.join-button:hover:hover {
+  background-color: #f5f5f5;
+  border-color: #ccc;
+}
+
+.checkbox-input {
+  display: none;
+  /* 기본 체크박스 숨김 */
+}
+
+.custom-google-login-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 15px 30px; /* 버튼 크기를 키우는 가장 중요한 속성 */
-  background-color: #4285f4; /* Google 파란색 */
-  color: white;
+  padding: 10px 20px;
+  background-color: #4285f4;
   border: none;
-  border-radius: 6px; /* 모서리를 둥글게 */
-  font-size: 18px; /* 폰트 크기 증가 */
-  font-weight: bold;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 100%; /* 버튼 너비를 부모 컨테이너에 맞춤 */
-  max-width: 400px; /* 버튼 최대 너비 설정 */
-  height: auto; /* 버튼 높이 자동 조정 */
+  transition: background-color 0.3s;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
 }
 
-.custom-google-button:hover {
+.custom-google-login-button:hover {
   background-color: #357ae8;
 }
 
-.custom-google-button:disabled {
-  background-color: #a9d2f9;
-  cursor: not-allowed;
+.custom-google-login-content {
+  display: flex;
+  align-items: center;
 }
 
-.google-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
+.custom-google-icon-wrapper {
+  width: 60px;
+  /* 아이콘 감싸는 div 크기 확대 */
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  /* 텍스트와 간격 조정 */
 }
 
-@media (max-width: 1500px) {
-  .sub-title-wrab {
-    width: calc(100% -  20vw); 
+.custom-google-icon {
+  width: 64px !important;
+  /* 강제로 아이콘 크기를 키움 */
+  height: 64px !important;
+  object-fit: contain !important;
+  /* 아이콘 비율 유지 */
+}
+
+.custom-google-login-text {
+  font-size: 18px;
+  /* 텍스트 크기 */
+  font-weight: bold;
+}
+
+.sns-buttons {
+  width: 100%;
+}
+
+
+
+
+@media (max-width: 1200px) {
+  .login-page-wrapper {
+    margin-top: 200px;
   }
-  .form-container {
-    margin: 0 150px;
+
+  .login-page-content {
+    width: 90%;
+    padding: 20px 0;
   }
 }
 
-@media (max-width: 1100px) {
-  .sub-title-wrab {
-    width: calc(100% -  20vw); 
-  }
-  .form-container {
-    margin: 0px 100px;
-  }
-  .login-option {
-    margin: 0px 100px;
-  }
-}
 @media (max-width: 768px) {
-  .form-container {
-    margin: 0 50px;
+  .login-page-wrapper {
+    margin-top: 180px;
   }
-  .member-join .join-content {
-    padding-top: 50px;
-    padding-bottom: 50px;
-    margin: 0px;
 
-    border-top: 2px solid #171717;
-  }
-  .login-option {
-    margin: 0 20px;
-  }
-  .email-content,
-  .sns-content {
-    display: none; 
-  }
-  .join-email, .join-sns{
+  .login-page-content {
+    width: 90%;
     padding: 30px;
   }
-  .join-sns{
-    padding-top: 0px;
-  }
-}
-@media (max-width: 480px) {
-  .sub-title-wrab {
-    width: calc(100%); 
-    margin-top: 150px;
-    padding-top: 0px;
-    
-  }
-  .sub-title {  
-    font-size: 30px;
 
+  .login-title {
+    font-size: 20px;
+    margin-bottom: 20px;
   }
-  .form-container {
-    flex-direction: column; 
-    margin: 0 50px;
-    align-items: center; 
+
+  .join-wrapper {
+    flex-direction: column;
+    gap: 0px;
   }
-  .login-wrab {
+
+  .join-email,
+  .join-sns {
+    width: 100%;
+    max-width: 1000px;
+    padding: 20px 0;
+  }
+
+  .join-content {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .login-page-wrapper {
+    margin-top: 140px;
+  }
+
+  .login-page-content {
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .login-form-wrapper {
+    margin-bottom: -10px;
+  }
+
+  .input-field {
     width: 100%;
   }
-  .join-email{
-    padding:10px;
+
+  .login-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
   }
-  .join-sns{
-    padding:10px;
+
+  .find-account {
+    flex-direction: column;
+    gap: 10px;
   }
-  .link{
-margin-right: 10px;
-  }
-  .form-control {
-    width: 60%; 
-    max-width: 420px;
-    margin: 0;
-  }
-  .custom-checkbox {
-    margin-left: 80px;
-  }
-  .login-option {
-    margin-right: 30px;
-  }
-  .login-button {
-    display: block;
-    min-width: 400px;
-    width: 100%;
-    max-width: 100%; 
-    height: 50px;
-    margin-top: 10px; /
-  }
-  .login-option {
-    margin: 0px;
-  }
-  .custom-checkbox {
-    margin-top: 15px;
-    margin-left: 40px;
-    display: flex;
-    align-items: center;
-  }
-  .sub-title-wrab {
-    margin-top: 100px;
-}
-.sub-title-name {
-  padding-top: 0;
-}
 }

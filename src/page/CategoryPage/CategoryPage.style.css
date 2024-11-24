@@ -187,12 +187,21 @@
     align-items: center;
     justify-content: center;
     transition: var(--transition-default);
-    z-index: 100;
+    z-index: 10000;
 }
 
 .category-page__scroll-top:hover {
     background-color: var(--color-hover-bg);
     transform: translateY(-2px);
+}
+
+.category-page__loading {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    /* 로딩 영역의 최소 높이 설정 */
 }
 
 @media screen and (max-width: 1200px) {
@@ -371,5 +380,35 @@
 
     .category-page__sort-toggle {
         font-size: 12px;
+    }
+}
+
+
+/* 로딩스피너 디자인 */
+.infinite-scroll-loader {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.infinite-scroll-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #333;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
     }
 }

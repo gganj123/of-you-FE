@@ -1,0 +1,97 @@
+.skeleton-card {
+    width: 100%;
+    border-radius: 5px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.skeleton-image {
+    width: 100%;
+    padding-bottom: 132%;
+    background: #f0f0f0;
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton-image::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 1.5s infinite;
+}
+
+.skeleton-content {
+    padding: 16px 0;
+}
+
+.skeleton-brand {
+    width: 40%;
+    height: 16px;
+    background: #f0f0f0;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.skeleton-title {
+    width: 100%;
+    height: 20px;
+    background: #f0f0f0;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.skeleton-price {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.skeleton-original-price {
+    width: 60%;
+    height: 18px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.skeleton-discount {
+    width: 40%;
+    height: 18px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.skeleton-brand::after,
+.skeleton-title::after,
+.skeleton-original-price::after,
+.skeleton-discount::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}

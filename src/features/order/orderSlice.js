@@ -1,6 +1,6 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import api from '../../utils/api';
-import {getCartQty} from '../cart/cartSlice';
+import {getCartList, getCartQty} from '../cart/cartSlice';
 
 // 비동기 주문 생성 액션
 export const createOrder = createAsyncThunk('order/createOrder', async (orderData, {rejectWithValue, dispatch}) => {
@@ -77,6 +77,7 @@ const orderSlice = createSlice({
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.loading = false;
+        dispatch(getCartList());
         state.order = action.payload.orderNum;
       })
       .addCase(createOrder.rejected, (state, action) => {

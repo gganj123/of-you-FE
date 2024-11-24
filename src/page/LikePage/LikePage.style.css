@@ -241,3 +241,102 @@
     padding: 6px 10px;
   }
 }
+
+/* 라이크 페이지 비어있을 때 디자인 */
+.empty-like {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 20px;
+  margin: 40px auto;
+  max-width: 480px;
+  text-align: center;
+  border-radius: 16px;
+}
+
+.empty-like-icon {
+  font-size: 56px;
+  margin-bottom: 28px;
+  animation: heartBeat 1.5s ease-in-out infinite;
+}
+
+.empty-like-title {
+  font-size: 24px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.empty-like-description {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.empty-like-button {
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #000;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.empty-like-button:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+}
+
+@keyframes heartBeat {
+  0% {
+    transform: scale(1);
+  }
+
+  14% {
+    transform: scale(1.1);
+  }
+
+  28% {
+    transform: scale(1);
+  }
+
+  42% {
+    transform: scale(1.1);
+  }
+
+  70% {
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .empty-like {
+    padding: 60px 16px;
+    margin: 20px auto;
+  }
+
+  .empty-like-icon {
+    font-size: 48px;
+    margin-bottom: 24px;
+  }
+
+  .empty-like-title {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  .empty-like-description {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .empty-like-button {
+    padding: 14px 32px;
+    font-size: 14px;
+  }
+}

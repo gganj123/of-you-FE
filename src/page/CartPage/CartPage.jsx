@@ -1,17 +1,17 @@
-import {useState, useEffect} from 'react';
-import {IoClose, IoChevronDown} from 'react-icons/io5';
-import {useNavigate} from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { IoClose, IoChevronDown } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
 import './CartPage.style.css';
-import {useDispatch, useSelector} from 'react-redux';
-import {deleteCartItem, getCartList, updateQty} from '../../features/cart/cartSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteCartItem, getCartList, updateQty } from '../../features/cart/cartSlice';
 
 const CartPage = () => {
   const dispatch = useDispatch();
-  const {items, loading, error} = useSelector((state) => state.cart); // Redux state
+  const { items, loading, error } = useSelector((state) => state.cart); // Redux state
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 486);
   const [temporaryQuantity, setTemporaryQuantity] = useState(1);
-  const {cartList, totalPrice} = useSelector((state) => state.cart);
+  const { cartList, totalPrice } = useSelector((state) => state.cart);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [temporaryQuantities, setTemporaryQuantities] = useState({});
@@ -80,7 +80,7 @@ const CartPage = () => {
   };
   const handleSelectItem = (itemId) => {
     setCheckedItems((prev) => {
-      const newCheckedState = {...prev, [itemId]: !prev[itemId]};
+      const newCheckedState = { ...prev, [itemId]: !prev[itemId] };
 
       // 전체 체크박스 상태 업데이트
       const isAllChecked = cartList.every((item) => newCheckedState[item._id]);
@@ -117,7 +117,7 @@ const CartPage = () => {
 
   const handleQuantityChange = (productId, size, change) => {
     const updatedCartList = cartList.map((item) =>
-      item.productId._id === productId && item.size === size ? {...item, qty: Math.max(1, item.qty + change)} : item
+      item.productId._id === productId && item.size === size ? { ...item, qty: Math.max(1, item.qty + change) } : item
     );
     console.log('Updated Cart List:', updatedCartList);
   };
@@ -184,7 +184,7 @@ const CartPage = () => {
         alert(`수량이 ${newQty}개로 변경되었습니다.`);
         // 상태 초기화
         setTemporaryQuantities((prev) => {
-          const {[itemId]: _, ...rest} = prev;
+          const { [itemId]: _, ...rest } = prev;
           return rest;
         });
         dispatch(getCartList());
@@ -212,6 +212,28 @@ const CartPage = () => {
 
   if (error) {
     return <div>Error: {error}</div>;
+  }
+
+  if (cartList.length === 0) {
+    return (
+      <div className="cart-wrapper">
+        <h1 className="cart-page-title">장바구니</h1>
+        <div className="empty-cart">
+          <div className="empty-cart-icon">🛒</div>
+          <h2 className="empty-cart-title">장바구니가 비어있습니다</h2>
+          <p className="empty-cart-description">
+            OF YOU의 다양한 상품을 둘러보고<br />
+            장바구니를 채워보세요!
+          </p>
+          <button
+            className="empty-cart-button"
+            onClick={() => navigate('/')}
+          >
+            쇼핑 계속하기
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -258,7 +280,7 @@ const CartPage = () => {
                               }}>
                               {(item.productId.price * item.qty).toLocaleString()}원
                             </span>
-                            <span style={{color: 'red', fontWeight: 'bold'}}>
+                            <span style={{ color: 'red', fontWeight: 'bold' }}>
                               {(item.productId.realPrice * item.qty).toLocaleString()}원
                             </span>
                           </>
@@ -295,9 +317,9 @@ const CartPage = () => {
                             const stockLimit = item.productId.stock[item.size];
                             if (currentQuantity + 1 > stockLimit) {
                               alert(`최대 ${stockLimit}개까지 구매 가능합니다.`);
-                              return {...prev, [item._id]: stockLimit};
+                              return { ...prev, [item._id]: stockLimit };
                             }
-                            return {...prev, [item._id]: currentQuantity + 1};
+                            return { ...prev, [item._id]: currentQuantity + 1 };
                           })
                         }>
                         ▲
@@ -365,9 +387,8 @@ const CartPage = () => {
           </div>
 
           <button
-            className={`cart-checkout-button ${
-              Object.values(checkedItems).some((isChecked) => isChecked) ? 'active' : 'disabled'
-            }`}
+            className={`cart-checkout-button ${Object.values(checkedItems).some((isChecked) => isChecked) ? 'active' : 'disabled'
+              }`}
             onClick={handleCheckout}
             disabled={!Object.values(checkedItems).some((isChecked) => isChecked) || cartList.length === 0}>
             주문하기

@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {useState, useEffect} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
 import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import './PaymentPage.style.css';
-import { cc_expires_format } from '../../utils/number';
-import { useDispatch, useSelector } from 'react-redux';
-import { createOrder } from '../../features/order/orderSlice';
-import { getAddressList } from '../../features/address/addressSlice';
+import {cc_expires_format} from '../../utils/number';
+import {useDispatch, useSelector} from 'react-redux';
+import {createOrder} from '../../features/order/orderSlice';
+import {getAddressList} from '../../features/address/addressSlice';
 import DaumPostcode from 'react-daum-postcode';
 import LoadingSpinner from '../../common/components/LoadingSpinner/LoadingSpinner';
 
@@ -14,9 +14,9 @@ const PaymentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { items, totalPrice } = location.state || { items: [], totalPrice: 0 };
-  const { addresses, loading: addressLoading } = useSelector((state) => state.address);
-  const { loading: orderLoading } = useSelector((state) => state.order);
+  const {items, totalPrice} = location.state || {items: [], totalPrice: 0};
+  const {addresses, loading: addressLoading} = useSelector((state) => state.address);
+  const {loading: orderLoading} = useSelector((state) => state.order);
 
   const [isMobileView, setIsMobileView] = useState(false);
   const [shipInfo, setShipInfo] = useState({
@@ -46,8 +46,8 @@ const PaymentPage = () => {
   const [selectedAddress, setSelectedAddress] = useState(null);
 
   const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    setShipInfo({ ...shipInfo, [name]: value });
+    const {name, value} = e.target;
+    setShipInfo({...shipInfo, [name]: value});
   };
 
   useEffect(() => {
@@ -88,13 +88,14 @@ const PaymentPage = () => {
   // ==================
 
   const handleContactChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     const updatedContactParts = {
       ...contactParts,
       [name]: value
     };
-    const updatedContact = `${updatedContactParts.prefix || ''}-${updatedContactParts.middle || ''}-${updatedContactParts.last || ''
-      }`;
+    const updatedContact = `${updatedContactParts.prefix || ''}-${updatedContactParts.middle || ''}-${
+      updatedContactParts.last || ''
+    }`;
 
     setContactParts(updatedContactParts);
     setShipInfo((prev) => ({
@@ -104,7 +105,7 @@ const PaymentPage = () => {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
 
     if (name === 'number' && value.length > 16) {
       return; // 16자 초과 시 무시
@@ -119,7 +120,7 @@ const PaymentPage = () => {
   };
 
   const handleInputFocus = (e) => {
-    setCardData((prev) => ({ ...prev, focus: e.target.name }));
+    setCardData((prev) => ({...prev, focus: e.target.name}));
   };
 
   const handleCompletePostcode = (data) => {
@@ -128,9 +129,9 @@ const PaymentPage = () => {
 
     setShipInfo((prev) => ({
       ...prev,
-      city: fullAddress, // 도로명 주소
+      address: fullAddress, // 도로명 주소
       zip: zonecode, // 우편번호
-      address: '' // 상세 주소는 비워둠
+      city: '' // 상세 주소는 비워둠
     }));
 
     setIsPostcodeOpen(false); // 모달 닫기
@@ -327,7 +328,7 @@ const PaymentPage = () => {
                     className='payment_form_input'
                     placeholder='상세 주소'
                     value={shipInfo.city}
-                    onChange={(e) => setShipInfo((prev) => ({ ...prev, address: e.target.value }))}
+                    onChange={(e) => setShipInfo((prev) => ({...prev, city: e.target.value}))}
                   />
                 </div>
               </div>
@@ -511,12 +512,11 @@ const PaymentPage = () => {
               </span>
             </div>
 
-            <button className='payment_button' onClick={handleSubmitOrder} disabled={orderLoading}
-            >
+            <button className='payment_button' onClick={handleSubmitOrder} disabled={orderLoading}>
               {orderLoading ? '결제 처리중...' : '결제하기'}
             </button>
             {orderLoading && (
-              <div className="payment-loading-overlay">
+              <div className='payment-loading-overlay'>
                 <LoadingSpinner />
               </div>
             )}

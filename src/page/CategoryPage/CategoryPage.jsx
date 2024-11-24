@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import {useEffect, useState} from 'react';
+import {useParams, useNavigate, useSearchParams, useLocation} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
 import ProductCard from '../../common/components/ProductCard/ProductCard';
-import { clearProducts, fetchProducts, searchProduct } from '../../features/product/productSlice';
-import { categories, getCategoryName, getSubcategoryName } from '../../utils/categories';
+import {clearProducts, fetchProducts, searchProduct} from '../../features/product/productSlice';
+import {categories, getCategoryName, getSubcategoryName} from '../../utils/categories';
 import './CategoryPage.style.css';
 import SkeletonCard from '../../common/components/SkeletonCard/SkeletonCard';
 
@@ -12,9 +12,9 @@ const CategoryPage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const { category, subcategory } = useParams();
+  const {category, subcategory} = useParams();
   const [searchParams] = useSearchParams();
-  const { products, loading, error } = useSelector((state) => state.products);
+  const {products, loading, error} = useSelector((state) => state.products);
   const [hasMoreProducts, setHasMoreProducts] = useState(true);
   const [showScrollToTopButton, setShowScrollToTopButton] = useState(false);
   const [sortType, setSortType] = useState('latest');
@@ -28,7 +28,6 @@ const CategoryPage = () => {
   const categoryName = category ? category.toUpperCase() : 'ALL';
   const subcategories = categories[categoryName] || [];
   const skeletonArray = Array(12).fill(null);
-
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -128,20 +127,20 @@ const CategoryPage = () => {
     // 검색어 여부에 따라 API 호출
     const fetchAction = searchTerm
       ? searchProduct({
-        mainCate: getCategoryName(category),
-        subCate: subcategory ? getSubcategoryName(subcategory) : null,
-        page: nextPage,
-        limit: productsPerPage,
-        sort: sortType,
-        name: searchTerm
-      })
+          mainCate: getCategoryName(category),
+          subCate: subcategory ? getSubcategoryName(subcategory) : null,
+          page: nextPage,
+          limit: productsPerPage,
+          sort: sortType,
+          name: searchTerm
+        })
       : fetchProducts({
-        mainCate: getCategoryName(category),
-        subCate: subcategory ? getSubcategoryName(subcategory) : null,
-        page: nextPage,
-        limit: productsPerPage,
-        sort: sortType
-      });
+          mainCate: getCategoryName(category),
+          subCate: subcategory ? getSubcategoryName(subcategory) : null,
+          page: nextPage,
+          limit: productsPerPage,
+          sort: sortType
+        });
 
     dispatch(fetchAction)
       .unwrap()
@@ -154,7 +153,7 @@ const CategoryPage = () => {
         // 상태에 데이터 추가
         dispatch({
           type: 'products/addMoreProducts',
-          payload: { products: result.products } // API 응답 구조에 따라 적절히 수정
+          payload: {products: result.products} // API 응답 구조에 따라 적절히 수정
         });
       })
       .catch((err) => {
@@ -277,28 +276,26 @@ const CategoryPage = () => {
 
       <div className='category-page__product-grid'>
         {/* 초기 로딩 시 스켈레톤 UI 표시 */}
-        {loading && products.length === 0 ? (
-          skeletonArray.map((_, index) => (
-            <div className='category-page__product-item' key={`skeleton-${index}`}>
-              <SkeletonCard />
-            </div>
-          ))
-        ) : (
-          // 상품 목록
-          products.map((product) => (
-            <div className='category-page__product-item' key={`${product._id}-${Math.random()}`}>
-              <ProductCard
-                id={product._id}
-                image={product.image}
-                brand={product.brand}
-                title={product.name}
-                realPrice={product.realPrice}
-                originalPrice={product.price}
-                discountRate={product.saleRate}
-              />
-            </div>
-          ))
-        )}
+        {loading && products.length === 0
+          ? skeletonArray.map((_, index) => (
+              <div className='category-page__product-item' key={`skeleton-${index}`}>
+                <SkeletonCard />
+              </div>
+            ))
+          : // 상품 목록
+            products.map((product) => (
+              <div className='category-page__product-item' key={`${product._id}-${Math.random()}`}>
+                <ProductCard
+                  id={product._id}
+                  image={product.image}
+                  brand={product.brand}
+                  title={product.name}
+                  realPrice={product.realPrice}
+                  originalPrice={product.price}
+                  discountRate={product.saleRate}
+                />
+              </div>
+            ))}
       </div>
 
       {/* 무한 스크롤 로딩 스피너 */}
@@ -314,9 +311,7 @@ const CategoryPage = () => {
         </button>
       )}
 
-      {error && (
-        <div className='category-page__error'>에러 발생: {error.message}</div>
-      )}
+      {error && <div className='category-page__error'>에러 발생: {error.message}</div>}
     </div>
   );
 };

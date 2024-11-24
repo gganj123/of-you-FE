@@ -73,8 +73,11 @@ const HomePage = () => {
       </div>
 
       {/* 추천 상품 */}
-      <RecommendedProducts products={recommendedProducts} />
-
+      <section className='recommended-products-section'>
+        <h2 className='recommended-products-title'>ITEMS FOR YOU</h2>
+        <p className='recommended-products-subtitle'>당신을 위한 추천상품</p>
+        <CategorySection categoryName={'BEST'} />
+      </section>
       {/* 브랜드배너 */}
       <BrandBanner banners={brandBanners} />
 

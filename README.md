@@ -53,6 +53,8 @@ OF-YOU는 개인의 선호와 스타일에 맞춘 상품을 추천하고, 쉽고
 소셜로그인 디자인
 1200px 75%
 
+### DeskTop
+
 |                                                 Main                                                 |                                                  Product                                                   |
 | :--------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------: |
 | <img width="329" src="./public/images/main.png"/> <img width="329" src="./public/images/main2.png"/> | <img width="329" src="./public/images/category2.png"/> <img width="329" src="./public/images/detail.png"/> |
@@ -60,3 +62,11 @@ OF-YOU는 개인의 선호와 스타일에 맞춘 상품을 추천하고, 쉽고
 |                          <img width="329" src="./public/images/cart.png"/>                           |                            <img width="329" src="./public/images/payment.png"/>                            |
 |                                                Order                                                 |                                                    Like                                                    |
 |                          <img width="329" src="./public/images/order.png"/>                          |                             <img width="329" src="./public/images/like.png"/>                              |
+
+### Mobile
+
+|                                                  Main                                                   |                                                    Product                                                    |
+| :-----------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------: | --------------------------------------------------- | ------ |
+| <img width="180" src="./public/images/main_p.png"/><img width="180" src="./public/images/main2_p.png"/> | <img width="180" src="./public/images/category_p.png"/> <img width="180" src="./public/images/detail_p.png"/> |
+|                                                  Cart                                                   |                                                     Order                                                     | Like                                                | MyPage |
+|                           <img width="180" src="./public/images/cart_p.png"/>                           |                             <img width="180" src="./public/images/order_p.png"/>                              | <img width="180" src="./public/images/like_p.png"/> |

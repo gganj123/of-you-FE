@@ -67,8 +67,18 @@ OF-YOU는 개인의 선호와 스타일에 맞춘 상품을 추천하고, 쉽고
 
 |                                                  Main                                                   |                                                    Product                                                    |
 | :-----------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------: |
-| <img width="180" src="./public/images/main_p.png"/><img width="180" src="./public/images/main2_p.png"/> | <img width="180" src="./public/images/category_p.png"/> <img width="180" src="./public/images/detail_p.png"/> |
+| <img width="190" src="./public/images/main_p.png"/><img width="190" src="./public/images/main2_p.png"/> | <img width="190" src="./public/images/category_p.png"/> <img width="190" src="./public/images/detail_p.png"/> |
 
 |                        Cart                         |                        Order                         |                        Like                         |                      MyPage                       |
 | :-------------------------------------------------: | :--------------------------------------------------: | :-------------------------------------------------: | :-----------------------------------------------: |
 | <img width="180" src="./public/images/cart_p.png"/> | <img width="180" src="./public/images/order_p.png"/> | <img width="180" src="./public/images/like_p.png"/> | <img width="180" src="./public/images/my_p.png"/> |
+
+|                                                                                                            payment                                                                                                             |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| <img width="190" src="./public/images/payment_p.png"/> <img width="190" src="./public/images/payment2_p.png"/> <img width="190" src="./public/images/payment3_p.png"/> <img width="190" src="./public/images/payment4_p.png"/> |
+
+## 협업전략 및 준비과정
+
+## 데이터테이블
+
+## 디렉터리구조

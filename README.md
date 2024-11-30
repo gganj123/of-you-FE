@@ -13,7 +13,7 @@
 ## 배포주소
 
 - **개발버전** : https://of-you.netlify.app/
-- **백엔드 서버 (Heroku)**: https://of-you-150add69b1bb.herokuapp.com/
+- **백엔드 서버**: https://of-you-150add69b1bb.herokuapp.com/
 
 ## 웹개발팀 소개
 
@@ -29,7 +29,7 @@
 ### OF-YOU: 당신만을 위한 맞춤형 쇼핑몰
 
 OF-YOU는 개인의 선호와 스타일에 맞춘 상품을 추천하고, 쉽고 편리하게 쇼핑할 수 있는 맞춤형 쇼핑몰입니다.  
- 사용자 경험을 극대화하고, 직관적인 인터페이스와 다양한 디바이스에서 최적화된 환경을 제공합니다.
+ 사용자 경험을 극대화하고, 직관적인 인터페이스와 **데스크톱, 테블릿, 모바일**에서 최적화된 환경을 제공합니다.
 
 - **애자일 방식으로 진행된 2주 프로젝트**
 
@@ -46,22 +46,18 @@ OF-YOU는 개인의 선호와 스타일에 맞춘 상품을 추천하고, 쉽고
 
 ## 화면구성
 
-영상  
-반응형 데스크톱 1200px 테블릿 768px 모바일 480px
-
-카드결제 카카오결제
-소셜로그인 디자인
-1200px 75%
+- 영상
 
 ### DeskTop
 
-|                                                 Main                                                 |                                                  Product                                                   |
+(화면클릭 시 사진을 자세히 보실 수 있습니다.)
+| Main | Product |
 | :--------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------: |
 | <img width="329" src="./public/images/main.png"/> <img width="329" src="./public/images/main2.png"/> | <img width="329" src="./public/images/category2.png"/> <img width="329" src="./public/images/detail.png"/> |
-|                                                 Cart                                                 |                                                  Payment                                                   |
-|                          <img width="329" src="./public/images/cart.png"/>                           |                            <img width="329" src="./public/images/payment.png"/>                            |
-|                                                Order                                                 |                                                    Like                                                    |
-|                          <img width="329" src="./public/images/order.png"/>                          |                             <img width="329" src="./public/images/like.png"/>                              |
+| Cart | Payment |
+| <img width="329" src="./public/images/cart.png"/> | <img width="329" src="./public/images/payment.png"/> |
+| Order | Like |
+| <img width="329" src="./public/images/order.png"/> | <img width="329" src="./public/images/like.png"/> |
 
 ### Mobile
 
@@ -108,8 +104,20 @@ OF-YOU는 개인의 선호와 스타일에 맞춘 상품을 추천하고, 쉽고
 
 ## 데이터테이블
 
+### MongoDB 기반
+
+JSON 스타일의 문서형 데이터베이스 설계를 따르며, 데이터의 관계를 최소화하고 독립적으로 관리 가능한 NoSQL 구조를 채택했습니다.
+
  <img width="700" src="./public/images/datatable.png"/>
 
 ## 디렉터리구조
+
+### "기능 기반 디렉터리 구조"(Feature-Based Directory Structure)
+
+컴포넌트, 상태 관리, 페이지, 라우팅, 유틸리티 등을 디렉터리별로 나누어 파일을 정리했습니다.
+
+- 기능 중심 분류: 프로젝트를 구성하는 각 주요 기능(예: features, pages, components)에 따라 디렉터리를 나누고, 관련 파일들을 그룹화했습니다.
+- 모듈화: 각 폴더가 독립적으로 동작하며 특정 기능이나 역할을 수행합니다.
+- 확장성: 새로운 기능이 추가될 때 관련 폴더에 파일을 추가하거나 새로운 폴더를 만들어 쉽게 확장할 수 있습니다.
 
  <img width="300" src="./public/images/directorytree.png"/>

@@ -109,7 +109,6 @@ const AddressPage = () => {
   const handleSaveAddress = (e) => {
     e.preventDefault();
 
-    // 필수 항목 확인
     if (!formData.contact.firstName || !formData.contact.lastName) {
       alert('성명은 필수 입력 사항입니다.');
       return;

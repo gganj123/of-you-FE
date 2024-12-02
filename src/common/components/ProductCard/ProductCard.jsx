@@ -4,26 +4,35 @@ import {IoHeartOutline, IoHeart} from 'react-icons/io5';
 import './ProductCard.style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {toggleLike, toggleLikeOptimistic} from '../../../features/like/likeSlice';
+import {throttle} from 'lodash';
+import useToast from '../../../utils/useToast';
 
 const ProductCard = ({id, image, title, realPrice, originalPrice, discountRate}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {likes} = useSelector((state) => state.like);
+  const {user} = useSelector((state) => state.user);
+  const {showInfo} = useToast();
 
   const isLiked = likes.some((like) => like.productId === id || like.productId?._id === id);
+
+  const throttledLikeHandler = throttle((productId) => {
+    dispatch(toggleLikeOptimistic(productId));
+    dispatch(toggleLike(productId)).catch((error) => {
+      console.error('좋아요 토글 실패:', error);
+      dispatch(toggleLikeOptimistic(productId));
+    });
+  }, 300);
+
   const handleLikeClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    // 프론트엔드 상태를 즉시 반영
-    dispatch(toggleLikeOptimistic(id));
-
-    // 서버 요청
-    dispatch(toggleLike(id)).catch((error) => {
-      console.error('좋아요 토글 실패:', error);
-      // 실패 시 상태를 복구하기 위해 다시 토글
-      dispatch(toggleLikeOptimistic(id));
-    });
+    if (!user) {
+      showInfo('로그인이 필요한 기능입니다.');
+      return;
+    }
+    throttledLikeHandler(id);
   };
   const handleCardClick = () => {
     if (id) {

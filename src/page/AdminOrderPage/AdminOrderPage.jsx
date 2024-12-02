@@ -55,7 +55,6 @@ const AdminOrderPage = () => {
     try {
       await dispatch(updateOrderStatus({orderId, newStatus}));
 
-      // 상태 변경 후 주문 목록을 새로 고침
       await dispatch(getOrderList(searchQuery));
     } catch (error) {
       console.error('주문 상태 업데이트 중 오류 발생:', error);

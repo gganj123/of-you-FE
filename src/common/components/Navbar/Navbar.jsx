@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   FiHeart,
   FiLogIn,
@@ -11,16 +11,16 @@ import {
   FiSettings
 } from 'react-icons/fi';
 import './Navbar.style.css';
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginWithToken, logout } from '../../../features/user/userSlice';
-import { persistor } from '../../../features/store';
-import { resetLikes } from '../../../features/like/likeSlice';
-import { getCartList, getCartQty } from '../../../features/cart/cartSlice';
-import { categories } from '../../../utils/categories';
-import { getQuery } from '../../../features/query/querySlice';
+import {useNavigate, useLocation, useSearchParams} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {loginWithToken, logout} from '../../../features/user/userSlice';
+import {persistor} from '../../../features/store';
+import {resetLikes} from '../../../features/like/likeSlice';
+import {getCartList, getCartQty} from '../../../features/cart/cartSlice';
+import {categories} from '../../../utils/categories';
+import {getQuery} from '../../../features/query/querySlice';
 
-const Navbar = ({ user }) => {
+const Navbar = ({user}) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('WOMEN');
   const [selectedAdminCategory, setSelectedAdminCategory] = useState('PRODUCT');
@@ -32,7 +32,7 @@ const Navbar = ({ user }) => {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
 
-  const { queries, queryLoading } = useSelector((state) => state.query);
+  const {queries, queryLoading} = useSelector((state) => state.query);
 
   const popularSearchRef = useRef(null);
   const categoryMenuRef = useRef(null);
@@ -58,7 +58,6 @@ const Navbar = ({ user }) => {
   const handleCategoryToggle = () => {
     setIsCategoryOpen(!isCategoryOpen);
   };
-  // 토글박스의 중분류 카테고리 선택을 위한 함수
   const handleSubCategorySelect = (category) => {
     setSelectedCategory(category);
   };
@@ -70,7 +69,6 @@ const Navbar = ({ user }) => {
     setIsCategoryOpen(false); // 메뉴 닫기
   };
 
-  // 메뉴의 대분류 카테고리 페이지 이동을 위한 함수
   const handleCategoryPageNavigate = (category) => {
     navigate(`/products/category/${category.toLowerCase()}`);
   };
@@ -85,10 +83,8 @@ const Navbar = ({ user }) => {
 
   const handleSearchIconClick = () => {
     if (window.innerWidth <= 1200) {
-      // 모바일에서는 검색 모달 열기
       setIsSearchModalOpen(true);
     } else {
-      // 피씨에서는 검색창 아래에 인기 검색어 표시
       setIsPopularSearchVisible(!isPopularSearchVisible);
     }
   };
@@ -101,7 +97,6 @@ const Navbar = ({ user }) => {
     navigate(`/admin/${category.toLowerCase()}`);
   };
 
-  // 카테고리 메뉴 외부 클릭 시 닫기
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (categoryMenuRef.current && !categoryMenuRef.current.contains(event.target)) {
@@ -113,8 +108,8 @@ const Navbar = ({ user }) => {
   }, []);
 
   const handleLogout = () => {
-    persistor.pause(); // Redux Persist가 저장 작업을 멈추도록 설정
-    persistor.purge(); // Redux Persist 상태 초기화
+    persistor.pause();
+    persistor.purge();
     localStorage.removeItem('persist:root');
     sessionStorage.clear();
     dispatch(resetLikes());
@@ -335,21 +330,21 @@ const Navbar = ({ user }) => {
           <div className='navbar-menu'>
             {location.pathname.startsWith('/admin')
               ? ['PRODUCT', 'ORDER'].map((menuItem, index, array) => (
-                <React.Fragment key={menuItem}>
-                  <div className='navbar-menu-item' onClick={() => handleAdminCategorySelect(menuItem)}>
-                    {menuItem}
-                  </div>
-                  {index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
-                </React.Fragment>
-              ))
+                  <React.Fragment key={menuItem}>
+                    <div className='navbar-menu-item' onClick={() => handleAdminCategorySelect(menuItem)}>
+                      {menuItem}
+                    </div>
+                    {index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
+                  </React.Fragment>
+                ))
               : ['WOMEN', 'MEN', 'BEAUTY', 'LIFE', 'BEST', 'SALE', 'NEW'].map((menuItem, index, array) => (
-                <React.Fragment key={menuItem}>
-                  <div className='navbar-menu-item' onClick={() => handleCategoryPageNavigate(menuItem)}>
-                    {menuItem}
-                  </div>
-                  {menuItem === 'LIFE' && index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
-                </React.Fragment>
-              ))}
+                  <React.Fragment key={menuItem}>
+                    <div className='navbar-menu-item' onClick={() => handleCategoryPageNavigate(menuItem)}>
+                      {menuItem}
+                    </div>
+                    {menuItem === 'LIFE' && index < array.length - 1 && <span className='navbar-menu-divider'>|</span>}
+                  </React.Fragment>
+                ))}
           </div>
         </div>
       </div>

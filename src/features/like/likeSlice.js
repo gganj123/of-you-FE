@@ -30,19 +30,16 @@ const likeSlice = createSlice({
   },
   reducers: {
     resetLikes: (state) => {
-      state.likes = []; // likes 초기화
+      state.likes = [];
     },
     toggleLikeOptimistic: (state, action) => {
       const productId = action.payload;
 
-      // 좋아요 상태 즉시 반영
       const existingLikeIndex = state.likes.findIndex((like) => (like.productId?._id || like.productId) === productId);
 
       if (existingLikeIndex !== -1) {
-        // 이미 좋아요된 상품이라면 제거
         state.likes.splice(existingLikeIndex, 1);
       } else {
-        // 새로 좋아요 추가
         state.likes.push({productId});
       }
     },
@@ -58,10 +55,10 @@ const likeSlice = createSlice({
       })
       .addCase(getLikeList.fulfilled, (state, action) => {
         state.loading = false;
-        state.likes = action.payload.filter((like) => like.productId); // productId가 null이 아닌 항목만 유지
+        state.likes = action.payload.filter((like) => like.productId);
       })
       .addCase(getLikeList.rejected, (state, action) => {
-        console.error('Error fetching likes:', action.payload); // 확인용
+        console.error('Error fetching likes:', action.payload);
         state.likes = action.payload.filter((like) => like.productId);
 
         state.loading = false;
@@ -73,11 +70,11 @@ const likeSlice = createSlice({
       })
       .addCase(toggleLike.fulfilled, (state, action) => {
         state.loading = false;
-        const productId = action.payload; // 성공적으로 토글된 상품 ID
+        const productId = action.payload;
         if (state.likes.some((like) => like.productId === productId)) {
-          state.likes = state.likes.filter((like) => like.productId !== productId); // 제거
+          state.likes = state.likes.filter((like) => like.productId !== productId);
         } else {
-          state.likes.push({productId}); // 추가
+          state.likes.push({productId});
         }
       })
       .addCase(toggleLike.rejected, (state, action) => {

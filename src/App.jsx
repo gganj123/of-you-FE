@@ -6,16 +6,17 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useEffect} from 'react';
 import {getLikeList} from './features/like/likeSlice';
 import ScrollToTop from './utils/ScrollToTop';
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_APP_GOOGLE_CLIENT_ID;
 
 function App() {
   const dispatch = useDispatch();
-  const {isAuthenticated} = useSelector((state) => state.user); // 로그인 상태 확인
+  const {isAuthenticated} = useSelector((state) => state.user);
 
   useEffect(() => {
     if (isAuthenticated) {
-      // 로그인한 사용자만 좋아요 리스트 호출
       dispatch(getLikeList());
     }
   }, [dispatch, isAuthenticated]);
@@ -23,6 +24,7 @@ function App() {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <BrowserRouter>
+        <ToastContainer />
         <ScrollToTop />
         <AppLayout>
           <AppRouter />

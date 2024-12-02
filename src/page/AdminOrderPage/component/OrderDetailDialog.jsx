@@ -5,7 +5,7 @@ import {Modal, Button, Form, Table} from 'react-bootstrap';
 import './OrderDetailDialog.style.css';
 
 const OrderDetailDialog = ({open, handleClose, order, handleStatusChange}) => {
-  if (!order) return null; // 주문이 없으면 아무것도 렌더링하지 않음
+  if (!order) return null;
 
   const dispatch = useDispatch();
   const [status, setStatus] = useState(order.status);

@@ -11,8 +11,6 @@ const CategoryDialog = ({category, setCategory, showCategoryDialog, setShowCateg
   const [selectedCategory, setSelectedCategory] = useState('');
 
   const handleClose = () => {
-    //모든걸 초기화시키고;
-    // 다이얼로그 닫아주기
     setCategory([]);
     setSelectedCategory('');
     setShowCategoryDialog(false);

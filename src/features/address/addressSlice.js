@@ -38,7 +38,7 @@ export const updateAddress = createAsyncThunk(
 export const deleteAddress = createAsyncThunk('address/deleteAddress', async (addressId, {rejectWithValue}) => {
   try {
     await api.delete(`/addresses/${addressId}`);
-    return addressId; // 삭제된 주소 ID 반환
+    return addressId;
   } catch (error) {
     return rejectWithValue(error.response?.data?.message || error.message);
   }
@@ -74,11 +74,11 @@ const addressSlice = createSlice({
       })
       .addCase(getAddressList.fulfilled, (state, action) => {
         state.loading = false;
-        state.addresses = action.payload; // 주소 목록 업데이트
+        state.addresses = action.payload;
       })
       .addCase(getAddressList.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload; // 에러 처리
+        state.error = action.payload;
       })
       .addCase(addAddress.pending, (state) => {
         state.loading = true;
@@ -113,7 +113,7 @@ const addressSlice = createSlice({
       })
       .addCase(deleteAddress.fulfilled, (state, action) => {
         state.loading = false;
-        state.addresses = state.addresses.filter((address) => address._id !== action.payload); // 삭제된 주소 제거
+        state.addresses = state.addresses.filter((address) => address._id !== action.payload);
       })
       .addCase(deleteAddress.rejected, (state, action) => {
         state.loading = false;
@@ -137,7 +137,6 @@ const addressSlice = createSlice({
   }
 });
 
-// 액션 및 리듀서 내보내기
 export const {resetAddresses} = addressSlice.actions;
 
 export default addressSlice.reducer;

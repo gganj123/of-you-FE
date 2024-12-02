@@ -10,12 +10,11 @@ const initialState = {
   totalPrice: 0
 };
 
-// Async thunk actions
 export const addToCart = createAsyncThunk('cart/addToCart', async ({cartItems}, {rejectWithValue, dispatch}) => {
   try {
     const response = await api.post('/cart', {cartItems});
     dispatch(getCartQty());
-    return response.data; // 서버로부터 성공적인 응답 처리
+    return response.data;
   } catch (error) {
     return rejectWithValue(error.response?.data?.message || 'Failed to add item to cart.');
   }
@@ -90,17 +89,12 @@ const cartSlice = createSlice({
 
       const cartData = action.payload.data || [];
 
-      // cartItemId를 유지하면서 cartList 업데이트
       state.cartList = cartData.map((item) => ({
         ...item,
-        cartItemId: item.cartItemId || `${item.productId}_${item.size}` // 고유 cartItemId 유지 또는 생성
+        cartItemId: item.cartItemId || `${item.productId}_${item.size}`
       }));
 
-      // 총 금액 계산
-      state.totalPrice = state.cartList.reduce(
-        (total, item) => total + item.productId.price * item.qty,
-        0 // 초기값 설정
-      );
+      state.totalPrice = state.cartList.reduce((total, item) => total + item.productId.price * item.qty, 0);
     });
 
     builder.addCase(getCartList.rejected, (state, action) => {

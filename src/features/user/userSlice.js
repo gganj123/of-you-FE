@@ -50,9 +50,9 @@ export const loginWithGoogle = createAsyncThunk('user/loginWithGoogle', async (t
 
 export const fetchKakaoToken = createAsyncThunk('user/fetchKakaoToken', async (_, thunkAPI) => {
   try {
-    const response = await fetch('/api/auth/kakao/callback'); // 서버 API 호출
+    const response = await fetch('/api/auth/kakao/callback');
     const data = await response.json();
-    return data.token; // 액세스 토큰 반환
+    return data.token;
   } catch (error) {
     console.error('로그인 후 처리 중 오류 발생:', error);
     return thunkAPI.rejectWithValue(error.message);
@@ -155,12 +155,12 @@ const userSlice = createSlice({
       })
       .addCase(fetchKakaoToken.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.token = action.payload; // 액세스 토큰 저장
-        localStorage.setItem('token', action.payload); // 토큰을 로컬 스토리지에 저장
+        state.token = action.payload;
+        localStorage.setItem('token', action.payload);
       })
       .addCase(fetchKakaoToken.rejected, (state, action) => {
         state.status = 'failed';
-        state.loginError = action.payload; // 에러 메시지 저장
+        state.loginError = action.payload;
       })
       .addCase(deleteUser.pending, (state) => {
         state.loading = true;
@@ -168,7 +168,7 @@ const userSlice = createSlice({
       })
       .addCase(deleteUser.fulfilled, (state) => {
         state.loading = false;
-        state.user = null; // 유저 정보 초기화
+        state.user = null;
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;

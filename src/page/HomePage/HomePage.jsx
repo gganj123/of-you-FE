@@ -52,6 +52,7 @@ const HomePage = () => {
   return (
     <div className='homepage-container'>
       {/* 배너 슬라이더 */}
+
       <BannerSlider />
 
       {/* 배너 스트립 */}

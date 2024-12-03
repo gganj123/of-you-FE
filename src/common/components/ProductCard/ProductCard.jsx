@@ -12,7 +12,7 @@ const ProductCard = ({id, image, title, realPrice, originalPrice, discountRate})
   const navigate = useNavigate();
   const {likes} = useSelector((state) => state.like);
   const {user} = useSelector((state) => state.user);
-  const {showInfo} = useToast();
+  const {showInfo, showError} = useToast();
 
   const isLiked = likes.some((like) => like.productId === id || like.productId?._id === id);
 
@@ -38,7 +38,7 @@ const ProductCard = ({id, image, title, realPrice, originalPrice, discountRate})
     if (id) {
       navigate(`/product/${id}`);
     } else {
-      alert('상품 정보를 찾을 수 없습니다.');
+      showError('상품 정보를 찾을 수 없습니다.');
       console.error('Product ID is missing. Cannot navigate to the product detail page.');
     }
   };

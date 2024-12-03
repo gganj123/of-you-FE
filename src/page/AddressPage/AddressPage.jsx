@@ -10,6 +10,7 @@ import {
 import DaumPostcode from 'react-daum-postcode';
 import './AddressPage.style.css';
 import LoadingSpinner from '../../common/components/LoadingSpinner/LoadingSpinner';
+import useCustomToast from '../../utils/useCustomToast';
 
 const AddressPage = () => {
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ const AddressPage = () => {
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const {showError} = useCustomToast();
 
   const initialFormData = {
     id: '',
@@ -110,17 +112,17 @@ const AddressPage = () => {
     e.preventDefault();
 
     if (!formData.contact.firstName || !formData.contact.lastName) {
-      alert('성명은 필수 입력 사항입니다.');
+      showError('성명을 입력해주세요');
       return;
     }
 
     if (!formData.contact.prefix || !formData.contact.middle || !formData.contact.last) {
-      alert('연락처는 필수 입력 사항입니다.');
+      showError('연락처는 필수 입력 사항입니다.');
       return;
     }
 
     if (!formData.address || !formData.city || !formData.zipCode) {
-      alert('주소는 필수 입력 사항입니다.');
+      showError('주소는 필수 입력 사항입니다.');
       return;
     }
 

@@ -9,6 +9,7 @@ import {createOrder} from '../../features/order/orderSlice';
 import {getAddressList} from '../../features/address/addressSlice';
 import DaumPostcode from 'react-daum-postcode';
 import LoadingSpinner from '../../common/components/LoadingSpinner/LoadingSpinner';
+import useCustomToast from '../../utils/useCustomToast';
 
 const PaymentPage = () => {
   const location = useLocation();
@@ -17,6 +18,7 @@ const PaymentPage = () => {
   const {items, totalPrice} = location.state || {items: [], totalPrice: 0};
   const {addresses, loading: addressLoading} = useSelector((state) => state.address);
   const {loading: orderLoading} = useSelector((state) => state.order);
+  const {showInfo} = useCustomToast();
 
   const [isMobileView, setIsMobileView] = useState(false);
   const [shipInfo, setShipInfo] = useState({
@@ -150,7 +152,7 @@ const PaymentPage = () => {
       cardData.cvc.length !== 3 ||
       !cardData.name
     ) {
-      alert('모든 입력란을 정확히 채워주세요.');
+      showInfo('모든 입력란을 정확히 채워주세요.');
       return;
     }
     // 주문 데이터 형식에 맞게 변환

@@ -4,12 +4,13 @@ import './useCustomToast.css';
 const useCustomToast = () => {
   const showInfo = (message) => {
     toast.info(message, {
-      position: 'bottom-center',
+      position: 'top-center',
       autoClose: 2000,
       hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: false,
-      draggable: true
+      draggable: true,
+      theme: 'dark'
     });
   };
 
@@ -20,7 +21,8 @@ const useCustomToast = () => {
       hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: false,
-      draggable: true
+      draggable: true,
+      theme: 'dark'
     });
   };
 
@@ -31,7 +33,8 @@ const useCustomToast = () => {
       hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: false,
-      draggable: true
+      draggable: true,
+      theme: 'dark'
     });
   };
 

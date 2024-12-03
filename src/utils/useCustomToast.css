@@ -8,7 +8,9 @@
 .Toastify__toast-body {
   font-size: 14px;
 }
-
+.Toastify__toast {
+  opacity: 0.9; /* 원하는 투명도 값 */
+}
 .Toastify__close-button {
   color: #fff; /* 닫기 버튼 색상 */
 }

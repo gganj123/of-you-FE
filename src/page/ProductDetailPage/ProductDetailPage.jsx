@@ -6,6 +6,7 @@ import './ProductDetailPage.style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {clearProductDetail, fetchProductDetail} from '../../features/product/productSlice';
 import {addToCart, getCartList} from '../../features/cart/cartSlice';
+import useCustomToast from '../../utils/useCustomToast';
 
 const ProductDetailPage = () => {
   const {id} = useParams();
@@ -19,6 +20,7 @@ const ProductDetailPage = () => {
   const [size, setSize] = useState('');
   const [sizeError, setSizeError] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const {showInfo} = useCustomToast();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -46,7 +48,7 @@ const ProductDetailPage = () => {
     const exists = selectedOptions.find((item) => item.option === option);
 
     if (exists) {
-      alert('이미 추가된 상품입니다. 주문 수량을 조정해주세요.');
+      showInfo('이미 추가된 상품입니다. 주문 수량을 조정해주세요.');
       setIsOptionOpen(false);
 
       return;
@@ -98,17 +100,19 @@ const ProductDetailPage = () => {
       size: option.option,
       qty: option.quantity
     }));
+    console.log('현재 선택된 항목(cartItems):', cartItems);
+    console.log('현재 장바구니 항목(cartList):', cartList);
 
     try {
-      // 중복 확인
       const isDuplicate = cartItems.some((cartItem) =>
         cartList.some(
-          (existingItem) => existingItem.productId === cartItem.productId && existingItem.size === cartItem.size
+          (existingItem) => existingItem.productId._id === cartItem.productId && existingItem.size === cartItem.size
         )
       );
+      console.log('중복 여부(isDuplicate):', isDuplicate);
 
       if (isDuplicate) {
-        alert('이미 장바구니에 있는 옵션이 있습니다.');
+        showInfo('이미 장바구니에 있는 옵션이 있습니다.');
         return;
       }
 
@@ -116,14 +120,14 @@ const ProductDetailPage = () => {
       const response = await dispatch(addToCart({cartItems})).unwrap();
 
       if (response.status === 'fail') {
-        alert(`중복된 항목: ${response.falseItems.join(', ')}`);
+        showInfo(`중복된 항목: ${response.falseItems.join(', ')}`);
         return;
       }
 
-      alert('장바구니에 추가되었습니다.');
+      showInfo('장바구니에 추가되었습니다.');
     } catch (error) {
       console.error('장바구니 추가 실패:', error);
-      alert('장바구니 추가 중 문제가 발생했습니다.');
+      showInfo('장바구니 추가 중 문제가 발생했습니다.');
     }
   };
 

@@ -5,14 +5,14 @@ import './ProductCard.style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {toggleLike, toggleLikeOptimistic} from '../../../features/like/likeSlice';
 import {throttle} from 'lodash';
-import useToast from '../../../utils/useToast';
+import useCustomToast from '../../../utils/useCustomToast';
 
 const ProductCard = ({id, image, title, realPrice, originalPrice, discountRate}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {likes} = useSelector((state) => state.like);
   const {user} = useSelector((state) => state.user);
-  const {showInfo, showError} = useToast();
+  const {showInfo, showError} = useCustomToast();
 
   const isLiked = likes.some((like) => like.productId === id || like.productId?._id === id);
 

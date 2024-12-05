@@ -5,6 +5,7 @@ import './CartPage.style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {deleteCartItem, getCartList, updateQty} from '../../features/cart/cartSlice';
 import LoadingSpinner from '../../common/components/LoadingSpinner/LoadingSpinner';
+import useCustomToast from '../../utils/useCustomToast';
 
 const CartPage = () => {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ const CartPage = () => {
   const [temporaryQuantities, setTemporaryQuantities] = useState({});
   const [checkedItems, setCheckedItems] = useState({});
   const [isAllChecked, setIsAllChecked] = useState(true);
+  const {showInfo, showError} = useCustomToast();
 
   useEffect(() => {
     const handleResize = () => {
@@ -64,7 +66,7 @@ const CartPage = () => {
   const handleCheckout = () => {
     const selectedItems = cartList.filter((item) => checkedItems[item._id]);
     if (selectedItems.length === 0) {
-      alert('주문할 상품을 선택해주세요.');
+      showInfo('주문할 상품을 선택해주세요.');
       return;
     }
 
@@ -151,13 +153,13 @@ const CartPage = () => {
     )
       .unwrap()
       .then(() => {
-        alert(`옵션이 성공적으로 변경되었습니다.\n새 옵션: 사이즈 - ${newSize}, 수량 - ${newQty}`);
+        showInfo(`옵션이 변경되었습니다.`);
         setIsModalOpen(false); // 모달 닫기
         dispatch(getCartList());
       })
       .catch((err) => {
         console.error('옵션 변경 실패:', err);
-        alert('옵션 변경에 실패했습니다.');
+        showInfo('옵션 변경에 실패했습니다.');
       });
   };
 
@@ -180,7 +182,7 @@ const CartPage = () => {
     )
       .unwrap()
       .then(() => {
-        alert(`수량이 ${newQty}개로 변경되었습니다.`);
+        showInfo(`수량이 ${newQty}개로 변경되었습니다.`);
         // 상태 초기화
         setTemporaryQuantities((prev) => {
           const {[itemId]: _, ...rest} = prev;
@@ -190,7 +192,7 @@ const CartPage = () => {
       })
       .catch((err) => {
         console.error('수량 변경 실패:', err);
-        alert('수량 변경에 실패했습니다.');
+        showInfo('수량 변경에 실패했습니다.');
       });
   };
 
@@ -313,7 +315,7 @@ const CartPage = () => {
                             const currentQuantity = prev[item._id] || item.qty;
                             const stockLimit = item.productId.stock[item.size];
                             if (currentQuantity + 1 > stockLimit) {
-                              alert(`최대 ${stockLimit}개까지 구매 가능합니다.`);
+                              showInfo(`최대 ${stockLimit}개까지 구매 가능합니다.`);
                               return {...prev, [item._id]: stockLimit};
                             }
                             return {...prev, [item._id]: currentQuantity + 1};
@@ -438,7 +440,7 @@ const CartPage = () => {
                           setTemporaryQuantity((prevQuantity) => {
                             const stockLimit = selectedProduct.productId.stock[selectedProduct.size];
                             if (prevQuantity + 1 > stockLimit) {
-                              alert(`최대 ${stockLimit}개까지 구매 가능합니다.`);
+                              showInfo(`최대 ${stockLimit}개까지 구매 가능합니다.`);
                               return stockLimit;
                             }
                             return prevQuantity + 1;

@@ -7,3 +7,15 @@
   to = "https://of-you-150add69b1bb.herokuapp.com/api/:splat"
   status = 200
   force = true
+
+[[redirects]]
+  from = "http://*"
+  to = "https://:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.*"
+  to = "https://www.:splat"
+  status = 301
+  force = true

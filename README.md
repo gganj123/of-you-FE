@@ -12,7 +12,7 @@
 
 ## 배포주소
 
-- **개발버전 (Netlify)** : http://ofyou.shop/
+- **개발버전 (Netlify)** : https://ofyou.shop/
 - **백엔드 서버 (Heroku)**: https://of-you-150add69b1bb.herokuapp.com/
 
 ## 웹개발팀 소개

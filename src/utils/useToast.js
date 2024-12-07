@@ -1,6 +1,6 @@
 import {toast} from 'react-toastify';
 
-const useToast = () => {
+const useCustomToast = () => {
   const showInfo = (message) => {
     toast.info(message, {
       position: 'bottom-center',
@@ -37,4 +37,4 @@ const useToast = () => {
   return {showInfo, showSuccess, showError};
 };
 
-export default useToast;
+export default useCustomToast;

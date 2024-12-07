@@ -5,34 +5,44 @@ import './ProductCard.style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {toggleLike, toggleLikeOptimistic} from '../../../features/like/likeSlice';
 import {throttle} from 'lodash';
-import useToast from '../../../utils/useToast';
+import useCustomToast from '../../../utils/useToast';
 
 const ProductCard = ({id, image, title, realPrice, originalPrice, discountRate}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {likes} = useSelector((state) => state.like);
   const {user} = useSelector((state) => state.user);
-  const {showInfo} = useToast();
+  const {showInfo} = useCustomToast();
+  const [isThrottling, setIsThrottling] = useState(false);
 
   const isLiked = likes.some((like) => like.productId === id || like.productId?._id === id);
 
-  const throttledLikeHandler = throttle((productId) => {
-    dispatch(toggleLikeOptimistic(productId));
-    dispatch(toggleLike(productId)).catch((error) => {
-      console.error('좋아요 토글 실패:', error);
-      dispatch(toggleLikeOptimistic(productId));
-    });
-  }, 300);
-
-  const handleLikeClick = (e) => {
+  const handleLikeClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-
     if (!user) {
       showInfo('로그인이 필요한 기능입니다.');
       return;
     }
-    throttledLikeHandler(id);
+    // 요청 중일 경우 중단
+    if (isThrottling) {
+      return;
+    }
+
+    setIsThrottling(true); // 요청 중 상태 설정
+
+    try {
+      // 좋아요 요청 실행
+      await dispatch(toggleLike(id));
+    } catch (error) {
+      if (error.response?.status === 400) {
+        alert('이미 좋아요를 누르셨습니다.');
+      } else {
+        console.error('좋아요 요청 실패:', error);
+      }
+    } finally {
+      setIsThrottling(false); // 요청 완료 후 상태 해제
+    }
   };
   const handleCardClick = () => {
     if (id) {

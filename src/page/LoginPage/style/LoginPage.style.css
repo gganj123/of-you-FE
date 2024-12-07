@@ -112,7 +112,7 @@
   cursor: pointer;
 }
 
-.checkbox-label input[type="checkbox"]:checked+.checkbox-custom::after {
+.checkbox-label input[type='checkbox']:checked + .checkbox-custom::after {
   content: '';
   position: absolute;
   left: 4px;
@@ -144,12 +144,10 @@
   display: flex;
   justify-content: space-between;
   margin-top: 40px;
-
 }
 
 .join-email,
 .join-sns {
-
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -239,11 +237,8 @@
 }
 
 .sns-buttons {
-  width: 100%;
+  width: 50%;
 }
-
-
-
 
 @media (max-width: 1200px) {
   .login-page-wrapper {
@@ -289,7 +284,6 @@
 }
 
 @media (max-width: 480px) {
-
   .login-page-wrapper {
     margin-top: 140px;
   }

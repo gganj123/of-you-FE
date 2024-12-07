@@ -7,6 +7,7 @@ import './AdminProductPage.style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {getProductList, deleteProduct, setSelectedProduct} from '../../features/product/productSlice';
 import {FiSearch} from 'react-icons/fi';
+import useCustomToast from '../../utils/useCustomToast';
 
 const AdminProductPage = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const AdminProductPage = () => {
   const [keyword, setKeyword] = useState(query.get('name') || '');
   const [showDialog, setShowDialog] = useState(false);
   const [mode, setMode] = useState('new');
+  const {showInfo} = useCustomToast();
 
   const [searchQuery, setSearchQuery] = useState({
     page: query.get('page') || 1,
@@ -98,7 +100,7 @@ const AdminProductPage = () => {
       console.error('Error deleting product:', error);
     }
 
-    alert('상품이 삭제되었습니다.');
+    showInfo('상품이 삭제되었습니다.');
   };
 
   // 페이지네이션 반응형 조절

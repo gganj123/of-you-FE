@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import BannerSlider from './components/BannerSlider/BannerSlider';
-import RecommendedProducts from './components/RecommendedProducts/RecommendedProducts';
 import BrandBanner from './components/BrandBanner/BrandBanner';
 import CategorySection from './components/CategorySection/CategorySection';
 import './HomePage.style.css';
@@ -20,11 +19,6 @@ const HomePage = () => {
     originalPrice: 298000,
     discountRate: 51
   };
-
-  const recommendedProducts = Array.from({length: 16}, (_, index) => ({
-    ...baseProduct,
-    id: index + 1
-  }));
 
   // 브랜드배너 데이터
   const brandBanners = [
@@ -52,6 +46,7 @@ const HomePage = () => {
   return (
     <div className='homepage-container'>
       {/* 배너 슬라이더 */}
+
       <BannerSlider />
 
       {/* 배너 스트립 */}

@@ -5,15 +5,14 @@ import './ProductCard.style.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {toggleLike, toggleLikeOptimistic} from '../../../features/like/likeSlice';
 import {throttle} from 'lodash';
-import useCustomToast from '../../../utils/useToast';
+import useCustomToast from '../../../utils/useCustomToast';
 
 const ProductCard = ({id, image, title, realPrice, originalPrice, discountRate}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {likes} = useSelector((state) => state.like);
   const {user} = useSelector((state) => state.user);
-  const {showInfo} = useCustomToast();
-  const [isThrottling, setIsThrottling] = useState(false);
+  const {showInfo, showError} = useCustomToast();
 
   const isLiked = likes.some((like) => like.productId === id || like.productId?._id === id);
 
@@ -48,7 +47,7 @@ const ProductCard = ({id, image, title, realPrice, originalPrice, discountRate})
     if (id) {
       navigate(`/product/${id}`);
     } else {
-      alert('상품 정보를 찾을 수 없습니다.');
+      showError('상품 정보를 찾을 수 없습니다.');
       console.error('Product ID is missing. Cannot navigate to the product detail page.');
     }
   };

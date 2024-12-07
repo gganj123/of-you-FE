@@ -1,0 +1,16 @@
+.Toastify__toast {
+  background-color: rgba(0, 0, 0, 0.7); /* 검은색 배경, 투명도 50% */
+  color: #fff; /* 텍스트는 흰색 */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+}
+
+.Toastify__toast-body {
+  font-size: 14px;
+}
+.Toastify__toast {
+  opacity: 0.9; /* 원하는 투명도 값 */
+}
+.Toastify__close-button {
+  color: #fff; /* 닫기 버튼 색상 */
+}

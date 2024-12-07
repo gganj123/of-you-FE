@@ -8,6 +8,7 @@ export const createOrder = createAsyncThunk('order/createOrder', async (orderDat
     const response = await api.post('/order', orderData); // 주문 API 호출
     dispatch(getCartQty());
 
+    dispatch(getCartList());
     return response.data; // 성공 시 데이터 반환
   } catch (error) {
     // 실패 시 에러 메시지 반환
@@ -77,7 +78,6 @@ const orderSlice = createSlice({
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.loading = false;
-        dispatch(getCartList());
         state.order = action.payload.orderNum;
       })
       .addCase(createOrder.rejected, (state, action) => {

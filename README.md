@@ -15,6 +15,12 @@
 - **개발버전 (Netlify)** : https://ofyou.shop/
 - **백엔드 서버 (Heroku)**: https://of-you-150add69b1bb.herokuapp.com/
 
+유저 : test123@gamil.com
+비밀번호 : test1234
+
+관리자 : admin@admin.com
+비밀번호 : admin1234
+
 ## 웹개발팀 소개
 
 | 이름   | 역할          | 사진                                                                        | GitHub 프로필                                      |

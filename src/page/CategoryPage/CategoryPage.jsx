@@ -23,7 +23,7 @@ const CategoryPage = () => {
   const [page, setPage] = useState(1);
 
   const pageRef = useState(1); // 페이지 상태 관리
-  const productsPerPage = 50;
+  const productsPerPage = 48;
   const searchTerm = searchParams.get('name') || ''; // 검색어 가져오기
   const categoryName = category ? category.toUpperCase() : 'ALL';
   const subcategories = categories[categoryName] || [];

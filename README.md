@@ -52,10 +52,11 @@ OF-YOU는 개인의 선호와 스타일에 맞춘 상품을 추천하고, 쉽고
 
 ## 화면구성
 
--PC ver
-![PC](./videos/desktop.mp4)
--Mobile ver
-![Mobile](./videos/mobile.mp4)
+-PC ver  
+<video src="./videos/desktop.mp4" width="600" controls></video>
+
+-Mobile ver  
+<video src="./videos/mobile.mp4" width="600" controls></video>
 
 ### DeskTop
 

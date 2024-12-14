@@ -212,7 +212,7 @@ const ProductDetailPage = () => {
               </div>
               <div className='product-detail-page__price-remove'>
                 <div className='product-detail-page__option-price'>
-                  {(productDetail.realPrice || productDetail.price) * selected.quantity}원
+                  {((productDetail.realPrice || productDetail.price) * selected.quantity).toLocaleString()}원
                 </div>
                 <button className='product-detail-page__remove-option' onClick={() => handleRemoveOption(index)}>
                   <AiOutlineClose />

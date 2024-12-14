@@ -38,7 +38,6 @@ OF-YOU는 개인의 선호와 스타일에 맞춘 상품을 추천하고, 쉽고
  사용자 경험을 극대화하고, 직관적인 인터페이스와 **데스크톱, 테블릿, 모바일**에서 최적화된 환경을 제공합니다.
 
 - **애자일 방식으로 진행된 2주 프로젝트**
-
   - 유연한 계획과 점진적 개발을 통해 쇼핑몰 기능 구현
   - 주기적인 피드백과 개선 작업을 통해 완성도 향상
 
@@ -56,7 +55,7 @@ OF-YOU는 개인의 선호와 스타일에 맞춘 상품을 추천하고, 쉽고
 <video src="./videos/desktop.mp4" width="600" controls></video>
 
 -Mobile ver  
-<video src="./videos/mobile.mp4" width="600" controls></video>
+[Watch on YouTube](https://youtu.be/EEiAhyOopIU)
 
 ### DeskTop
 

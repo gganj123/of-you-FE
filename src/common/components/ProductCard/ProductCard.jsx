@@ -14,6 +14,8 @@ const ProductCard = ({id, image, title, realPrice, originalPrice, discountRate})
   const {user} = useSelector((state) => state.user);
   const {showInfo, showError} = useCustomToast();
 
+  const [isThrottling, setIsThrottling] = useState(false);
+
   const isLiked = likes.some((like) => like.productId === id || like.productId?._id === id);
 
   const handleLikeClick = async (e) => {

@@ -49,13 +49,24 @@ OF-YOU는 개인의 선호와 스타일에 맞춘 상품을 추천하고, 쉽고
 
  <img src="./public/images/stack.png" alt="stack" style="width:500px">
 
+---
+
+## 🔗 시연영상
+
+### PC Version 
+<a href="https://youtu.be/oBItsCzKN20" target="_blank" rel="noopener noreferrer">
+  <img src="./public/images/main.png" alt="PC Version Thumbnail" width="300">
+</a><br>
+(이미지를 클릭하면 유튜브 링크로 이동합니다)
+
+### Mobile Version 
+<a href="https://youtu.be/EEiAhyOopIU" target="_blank" rel="noopener noreferrer">
+  <img src="./public/images/main_p.png" alt="Mobile Version Thumbnail" width="150">
+</a><br>
+(이미지를 클릭하면 유튜브 링크로 이동합니다)
+
+
 ## 화면구성
-
--PC ver  
-<video src="./videos/desktop.mp4" width="600" controls></video>
-
--Mobile ver  
-[Watch on YouTube](https://youtu.be/EEiAhyOopIU)
 
 ### DeskTop
 

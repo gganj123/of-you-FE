@@ -54,6 +54,11 @@ OF-YOU는 개인의 선호와 스타일에 맞춘 상품을 추천하고, 쉽고
 
 - 영상
 
+PC ver
+![Example Video](./videos/desktop.mp4)
+Mobile ver
+![Example Video](./videos/mobile.mp4)
+
 ### DeskTop
 
 (화면클릭 시 사진을 자세히 보실 수 있습니다.)

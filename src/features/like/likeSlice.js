@@ -4,7 +4,6 @@ import api from '../../utils/api';
 export const getLikeList = createAsyncThunk('like/getLikeList', async (_, {rejectWithValue}) => {
   try {
     const response = await api.get('/like');
-    console.log(response.data);
     return response.data.data;
   } catch (error) {
     return rejectWithValue(error);

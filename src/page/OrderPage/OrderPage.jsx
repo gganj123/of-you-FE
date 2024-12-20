@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import './OrderPage.style.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchOrder } from '../../features/order/orderSlice';
-import LoadingSpinner from '../../common/components/LoadingSpinner/LoadingSpinner'
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchOrder} from '../../features/order/orderSlice';
+import LoadingSpinner from '../../common/components/LoadingSpinner/LoadingSpinner';
 
 const OrderPage = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('all');
@@ -11,7 +11,7 @@ const OrderPage = () => {
   const [filteredOrders, setFilteredOrders] = useState([]);
 
   const dispatch = useDispatch();
-  const { orderList, loading, error } = useSelector((state) => state.order);
+  const {orderList, loading, error} = useSelector((state) => state.order);
 
   const handlePeriodClick = (period) => {
     setSelectedPeriod(period);
@@ -20,7 +20,6 @@ const OrderPage = () => {
 
   const filterOrders = () => {
     if (!startDate || !endDate) {
-      console.log('No date filters applied. Returning all orders.');
       setFilteredOrders(orderList); // 날짜 선택 안 된 경우 전체 데이터 표시
       return;
     }
@@ -29,21 +28,15 @@ const OrderPage = () => {
     const adjustedEndDate = new Date(endDate);
     adjustedEndDate.setHours(23, 59, 59, 999);
 
-    console.log('Start Date:', startDate);
-    console.log('Adjusted End Date:', adjustedEndDate);
-
     // 주문 날짜 필터링
     const filtered = orderList.filter((order) => {
       const orderDate = new Date(order.createdAt);
-      console.log('Order Date:', orderDate);
 
       const isWithinRange = orderDate >= startDate && orderDate <= adjustedEndDate;
-      console.log(`Order Date ${orderDate} is within range:`, isWithinRange);
 
       return isWithinRange; // 날짜 범위에 포함되는지 확인
     });
 
-    console.log('Filtered Orders:', filtered);
     setFilteredOrders(filtered);
   };
 

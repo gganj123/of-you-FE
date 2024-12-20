@@ -17,11 +17,8 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async (p
       endpoint += `/${subCate}`;
     }
 
-    console.log('Fetching products from endpoint:', endpoint, 'with params:', queryParams);
-
     // API 호출
     const response = await api.get(endpoint, {params: queryParams});
-    console.log('상품목록:', params);
 
     return response.data;
   } catch (error) {
@@ -177,7 +174,6 @@ const productSlice = createSlice({
       .addCase(fetchProductDetail.fulfilled, (state, action) => {
         state.loading = false;
         state.productDetail = action.payload;
-        console.log(Object.entries(state.productDetail.stock));
       })
       .addCase(fetchProductDetail.rejected, (state, action) => {
         state.loading = false;

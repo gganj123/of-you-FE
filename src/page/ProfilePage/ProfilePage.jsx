@@ -16,7 +16,6 @@ const ProfilePage = () => {
   const handleDeleteAccount = async () => {
     try {
       await dispatch(deleteUser());
-      console.log('회원탈퇴 처리');
 
       // 첫 번째 모달 닫기
       setIsDeleteModalOpen(false);

@@ -46,8 +46,6 @@ const CategorySection = ({categoryName}) => {
         // mainCate와 subCate를 동적으로 포함하여 엔드포인트 생성
         let endpoint = `/product/category/${encodeURIComponent(categoryName)}`;
 
-        console.log('Fetching products from endpoint:', endpoint);
-
         // API 호출
         const response = await api.get(endpoint, {
           params: {
@@ -57,7 +55,6 @@ const CategorySection = ({categoryName}) => {
           }
         });
 
-        console.log('API Response:', response.data.products);
         setProducts(response.data.products);
       } catch (err) {
         console.error('Fetch failed with error:', err);

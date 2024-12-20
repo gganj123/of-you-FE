@@ -177,8 +177,6 @@ const PaymentPage = () => {
       totalPrice: totalPrice
     };
 
-    console.log('Order Data:', orderData); // 디버깅용
-
     // createOrder 액션 호출
     dispatch(createOrder(orderData));
     navigate('/payment/success');

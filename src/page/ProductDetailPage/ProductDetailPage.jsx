@@ -55,7 +55,6 @@ const ProductDetailPage = () => {
     }
     setSizeError(false);
     setSelectedOptions((prev) => [...prev, {option, quantity: 1}]);
-    console.log(selectedOptions);
     setIsOptionOpen(false);
   };
 
@@ -100,16 +99,12 @@ const ProductDetailPage = () => {
       size: option.option,
       qty: option.quantity
     }));
-    console.log('현재 선택된 항목(cartItems):', cartItems);
-    console.log('현재 장바구니 항목(cartList):', cartList);
-
     try {
       const isDuplicate = cartItems.some((cartItem) =>
         cartList.some(
           (existingItem) => existingItem.productId._id === cartItem.productId && existingItem.size === cartItem.size
         )
       );
-      console.log('중복 여부(isDuplicate):', isDuplicate);
 
       if (isDuplicate) {
         showInfo('이미 장바구니에 있는 옵션이 있습니다.');

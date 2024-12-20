@@ -120,7 +120,6 @@ const CartPage = () => {
     const updatedCartList = cartList.map((item) =>
       item.productId._id === productId && item.size === size ? {...item, qty: Math.max(1, item.qty + change)} : item
     );
-    console.log('Updated Cart List:', updatedCartList);
   };
 
   const handleModalQuantityChange = (change) => {
@@ -164,10 +163,6 @@ const CartPage = () => {
   };
 
   const handleApplyQuantityChange = (itemId) => {
-    console.log('cartItemId:', itemId);
-
-    console.log('temporaryQuantities:', temporaryQuantities); // temporaryQuantities 상태 확인
-
     const newQty = temporaryQuantities[itemId];
     if (newQty === undefined) {
       console.error('New quantity is undefined for cartItemId:', itemId);

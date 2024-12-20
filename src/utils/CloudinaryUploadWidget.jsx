@@ -37,8 +37,6 @@ class CloudinaryUploadWidget extends Component {
     document.getElementById('upload_widget').addEventListener(
       'click',
       function () {
-        console.log('CLOUDNAME : ', CLOUDNAME);
-        console.log('UPLOADPRESET : ', UPLOADPRESET);
         myWidget.open();
       },
       false

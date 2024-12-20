@@ -12,8 +12,6 @@ const KakaoLoginButton = () => {
       const data = await response.json();
 
       if (data.token) {
-        console.log('로그인 성공, 토큰:', data.token);
-
         // 클라이언트 측에 토큰 저장
         localStorage.setItem('token', data.token);
 
@@ -44,7 +42,6 @@ const KakaoLoginButton = () => {
     const handleMessage = (event) => {
       if (event.data.type === 'KAKAO_AUTH_SUCCESS') {
         const code = event.data.code;
-        console.log('인증 코드 수신:', code);
 
         // 서버로 인증 코드 전달
         fetchAccessToken(code);
@@ -66,8 +63,6 @@ const KakaoLoginButton = () => {
         headers: {'Content-Type': 'application/json'}
       });
       const data = response.data; // api.get은 이미 JSON 데이터를 반환
-
-      console.log('액세스 토큰:', data.token);
 
       // 토큰 저장
       localStorage.setItem('token', data.token);

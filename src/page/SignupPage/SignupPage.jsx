@@ -94,7 +94,6 @@ const SignupPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log('Form data submitted:', formData);
       dispatch(
         registerUser({
           name: formData.name,

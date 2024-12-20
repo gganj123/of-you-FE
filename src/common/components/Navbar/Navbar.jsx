@@ -51,7 +51,6 @@ const Navbar = ({user}) => {
   useEffect(() => {
     if (user) {
       dispatch(getCartQty());
-      console.log('유저의 카트 카운트정보를 불러옵니다.', cartItemCount);
     }
   }, [dispatch, user]);
 

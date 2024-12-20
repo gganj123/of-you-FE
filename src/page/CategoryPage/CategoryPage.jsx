@@ -77,9 +77,7 @@ const CategoryPage = () => {
         })
       )
         .unwrap()
-        .then((result) => {
-          console.log('Search successful with result:', result);
-        })
+        .then((result) => {})
         .catch((err) => {
           console.error('Search failed with error:', err);
         });
@@ -89,22 +87,16 @@ const CategoryPage = () => {
 
     // 일반 카테고리 처리
     if (searchTerm) {
-      console.log('Dispatching searchProduct with params:', fetchParams);
       dispatch(searchProduct(fetchParams))
         .unwrap()
-        .then((result) => {
-          console.log('Search successful with result:', result);
-        })
+        .then((result) => {})
         .catch((err) => {
           console.error('Search failed with error:', err);
         });
     } else {
-      console.log('Dispatching fetchProducts with params:', fetchParams);
       dispatch(fetchProducts(fetchParams))
         .unwrap()
-        .then((result) => {
-          console.log('Fetch successful with result:', result);
-        })
+        .then((result) => {})
         .catch((err) => {
           console.error('Fetch failed with error:', err);
         });
@@ -116,7 +108,6 @@ const CategoryPage = () => {
   };
 
   const handleSubcategoryClick = (category, subcat) => {
-    console.log('Navigating to:', `/products/category/${category}/${subcat}`);
     navigate(`/products/category/${category}/${subcat}`);
   };
   const loadMoreProducts = () => {

@@ -23,7 +23,6 @@ const CategoryDialog = ({category, setCategory, showCategoryDialog, setShowCateg
   };
 
   const handleSubCategoryClick = (subcategory) => {
-    console.log(selectedCategory, subcategory);
     setCategory([selectedCategory, subcategory]);
   };
 

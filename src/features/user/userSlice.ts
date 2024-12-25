@@ -1,24 +1,51 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 import api from '../../utils/api';
 import {initialCart} from '../cart/cartSlice';
 
+interface UserInfo {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface UserState {
+  user: UserInfo | null;
+  loading: boolean;
+  loginError: string | null;
+  registrationError: string | null;
+  success: boolean;
+  token: string | null;
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error?: string | null;
+}
+
+const initialState: UserState = {
+  user: null,
+  loading: false,
+  loginError: null,
+  registrationError: null,
+  success: false,
+  token: null,
+  status: 'idle'
+};
+
 export const registerUser = createAsyncThunk(
   'user/registerUser',
-  async ({email, name, password}, {rejectWithValue}) => {
+  async ({email, name, password}: {email: string; name: string; password: string}, {rejectWithValue}) => {
     try {
       const response = await api.post('/user', {email, name, password});
       return response.data;
-    } catch (error) {
-      return rejectWithValue(error.error);
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Registration failed');
     }
   }
 );
 
 export const deleteUser = createAsyncThunk('user/deleteUser', async (_, {rejectWithValue}) => {
   try {
-    const response = await api.delete('/user/delete');
+    await api.delete('/user/delete');
     return '탈퇴완료';
-  } catch (error) {
+  } catch (error: any) {
     return rejectWithValue(error.response?.data?.message || '탈퇴를 실패하였습니다.');
   }
 });
@@ -26,24 +53,24 @@ export const deleteUser = createAsyncThunk('user/deleteUser', async (_, {rejectW
 export const loginWithEmail = createAsyncThunk(
   'user/loginWithEmail',
 
-  async ({email, password}, thunkAPI) => {
+  async ({email, password}: {email: string; password: string}, thunkAPI) => {
     const {rejectWithValue} = thunkAPI;
     try {
       const response = await api.post('/auth/login', {email, password});
       sessionStorage.setItem('token', response.data.token);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || '이메일과 비밀번호를 확인해주세요');
     }
   }
 );
 
-export const loginWithGoogle = createAsyncThunk('user/loginWithGoogle', async (token, {rejectWithValue}) => {
+export const loginWithGoogle = createAsyncThunk('user/loginWithGoogle', async (token: string, {rejectWithValue}) => {
   try {
     const response = await api.post('auth/google', {token});
     sessionStorage.setItem('token', response.data.token);
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     return rejectWithValue(error.response?.data || 'Google login failed');
   }
 });
@@ -53,7 +80,7 @@ export const fetchKakaoToken = createAsyncThunk('user/fetchKakaoToken', async (_
     const response = await fetch('/api/auth/kakao/callback');
     const data = await response.json();
     return data.token;
-  } catch (error) {
+  } catch (error: any) {
     console.error('로그인 후 처리 중 오류 발생:', error);
     return thunkAPI.rejectWithValue(error.message);
   }
@@ -69,12 +96,12 @@ export const loginWithToken = createAsyncThunk('user/loginWithToken', async (_, 
     const response = await api.get('/user/me');
 
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     return rejectWithValue(error.response?.data || 'An error occurred');
   }
 });
 
-export const logout = () => (dispatch) => {
+export const logout = () => (dispatch: any) => {
   sessionStorage.removeItem('token');
   dispatch(userSlice.actions.logout());
   dispatch(initialCart());
@@ -82,15 +109,7 @@ export const logout = () => (dispatch) => {
 
 const userSlice = createSlice({
   name: 'user',
-  initialState: {
-    user: null,
-    loading: false,
-    loginError: null,
-    registrationError: null,
-    success: false,
-    token: null,
-    status: 'idle'
-  },
+  initialState,
   reducers: {
     clearErrors: (state) => {
       state.loginError = null;
@@ -103,62 +122,62 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(registerUser.pending, (state, action) => {
+      .addCase(registerUser.pending, (state) => {
         state.loading = true;
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
+      .addCase(registerUser.fulfilled, (state, action: PayloadAction<{user: UserInfo}>) => {
         state.loading = false;
         state.user = action.payload.user;
         state.loginError = null;
       })
-      .addCase(registerUser.rejected, (state, action) => {
+      .addCase(registerUser.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.loginError = action.payload;
       })
-      .addCase(loginWithEmail.pending, (state, action) => {
+      .addCase(loginWithEmail.pending, (state) => {
         state.loading = true;
       })
-      .addCase(loginWithEmail.fulfilled, (state, action) => {
+      .addCase(loginWithEmail.fulfilled, (state, action: PayloadAction<{user: UserInfo}>) => {
         state.loading = false;
         state.user = action.payload.user;
       })
-      .addCase(loginWithEmail.rejected, (state, action) => {
+      .addCase(loginWithEmail.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.loginError = action.payload;
       })
       .addCase(loginWithToken.pending, (state) => {
         state.loading = true;
       })
-      .addCase(loginWithToken.fulfilled, (state, action) => {
+      .addCase(loginWithToken.fulfilled, (state, action: PayloadAction<{user: UserInfo}>) => {
         state.user = action.payload.user;
       })
-      .addCase(loginWithToken.rejected, (state, action) => {
+      .addCase(loginWithToken.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.user = null;
         sessionStorage.removeItem('token');
         state.error = action.payload;
       })
-      .addCase(loginWithGoogle.pending, (state, action) => {
+      .addCase(loginWithGoogle.pending, (state) => {
         state.loading = true;
       })
-      .addCase(loginWithGoogle.fulfilled, (state, action) => {
+      .addCase(loginWithGoogle.fulfilled, (state, action: PayloadAction<{user: UserInfo}>) => {
         state.loading = false;
         state.user = action.payload.user;
         state.loginError = null;
       })
-      .addCase(loginWithGoogle.rejected, (state, action) => {
+      .addCase(loginWithGoogle.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.loginError = action.payload;
       })
       .addCase(fetchKakaoToken.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchKakaoToken.fulfilled, (state, action) => {
+      .addCase(fetchKakaoToken.fulfilled, (state, action: PayloadAction<string>) => {
         state.status = 'succeeded';
         state.token = action.payload;
         localStorage.setItem('token', action.payload);
       })
-      .addCase(fetchKakaoToken.rejected, (state, action) => {
+      .addCase(fetchKakaoToken.rejected, (state, action: PayloadAction<any>) => {
         state.status = 'failed';
         state.loginError = action.payload;
       })
@@ -170,7 +189,7 @@ const userSlice = createSlice({
         state.loading = false;
         state.user = null;
       })
-      .addCase(deleteUser.rejected, (state, action) => {
+      .addCase(deleteUser.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;
       });

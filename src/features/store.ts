@@ -1,5 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit';
-import {persistStore, persistReducer} from 'redux-persist';
+import {persistStore, persistReducer, PersistConfig} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import {combineReducers} from 'redux';
 import userSlice from './user/userSlice';
@@ -10,12 +10,7 @@ import orderSlice from './order/orderSlice';
 import addressSlice from './address/addressSlice';
 import querySlice from './query/querySlice';
 
-const persistConfig = {
-  key: 'root',
-  storage,
-  whitelist: ['user', 'like', 'cart', 'address']
-};
-
+// Root state 타입 정의
 const rootReducer = combineReducers({
   user: userSlice,
   products: productSlice,
@@ -26,6 +21,19 @@ const rootReducer = combineReducers({
   query: querySlice
 });
 
+export type RootState = ReturnType<typeof rootReducer>;
+
+// Persist config 타입 정의
+type PersistConfigType = PersistConfig<RootState> & {
+  whitelist: (keyof RootState)[];
+};
+
+const persistConfig: PersistConfigType = {
+  key: 'root',
+  storage,
+  whitelist: ['user', 'like', 'cart', 'address']
+};
+
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
@@ -35,6 +43,8 @@ const store = configureStore({
       serializableCheck: false
     })
 });
+
+export type AppDispatch = typeof store.dispatch;
 
 export const persistor = persistStore(store);
 

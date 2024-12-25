@@ -8,12 +8,13 @@ import {getLikeList} from './features/like/likeSlice';
 import ScrollToTop from './utils/ScrollToTop';
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {RootState, AppDispatch} from './features/store';
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_APP_GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_APP_GOOGLE_CLIENT_ID as string;
 
 function App() {
-  const dispatch = useDispatch();
-  const {isAuthenticated} = useSelector((state) => state.user);
+  const dispatch = useDispatch<AppDispatch>();
+  const {isAuthenticated} = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     if (isAuthenticated) {

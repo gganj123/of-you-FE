@@ -146,36 +146,37 @@ const cartSlice = createSlice({
     builder.addCase(updateQty.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(updateQty.fulfilled, (state, action: PayloadAction<CartItem>) => {
-      state.loading = false;
-      state.error = '';
-      const updatedItem = action.payload;
+    builder
+      .addCase(updateQty.fulfilled, (state, action: PayloadAction<CartItem>) => {
+        state.loading = false;
+        state.error = '';
+        const updatedItem = action.payload;
 
-      // 카트 리스트에서 아이템 업데이트
-      const index = state.cartList.findIndex((item) => item.cartItemId === updatedItem.cartItemId);
-      if (index !== -1) {
-        state.cartList[index] = updatedItem;
-      }
+        // 카트 리스트에서 아이템 업데이트
+        const index = state.cartList.findIndex((item) => item.cartItemId === updatedItem.cartItemId);
+        if (index !== -1) {
+          state.cartList[index] = updatedItem;
+        }
 
-      // 전체 가격 재계산
-      state.totalPrice = state.cartList.reduce((total, item) => total + item.productId.price * item.qty, 0);
-    });
-    builder.addCase(updateQty.rejected, (state, action: PayloadAction<any>) => {
-      state.loading = false;
-      state.error = action.payload;
-    });
-    builder.addCase(getCartQty.pending, (state, action) => {
-      state.loading = true;
-    });
-    builder.addCase(getCartQty.fulfilled, (state, action) => {
-      state.loading = false;
-      state.error = '';
-      state.cartItemCount = action.payload;
-    });
-    builder.addCase(getCartQty.rejected, (state, action: PayloadAction<any>) => {
-      state.loading = false;
-      state.error = action.payload;
-    });
+        // 전체 가격 재계산
+        state.totalPrice = state.cartList.reduce((total, item) => total + item.productId.price * item.qty, 0);
+      })
+      .addCase(updateQty.rejected, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getCartQty.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getCartQty.fulfilled, (state, action: PayloadAction<number>) => {
+        state.loading = false;
+        state.error = null;
+        state.cartItemCount = action.payload;
+      })
+      .addCase(getCartQty.rejected, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   }
 });
 

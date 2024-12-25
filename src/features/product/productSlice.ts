@@ -1,31 +1,72 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 import api from '../../utils/api';
 import {putQuery} from '../query/querySlice';
 
+interface Product {
+  sku: string;
+  name: string;
+  image: string;
+  brand: string;
+  category: string[];
+  description: string;
+  price: number;
+  salePrice: number;
+  stock: {[key: string]: number};
+  status: string;
+}
+
+// ProductState 인터페이스 정의
+interface ProductState {
+  products: Product[];
+  productDetail: Product | null;
+  loading: boolean;
+  error: string | null;
+  totalPageNum: number;
+  totalCount: number;
+  currentPage: number;
+  hasMoreProducts: boolean;
+  success?: boolean;
+  selectedProduct?: Product | null;
+}
+
+const initialState: ProductState = {
+  products: [],
+  productDetail: null,
+  loading: false,
+  error: null,
+  totalPageNum: 1,
+  totalCount: 0,
+  currentPage: 1,
+  hasMoreProducts: true
+};
+
 // 상품 목록 가져오기 비동기 Thunk
-export const fetchProducts = createAsyncThunk('products/fetchProducts', async (params, {rejectWithValue, dispatch}) => {
-  try {
-    // mainCate와 subCate 추출
-    const {mainCate, subCate, ...queryParams} = params;
+export const fetchProducts = createAsyncThunk(
+  'products/fetchProducts',
+  async (params: {mainCate: string; [key: string]: any}, {rejectWithValue}) => {
+    try {
+      // mainCate와 subCate 추출
+      const {mainCate, subCate, ...queryParams} = params;
 
-    if (!mainCate) {
-      throw new Error('mainCate is required but not provided.');
+      if (!mainCate) {
+        throw new Error('mainCate is required but not provided.');
+      }
+      // 동적으로 엔드포인트 생성
+      let endpoint = `/product/category/${mainCate}`;
+      if (subCate) {
+        endpoint += `/${subCate}`;
+      }
+
+      // API 호출
+      const response = await api.get(endpoint, {params: queryParams});
+
+      return response.data;
+    } catch (error: any) {
+      console.error('API Fetch Error:', error);
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
-    // 동적으로 엔드포인트 생성
-    let endpoint = `/product/category/${mainCate}`;
-    if (subCate) {
-      endpoint += `/${subCate}`;
-    }
-
-    // API 호출
-    const response = await api.get(endpoint, {params: queryParams});
-
-    return response.data;
-  } catch (error) {
-    console.error('API Fetch Error:', error);
-    return rejectWithValue(error.response?.data?.message || error.message);
   }
-});
+);
 
 export const searchProduct = createAsyncThunk('/product/searchProduct', async (params, {rejectWithValue, dispatch}) => {
   try {

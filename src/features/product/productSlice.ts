@@ -15,6 +15,10 @@ interface Product {
   status: string;
 }
 
+interface ProductWithId extends Product {
+  _id: string;
+}
+
 // ProductState 인터페이스 정의
 interface ProductState {
   products: Product[];
@@ -68,51 +72,63 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
-export const searchProduct = createAsyncThunk('/product/searchProduct', async (params, {rejectWithValue, dispatch}) => {
-  try {
-    const {limit, name, page, sort} = params;
+export const searchProduct = createAsyncThunk(
+  '/product/searchProduct',
+  async (params: {limit: number; name: string; page: number; sort: string}, {rejectWithValue, dispatch}) => {
+    try {
+      const {limit, name, page, sort} = params;
 
-    if (name) {
-      dispatch(putQuery({query: name}));
+      if (name) {
+        dispatch(putQuery({query: name}));
+      }
+
+      const response = await api.get('/product', {params: {limit, name, page, sort}});
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
-
-    const response = await api.get('/product', {params: {limit, name, page, sort}});
-    return response.data;
-  } catch (error) {
-    return rejectWithValue(error.response?.data?.message || error.message);
   }
-});
+);
 
-export const fetchProductDetail = createAsyncThunk(`product/fetchProductDetail`, async (id, {rejectWithValue}) => {
-  try {
-    const response = await api.get(`/product/${id}`);
+export const fetchProductDetail = createAsyncThunk(
+  `product/fetchProductDetail`,
+  async (id: string, {rejectWithValue}) => {
+    try {
+      const response = await api.get(`/product/${id}`);
 
-    return response.data.product;
-  } catch (error) {
-    return rejectWithValue(error.response?.data?.message || error.message);
+      return response.data.product;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
   }
-});
+);
 
-export const updateProduct = createAsyncThunk(`product/updateProduct`, async (product, {rejectWithValue, dispatch}) => {
-  try {
-    const response = await api.put(`/product/${product.id}`, product);
+export const updateProduct = createAsyncThunk(
+  `product/updateProduct`,
+  async (product: ProductWithId, {rejectWithValue, dispatch}) => {
+    try {
+      const response = await api.put(`/product/${product._id}`, product);
 
-    dispatch(getProductList({page: 1, limit: 5}));
-    return response.data.product;
-  } catch (error) {
-    return rejectWithValue(error.response?.data?.message || error.message);
+      dispatch(getProductList({page: 1, limit: 5}));
+      return response.data.product;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
   }
-});
+);
 
-export const deleteProduct = createAsyncThunk(`product/deleteProduct`, async (id, {rejectWithValue, dispatch}) => {
-  try {
-    const response = await api.delete(`/product/${id}`);
-    dispatch(getProductList({page: 1, limit: 5}));
-    return response.data;
-  } catch (error) {
-    return rejectWithValue(error.response?.data?.message || error.message);
+export const deleteProduct = createAsyncThunk(
+  `product/deleteProduct`,
+  async (id: string, {rejectWithValue, dispatch}) => {
+    try {
+      const response = await api.delete(`/product/${id}`);
+      dispatch(getProductList({page: 1, limit: 5}));
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
   }
-});
+);
 
 export const createProduct = createAsyncThunk(
   'products/createProduct',
@@ -122,34 +138,28 @@ export const createProduct = createAsyncThunk(
 
       dispatch(getProductList({page: 1, limit: 5}));
       return response.data.data;
-    } catch (err) {
-      return rejectWithValue(err.message);
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
 
-export const getProductList = createAsyncThunk('products/getProductList', async (query, {rejectWithValue}) => {
-  try {
-    const response = await api.get('/product', {params: {...query}});
+export const getProductList = createAsyncThunk(
+  'products/getProductList',
+  async (query: {page: number; limit: number}, {rejectWithValue}) => {
+    try {
+      const response = await api.get('/product', {params: {...query}});
 
-    return response.data;
-  } catch (err) {
-    return rejectWithValue(err.error);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
   }
-});
+);
 
 const productSlice = createSlice({
   name: 'products',
-  initialState: {
-    products: [],
-    productDetail: null,
-    loading: false,
-    error: null,
-    totalPageNum: 1,
-    totalCount: 0,
-    currentPage: 1,
-    hasMoreProducts: true
-  },
+  initialState,
   reducers: {
     clearProducts: (state) => {
       state.products = [];
@@ -161,13 +171,13 @@ const productSlice = createSlice({
       state.error = '';
       state.success = false;
     },
-    addMoreProducts: (state, action) => {
+    addMoreProducts: (state, action: PayloadAction<{products: Product[]}>) => {
       const newProducts = Array.isArray(action.payload?.products) ? action.payload.products : [];
       state.products = [...state.products, ...newProducts];
       state.currentPage += 1;
       state.hasMoreProducts = action.payload.products.length > 0;
     },
-    setSelectedProduct: (state, action) => {
+    setSelectedProduct: (state, action: PayloadAction<Product | null>) => {
       state.selectedProduct = action.payload;
     }
   },
@@ -177,7 +187,7 @@ const productSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchProducts.fulfilled, (state, action) => {
+      .addCase(fetchProducts.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.products = action.payload.products;
         state.totalPageNum = action.payload.totalPageNum;
@@ -185,16 +195,15 @@ const productSlice = createSlice({
         state.currentPage = 1;
         state.hasMoreProducts = action.payload.products.length > 0;
       })
-      .addCase(fetchProducts.rejected, (state, action) => {
+      .addCase(fetchProducts.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;
-      });
-    builder
+      })
       .addCase(searchProduct.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(searchProduct.fulfilled, (state, action) => {
+      .addCase(searchProduct.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.products = action.payload.products;
         state.totalPageNum = action.payload.totalPageNum;
@@ -202,7 +211,7 @@ const productSlice = createSlice({
         state.currentPage = 1;
         state.hasMoreProducts = action.payload.products.length > 0;
       })
-      .addCase(searchProduct.rejected, (state, action) => {
+      .addCase(searchProduct.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;
       });
@@ -212,11 +221,11 @@ const productSlice = createSlice({
         state.error = null;
         state.productDetail = null;
       })
-      .addCase(fetchProductDetail.fulfilled, (state, action) => {
+      .addCase(fetchProductDetail.fulfilled, (state, action: PayloadAction<Product>) => {
         state.loading = false;
         state.productDetail = action.payload;
       })
-      .addCase(fetchProductDetail.rejected, (state, action) => {
+      .addCase(fetchProductDetail.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload ? action.payload.message : 'Something went wrong.';
       })
@@ -224,11 +233,11 @@ const productSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteProduct.fulfilled, (state, action) => {
+      .addCase(deleteProduct.fulfilled, (state) => {
         state.loading = false;
         state.error = null;
       })
-      .addCase(deleteProduct.rejected, (state, action) => {
+      .addCase(deleteProduct.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload ? action.payload.message : 'Something went wrong.';
       })
@@ -236,14 +245,14 @@ const productSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(getProductList.fulfilled, (state, action) => {
+      .addCase(getProductList.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.products = action.payload.products;
         state.totalPageNum = action.payload.totalPageNum;
         state.totalCount = action.payload.totalCount;
         state.error = '';
       })
-      .addCase(getProductList.rejected, (state, action) => {
+      .addCase(getProductList.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload ? action.payload.message : 'Something went wrong.';
       })
@@ -252,12 +261,12 @@ const productSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateProduct.fulfilled, (state, action) => {
+      .addCase(updateProduct.fulfilled, (state) => {
         state.loading = false;
         state.success = true;
         state.error = '';
       })
-      .addCase(updateProduct.rejected, (state, action) => {
+      .addCase(updateProduct.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload ? action.payload.message : 'Something went wrong.';
         state.success = false;
@@ -267,12 +276,12 @@ const productSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(createProduct.fulfilled, (state, action) => {
+      .addCase(createProduct.fulfilled, (state) => {
         state.loading = false;
         state.success = true;
         state.error = '';
       })
-      .addCase(createProduct.rejected, (state, action) => {
+      .addCase(createProduct.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload ? action.payload.message : 'Something went wrong.';
         state.success = false;

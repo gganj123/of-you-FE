@@ -79,7 +79,7 @@ export const searchProduct = createAsyncThunk(
       const {limit, name, page, sort} = params;
 
       if (name) {
-        dispatch(putQuery({query: name}));
+        dispatch(putQuery({content: name}));
       }
 
       const response = await api.get('/product', {params: {limit, name, page, sort}});
